@@ -1,5 +1,19 @@
 [
   {
+    "title": "Welcome 🚧",
+    "filepath": "docs/overview.mdx",
+    "route": "/",
+    "section": "Dashboard",
+    "mtime": "2026-04-09T20:45:01.491Z"
+  },
+  {
+    "title": "System Architecture",
+    "filepath": "docs/5g-nr/architecture.mdx",
+    "route": "/5g-nr/architecture",
+    "section": "5G NR",
+    "mtime": "2026-04-09T20:41:32.296Z"
+  },
+  {
     "title": "Computer Systems Glossary 🚧",
     "filepath": "docs/glossary/computer-systems.mdx",
     "route": "/glossary/computer-systems",
@@ -84,23 +98,9 @@
     "mtime": "2026-04-09T20:36:46.435Z"
   },
   {
-    "title": "System Architecture 🚧",
-    "filepath": "docs/5g-nr/architecture.mdx",
-    "route": "/5g-nr/architecture",
-    "section": "5G NR",
-    "mtime": "2026-04-09T20:36:46.435Z"
-  },
-  {
     "title": "Data Encapsulation 🚧",
     "filepath": "docs/5g-nr/data-encapsulation.mdx",
     "route": "/5g-nr/data-encapsulation",
-    "section": "5G NR",
-    "mtime": "2026-04-09T20:36:46.435Z"
-  },
-  {
-    "title": "5G NR 🚧",
-    "filepath": "docs/5g-nr/overview.mdx",
-    "route": "/5g-nr",
     "section": "5G NR",
     "mtime": "2026-04-09T20:36:46.435Z"
   }

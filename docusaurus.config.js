@@ -22,7 +22,10 @@ const config = {
 
   onBrokenLinks: 'warn',
 
-  plugins: [require('./plugins/recent-changes.js')],
+  plugins: [
+    require('./plugins/recent-changes.js'),
+    require('./plugins/site-health.js'),
+  ],
 
   i18n: {
     defaultLocale: 'en',
