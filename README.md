@@ -54,7 +54,7 @@ Git is the version control tool used to download the code and track changes.
 "Cloning" downloads a full copy of the project to your computer. Run this in your terminal:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/nuradio-wiki-v2.git
+git clone https://github.com/Nuradioconcepts/nuradio-wiki.git
 ```
 
 Replace `YOUR_USERNAME` with the GitHub username where this repo lives.
@@ -200,10 +200,10 @@ This site can be deployed for free using GitHub Pages.
 In `docusaurus.config.js`, make sure these fields match your GitHub account:
 
 ```js
-url: 'https://YOUR_USERNAME.github.io',
-baseUrl: '/nuradio-wiki-v2/',
-organizationName: 'YOUR_USERNAME',
-projectName: 'nuradio-wiki-v2',
+url: 'https://Nuradioconcepts.github.io',
+baseUrl: '/nuradio-wiki/',
+organizationName: 'Nuradioconcepts',
+projectName: 'nuradio-wiki',
 ```
 
 ### Deploy
