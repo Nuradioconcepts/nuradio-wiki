@@ -1,0 +1,161 @@
+---
+title: Procedures
+slug: /5g-nr/procedures
+description: 5G NR procedures organized by network component — UE, NG-RAN, 5G Core, and 5G System.
+---
+
+import ProceduresHub from '@site/src/components/ProceduresHub';
+
+<div className="hero-panel">
+  <span className="hero-panel__eyebrow">5G NR · Procedures</span>
+  <h1>Procedures</h1>
+  <p>5G NR procedures grouped by the network component that drives them. Select a component to explore the relevant protocol layers and interface flows.</p>
+</div>
+
+<ProceduresHub cards={[
+  {
+    to: '/5g-nr/procedures/ue',
+    icon: '📱',
+    title: 'User Equipment',
+    subtitle: 'ME + USIM',
+    description: 'The UE handles both control signaling and user data over the Uu air interface.',
+    leftPanel: {
+      icon: '🛡️',
+      title: 'Control Plane',
+      subtitle: 'Signaling & mobility management',
+      layers: [
+        { icon: '💬', name: 'NAS',  description: 'Non-Access Stratum' },
+        { icon: '📡', name: 'RRC',  description: 'Radio Resource Control' },
+        { icon: '🔄', name: 'PDCP', description: 'Packet Data Convergence' },
+        { icon: '🔀', name: 'RLC',  description: 'Radio Link Control' },
+        { icon: '🖧',  name: 'MAC',  description: 'Medium Access Control' },
+        { icon: '〰️', name: 'PHY',  description: 'Physical Layer' },
+      ],
+    },
+    rightPanel: {
+      icon: '☁️',
+      title: 'User Plane',
+      subtitle: 'User data delivery',
+      layers: [
+        { icon: '⬛', name: 'App',  description: 'User Applications' },
+        { icon: '🔗', name: 'SDAP', description: 'Service Data Adaptation' },
+        { icon: '🔄', name: 'PDCP', description: 'Packet Data Convergence' },
+        { icon: '🔀', name: 'RLC',  description: 'Radio Link Control' },
+        { icon: '🖧',  name: 'MAC',  description: 'Medium Access Control' },
+        { icon: '〰️', name: 'PHY',  description: 'Physical Layer' },
+      ],
+    },
+    interfaces: [
+      { icon: '📡', name: 'N1', label: 'Control',       accent: 'green' },
+      { icon: '📡', name: 'Uu', label: 'Air Interface', accent: 'yellow' },
+    ],
+  },
+  {
+    to: '/5g-nr/procedures/ng-ran',
+    icon: '🗼',
+    title: 'NG-RAN',
+    subtitle: 'gNB-CU · gNB-DU · gNB-RU',
+    description: 'The NG-RAN provides the radio access network, split across CU, DU, and RU functional layers.',
+    leftPanel: {
+      icon: '🔌',
+      title: 'Interfaces',
+      subtitle: 'Inter-node & split interfaces',
+      layers: [
+        { icon: '⬅️', name: 'F1',  description: 'CU ↔ DU' },
+        { icon: '↔️', name: 'E1',  description: 'CU-CP ↔ CU-UP' },
+        { icon: '↔️', name: 'Xn',  description: 'gNB ↔ gNB' },
+        { icon: '⬆️', name: 'NG',  description: 'gNB ↔ 5GC' },
+        { icon: '📶', name: 'FH',  description: 'DU ↔ RU (eCPRI)' },
+      ],
+    },
+    rightPanel: {
+      icon: '📚',
+      title: 'Protocol Layers',
+      subtitle: 'CU and DU protocol split',
+      layers: [
+        { icon: '🔄', name: 'PDCP', description: 'CU — header compress' },
+        { icon: '📡', name: 'RRC',  description: 'CU-CP — radio control' },
+        { icon: '🔀', name: 'RLC',  description: 'DU — segmentation' },
+        { icon: '🖧',  name: 'MAC',  description: 'DU — scheduling' },
+        { icon: '〰️', name: 'PHY',  description: 'DU/RU — modulation' },
+      ],
+    },
+    interfaces: [
+      { icon: '🔌', name: 'F1',  label: 'CU–DU',     accent: 'green' },
+      { icon: '🔌', name: 'E1',  label: 'CP–UP',     accent: 'green' },
+      { icon: '🔌', name: 'Xn',  label: 'Inter-gNB', accent: 'yellow' },
+    ],
+  },
+  {
+    to: '/5g-nr/procedures/5g-core',
+    icon: '☁️',
+    title: '5G Core',
+    subtitle: 'AMF · SMF · UPF · AUSF',
+    description: 'The 5G Core manages registration, session control, and user-plane routing through dedicated network functions.',
+    leftPanel: {
+      icon: '🛡️',
+      title: 'Control Plane',
+      subtitle: 'Session & mobility management',
+      layers: [
+        { icon: '🏛️', name: 'AMF',  description: 'Access & Mobility Mgmt' },
+        { icon: '🔧', name: 'SMF',  description: 'Session Management' },
+        { icon: '🔐', name: 'AUSF', description: 'Auth Server Function' },
+        { icon: '💬', name: 'NAS',  description: '5GMM / 5GSM' },
+        { icon: '📋', name: 'NGAP', description: 'NG Application Protocol' },
+      ],
+    },
+    rightPanel: {
+      icon: '☁️',
+      title: 'User Plane',
+      subtitle: 'Data forwarding & QoS',
+      layers: [
+        { icon: '🚦', name: 'UPF',   description: 'User Plane Function' },
+        { icon: '🚇', name: 'GTP-U', description: 'Tunnel on N3/N9' },
+        { icon: '📊', name: 'QoS',   description: 'Flow-to-bearer mapping' },
+        { icon: '🌐', name: 'DN',    description: 'Data Network (internet)' },
+      ],
+    },
+    interfaces: [
+      { icon: '📡', name: 'NG-C', label: 'Control', accent: 'green' },
+      { icon: '📡', name: 'NG-U', label: 'User',    accent: 'yellow' },
+      { icon: '📡', name: 'N1',   label: 'NAS',     accent: 'green' },
+    ],
+  },
+  {
+    to: '/5g-nr/procedures/5g-system',
+    icon: '🌐',
+    title: '5G System',
+    subtitle: 'End-to-End Flows',
+    description: 'System-level procedures that span UE, NG-RAN, and 5GC — initial access, PDU session, and handover.',
+    leftPanel: {
+      icon: '📋',
+      title: 'Signaling Flows',
+      subtitle: 'Key end-to-end procedures',
+      layers: [
+        { icon: '🔎', name: 'Access',   description: 'Cell search & RACH' },
+        { icon: '📝', name: 'Register', description: 'NAS registration' },
+        { icon: '🔐', name: 'Auth',     description: '5G-AKA / EAP-AKA' },
+        { icon: '📦', name: 'PDU',      description: 'Session establishment' },
+        { icon: '🔄', name: 'Handover', description: 'Xn & N2 handover' },
+      ],
+    },
+    rightPanel: {
+      icon: '🛣️',
+      title: 'Data Path',
+      subtitle: 'User-plane end-to-end',
+      layers: [
+        { icon: '📱', name: 'UE',   description: 'SDAP/PDCP/RLC/MAC/PHY' },
+        { icon: '🗼', name: 'gNB',  description: 'CU-UP ↔ DU' },
+        { icon: '🔌', name: 'N3',   description: 'GTP-U tunnel' },
+        { icon: '☁️', name: 'UPF',  description: 'Packet routing' },
+        { icon: '🌐', name: 'DN',   description: 'Internet / services' },
+      ],
+    },
+    interfaces: [
+      { icon: '📡', name: 'Uu',  label: 'Air',     accent: 'green' },
+      { icon: '📡', name: 'F1',  label: 'Split',   accent: 'green' },
+      { icon: '📡', name: 'N3',  label: 'GTP-U',   accent: 'yellow' },
+      { icon: '📡', name: 'NG',  label: 'Core',    accent: 'yellow' },
+    ],
+  },
+]} />

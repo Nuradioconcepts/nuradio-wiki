@@ -1,0 +1,29 @@
+---
+title: O-RAN
+slug: /o-ran
+description: Open RAN architecture, interfaces, protocols, and hardware decomposition.
+---
+
+## Overview
+
+O-RAN (Open Radio Access Network) defines open, interoperable interfaces between RAN components, enabling multi-vendor deployments. The O-RAN Alliance specifies the architecture, fronthaul interface (O-RAN FH / eCPRI), and RIC (RAN Intelligent Controller) framework.
+
+## Key Components
+
+- **O-CU-CP** — Open CU Control Plane (RRC, PDCP-C)
+- **O-CU-UP** — Open CU User Plane (PDCP-U, SDAP)
+- **O-DU** — Open Distributed Unit (RLC, MAC, high-PHY)
+- **O-RU** — Open Radio Unit (low-PHY, RF)
+- **Near-RT RIC** — Near-real-time RAN Intelligent Controller
+- **Non-RT RIC** — Non-real-time policy and ML model management (in SMO)
+
+## Key Interfaces
+
+| Interface | Between | Standard |
+|-----------|---------|---------|
+| F1 | O-CU ↔ O-DU | 3GPP |
+| E1 | O-CU-CP ↔ O-CU-UP | 3GPP |
+| E2 | Near-RT RIC ↔ O-CU/O-DU | O-RAN Alliance |
+| O1 | SMO ↔ Managed Elements | O-RAN Alliance |
+| Open FH | O-DU ↔ O-RU | O-RAN Alliance (eCPRI) |
+| A1 | Non-RT RIC ↔ Near-RT RIC | O-RAN Alliance |

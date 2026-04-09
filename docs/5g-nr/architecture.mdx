@@ -1,0 +1,29 @@
+---
+title: System Architecture
+description: 5G NR system architecture — NG-RAN, 5G Core, and the key interfaces between network functions.
+---
+
+## Overview
+
+The 5G system is composed of the **NG-RAN** (Next Generation Radio Access Network) and the **5G Core (5GC)**. The NG-RAN consists of **gNBs** (gNodeBs) that connect to the 5GC via the **NG interface**.
+
+## Key Components
+
+- **gNB** — base station implementing the NR air interface
+- **gNB-CU** — Centralized Unit, handles upper-layer protocols (PDCP, RRC, SDAP)
+- **gNB-DU** — Distributed Unit, handles lower-layer protocols (RLC, MAC, PHY)
+- **gNB-RU** — Radio Unit (in split architectures), handles RF and lower PHY
+- **AMF** — Access and Mobility Management Function (5GC control plane)
+- **UPF** — User Plane Function (5GC user plane)
+
+## Key Interfaces
+
+| Interface | Between | Purpose |
+|-----------|---------|---------|
+| NG-C | gNB-CU ↔ AMF | Control plane (NAS/NGAP) |
+| NG-U | gNB-CU ↔ UPF | User plane (GTP-U) |
+| F1-C | gNB-CU ↔ gNB-DU | Control plane |
+| F1-U | gNB-CU ↔ gNB-DU | User plane |
+| E1 | gNB-CU-CP ↔ gNB-CU-UP | CP/UP separation |
+| Xn | gNB ↔ gNB | Inter-node handover and coordination |
+| Uu | UE ↔ gNB | Air interface |

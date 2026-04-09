@@ -1,0 +1,36 @@
+---
+title: Data Encapsulation
+description: 5G NR protocol stack, channel types, and logical/transport/physical channel mappings.
+---
+
+## Overview
+
+The 5G NR protocol stack handles data from the application layer down to the physical layer. Each protocol layer adds its own header and performs specific processing before passing the data to the layer below.
+
+## Protocol Layers (User Plane)
+
+| Layer | Protocol | Function |
+|-------|----------|---------|
+| Layer 4 | SDAP | QoS flow to DRB mapping |
+| Layer 3 | PDCP | Header compression, ciphering, integrity |
+| Layer 2 | RLC | Segmentation, ARQ |
+| Layer 2 | MAC | Multiplexing, HARQ, scheduling |
+| Layer 1 | PHY | Modulation, coding, resource mapping |
+
+## Channel Types
+
+Channels in NR exist at three levels:
+
+- **Logical Channels** — defined by the type of information transferred (CCCH, DCCH, DTCH, BCCH, PCCH, MCCH)
+- **Transport Channels** — defined by how data is transferred over the air (DL-SCH, UL-SCH, BCH, PCH, RACH)
+- **Physical Channels** — physical resources carrying the transport channels (PDSCH, PUSCH, PBCH, PDCCH, PUCCH, PRACH)
+
+## Interfaces
+
+| Interface | Protocols |
+|-----------|----------|
+| Uu (air interface) | SDAP, PDCP, RLC, MAC, PHY |
+| F1 | F1AP (control), GTP-U (user) |
+| E1 | E1AP |
+| NG | NGAP (control), GTP-U (user) |
+| Xn | XnAP (control), GTP-U (user) |

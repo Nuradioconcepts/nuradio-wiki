@@ -1,0 +1,77 @@
+---
+title: Project Overview
+description: Framework and collaboration guide for contributors to the NuRadio Wiki project.
+---
+
+## What It Is
+
+NuRadio Wiki is a **Docusaurus 3** static documentation site — a living knowledge base covering 5G NR, O-RAN, computer systems, and packet analysis topics. It's built as a pure docs site (no blog, no landing page) where the docs root (`/`) serves directly as the homepage.
+
+## Tech Stack
+
+- **Framework:** Docusaurus 3.9.2 with the `@docusaurus/preset-classic` preset
+- **Language:** JavaScript/JSX with TypeScript type-checking support
+- **React:** v19 (for custom components)
+- **Node:** >=20.0 required
+- **Syntax highlighting:** Prism React Renderer (bash, yaml, json enabled)
+
+## Project Structure
+
+```bash
+nuradio-wiki-v2/
+├── docs/                     # All content lives here as .mdx files
+│   ├── overview.mdx          # Homepage / dashboard (slug: /)
+│   ├── 5g-nr/                # 5G NR section
+│   │   ├── overview.mdx
+│   │   ├── architecture.mdx
+│   │   ├── air-interface.mdx
+│   │   ├── data-encapsulation.mdx
+│   │   └── procedures/       # Subsection with its own overview
+│   │       ├── overview.mdx
+│   │       ├── ue.mdx
+│   │       ├── ng-ran.mdx
+│   │       ├── 5g-core.mdx
+│   │       └── 5g-system.mdx
+│   ├── o-ran/overview.mdx    # O-RAN section (stub, items TBD)
+│   ├── packet-analysis/      # Packet Analysis section (stub)
+│   └── resources/            # Resources/references section (stub)
+├── src/
+│   ├── components/           # Custom React components used in MDX
+│   │   ├── ComponentCard/    # Protocol layer card panels
+│   │   ├── ProceduresHub/    # Procedures navigation component
+│   │   ├── ProtocolTable/    # Protocol field reference tables
+│   │   └── SectionTabs/      # Tabbed content component
+│   └── css/custom.css        # Global styles (dark theme, card grid, hero panel, etc.)
+├── static/                   # Static assets (images, favicon)
+├── docusaurus.config.js      # Site config (navbar, footer, theme)
+└── sidebars.js               # Sidebar navigation structure
+```
+
+## Content Model
+
+- All pages are **MDX** files — standard Markdown with optional JSX component imports
+- Content is organized into **top-level sections**, each with an `overview.mdx` that acts as the section landing page and is linked in both the navbar and the sidebar category header
+- The sidebar is manually defined in `sidebars.js` — new pages must be explicitly added there to appear in navigation
+
+## Key Configuration Decisions
+
+- **Docs-only mode:** `routeBasePath: '/'` means docs are served at the root — there is no separate homepage route
+- **Dark mode only:** Color mode switching is disabled; the site is permanently dark
+- **No edit links:** `editUrl` is set to `undefined` — there's no "Edit this page" button
+- **Auto-collapse sidebar categories:** Enabled; only the active section stays open
+
+## Adding Content
+
+1. Create a `.mdx` file in the appropriate `docs/` subdirectory
+2. Add a frontmatter `title` (and optionally `description`) at the top
+3. Register the file path in `sidebars.js` under the correct category
+4. Import any custom components from `src/components/` as needed
+
+## Local Development
+
+```bash
+npm install        # install dependencies
+npm start          # dev server at localhost:3000 (hot reload)
+npm run build      # production build → /build
+npm run serve      # preview the production build locally
+```

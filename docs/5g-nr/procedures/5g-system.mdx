@@ -1,0 +1,123 @@
+---
+title: 5G System Procedures
+description: End-to-end 5G system procedures spanning UE, NG-RAN, and 5G Core — registration, PDU session, handover, service request, and deregistration.
+---
+
+import SystemProcedureTable from '@site/src/components/SystemProcedureTable';
+
+# 5G System Procedures
+
+<SystemProcedureTable procedures={[
+  {
+    name: 'UE Registration',
+    icon: '📋',
+    spec: '3GPP TS 23.502 §4.2.2',
+    steps: [
+      { step:  1, phase: 'Cell Access',    from: { name: 'UE',  variant: 'ue'  }, to: { name: 'gNB', variant: 'ran' }, message: '[[RACH]] Preamble (Msg1) on [[PRACH]]' },
+      { step:  2, phase: 'Cell Access',    from: { name: 'gNB', variant: 'ran' }, to: { name: 'UE',  variant: 'ue'  }, message: '[[RAR]] on [[PDSCH]] (Msg2) — timing advance + UL grant' },
+      { step:  3, phase: 'RRC',            from: { name: 'UE',  variant: 'ue'  }, to: { name: 'gNB', variant: 'ran' }, message: '[[RRC]] Setup Request (Msg3 on [[PUSCH]])' },
+      { step:  4, phase: 'RRC',            from: { name: 'gNB', variant: 'ran' }, to: { name: 'UE',  variant: 'ue'  }, message: 'RRC Setup (SRB1 established)' },
+      { step:  5, phase: 'NAS',            from: { name: 'UE',  variant: 'ue'  }, to: { name: 'gNB', variant: 'ran' }, message: 'RRC Setup Complete + [[NAS]] Registration Request' },
+      { step:  6, phase: 'NAS',            from: { name: 'gNB', variant: 'ran' }, to: { name: 'AMF', variant: 'amf' }, message: 'Initial UE Message ([[NGAP]])' },
+      { step:  7, phase: 'Authentication', from: { name: 'AMF', variant: 'amf' }, to: { name: 'AUSF', variant: 'ausf' }, message: 'Nausf_UEAuthentication_Authenticate Request' },
+      { step:  8, phase: 'Authentication', from: { name: 'AUSF', variant: 'ausf' }, to: { name: 'UDM', variant: 'udm' }, message: 'Nudm_UEAuthentication_Get (fetch [[5G-AKA]] HE AV)' },
+      { step:  9, phase: 'Authentication', from: { name: 'AMF', variant: 'amf' }, to: { name: 'UE',  variant: 'ue'  }, message: '[[NAS]] Authentication Request ([[5G-AKA]])' },
+      { step: 10, phase: 'Authentication', from: { name: 'UE',  variant: 'ue'  }, to: { name: 'AMF', variant: 'amf' }, message: 'NAS Authentication Response (RES*)' },
+      { step: 11, phase: 'Security',       from: { name: 'AMF', variant: 'amf' }, to: { name: 'UE',  variant: 'ue'  }, message: '[[NAS]] Security Mode Command' },
+      { step: 12, phase: 'Security',       from: { name: 'UE',  variant: 'ue'  }, to: { name: 'AMF', variant: 'amf' }, message: 'NAS Security Mode Complete' },
+      { step: 13, phase: 'Context Setup',  from: { name: 'AMF', variant: 'amf' }, to: { name: 'gNB', variant: 'ran' }, message: 'Initial Context Setup Request ([[NGAP]]) — AS security + [[SRB]]s' },
+      { step: 14, phase: 'Context Setup',  from: { name: 'gNB', variant: 'ran' }, to: { name: 'UE',  variant: 'ue'  }, message: '[[RRC]] Reconfiguration (AS security, [[SRB]]2)' },
+      { step: 15, phase: 'Context Setup',  from: { name: 'UE',  variant: 'ue'  }, to: { name: 'gNB', variant: 'ran' }, message: 'RRC Reconfiguration Complete' },
+      { step: 16, phase: 'NAS',            from: { name: 'AMF', variant: 'amf' }, to: { name: 'UE',  variant: 'ue'  }, message: 'Registration Accept (5G-GUTI assigned, allowed [[S-NSSAI]]s)' },
+      { step: 17, phase: 'NAS',            from: { name: 'UE',  variant: 'ue'  }, to: { name: 'AMF', variant: 'amf' }, message: 'Registration Complete' },
+    ],
+  },
+  {
+    name: 'PDU Session Establishment',
+    icon: '🔌',
+    spec: '3GPP TS 23.502 §4.3.2',
+    steps: [
+      { step:  1, phase: 'NAS',       from: { name: 'UE',  variant: 'ue'  }, to: { name: 'AMF', variant: 'amf' }, message: '[[NAS]] PDU Session Establishment Request' },
+      { step:  2, phase: 'SBI',       from: { name: 'AMF', variant: 'amf' }, to: { name: 'SMF', variant: 'smf' }, message: 'Nsmf_PDUSession_CreateSMContext (N11)' },
+      { step:  3, phase: 'SBI',       from: { name: 'SMF', variant: 'smf' }, to: { name: 'PCF', variant: 'pcf' }, message: 'Npcf_SMPolicyControl_Create — get PCC rules (N7)' },
+      { step:  4, phase: 'SBI',       from: { name: 'SMF', variant: 'smf' }, to: { name: 'UDM', variant: 'udm' }, message: 'Nudm_SDM_Get — session management subscription (N10)' },
+      { step:  5, phase: 'UP Setup',  from: { name: 'SMF', variant: 'smf' }, to: { name: 'UPF', variant: 'upf' }, message: 'PFCP Session Establishment Request — [[PDR]]/[[FAR]]/[[QER]] rules' },
+      { step:  6, phase: 'UP Setup',  from: { name: 'UPF', variant: 'upf' }, to: { name: 'SMF', variant: 'smf' }, message: 'PFCP Session Establishment Response (N3 F-TEID allocated)' },
+      { step:  7, phase: 'N2',        from: { name: 'SMF', variant: 'smf' }, to: { name: 'AMF', variant: 'amf' }, message: 'Nsmf_PDUSession_CreateSMContext Response (N2 SM Info + NAS SM)' },
+      { step:  8, phase: 'N2',        from: { name: 'AMF', variant: 'amf' }, to: { name: 'gNB', variant: 'ran' }, message: 'PDU Session Resource Setup Request ([[NGAP]])' },
+      { step:  9, phase: 'RRC',       from: { name: 'gNB', variant: 'ran' }, to: { name: 'UE',  variant: 'ue'  }, message: '[[RRC]] Reconfiguration — [[DRB]] + [[QoS]] flow mapping' },
+      { step: 10, phase: 'RRC',       from: { name: 'UE',  variant: 'ue'  }, to: { name: 'gNB', variant: 'ran' }, message: 'RRC Reconfiguration Complete' },
+      { step: 11, phase: 'N2',        from: { name: 'gNB', variant: 'ran' }, to: { name: 'AMF', variant: 'amf' }, message: 'PDU Session Resource Setup Response (N3 [[GTP-U]] TEID)' },
+      { step: 12, phase: 'UP Setup',  from: { name: 'SMF', variant: 'smf' }, to: { name: 'UPF', variant: 'upf' }, message: 'PFCP Session Modification — activate [[N3]] tunnel to [[gNB]]' },
+    ],
+  },
+  {
+    name: 'Xn-based Handover',
+    icon: '↔️',
+    spec: '3GPP TS 23.502 §4.9.1.2',
+    steps: [
+      { step:  1, phase: 'Measurement', from: { name: 'UE',      variant: 'ue'  }, to: { name: 'gNB-src', variant: 'ran' }, message: 'Measurement Report (A3 event — neighbor [[RSRP]] exceeds threshold)' },
+      { step:  2, phase: 'HO Prep',     from: { name: 'gNB-src', variant: 'ran' }, to: { name: 'gNB-tgt', variant: 'ran' }, message: '[[XnAP]] HO Request — UE context, [[RRC]] config, [[QoS]] flows' },
+      { step:  3, phase: 'HO Prep',     from: { name: 'gNB-tgt', variant: 'ran' }, to: { name: 'gNB-src', variant: 'ran' }, message: 'XnAP HO Request Acknowledge — target resources reserved' },
+      { step:  4, phase: 'HO Exec',     from: { name: 'gNB-src', variant: 'ran' }, to: { name: 'UE',      variant: 'ue'  }, message: '[[RRC]] Reconfiguration — mobility control info for target cell' },
+      { step:  5, phase: 'HO Exec',     from: { name: 'UE',      variant: 'ue'  }, to: { name: 'gNB-tgt', variant: 'ran' }, message: '[[RACH]] + RRC Reconfiguration Complete on target cell' },
+      { step:  6, phase: 'Data Fwd',    from: { name: 'gNB-src', variant: 'ran' }, to: { name: 'gNB-tgt', variant: 'ran' }, message: 'SN Status Transfer ([[PDCP]] SN/HFN) + buffered DL data forwarding' },
+      { step:  7, phase: 'Path Switch', from: { name: 'gNB-tgt', variant: 'ran' }, to: { name: 'AMF',     variant: 'amf' }, message: 'Path Switch Request ([[NGAP]])' },
+      { step:  8, phase: 'Path Switch', from: { name: 'AMF',     variant: 'amf' }, to: { name: 'SMF',     variant: 'smf' }, message: 'Nsmf_PDUSession_UpdateSMContext — switch N3 endpoint' },
+      { step:  9, phase: 'Path Switch', from: { name: 'SMF',     variant: 'smf' }, to: { name: 'UPF',     variant: 'upf' }, message: 'PFCP Session Modification — N3 tunnel switched to target [[gNB]]' },
+      { step: 10, phase: 'Path Switch', from: { name: 'AMF',     variant: 'amf' }, to: { name: 'gNB-tgt', variant: 'ran' }, message: 'Path Switch Request Acknowledge' },
+      { step: 11, phase: 'Release',     from: { name: 'gNB-tgt', variant: 'ran' }, to: { name: 'gNB-src', variant: 'ran' }, message: 'XnAP UE Context Release — source releases [[UE]] radio resources' },
+    ],
+  },
+  {
+    name: 'N2-based Handover',
+    icon: '🔄',
+    spec: '3GPP TS 23.502 §4.9.1.3',
+    steps: [
+      { step:  1, phase: 'Measurement', from: { name: 'UE',      variant: 'ue'  }, to: { name: 'gNB-src', variant: 'ran' }, message: 'Measurement Report — no Xn to target [[gNB]]' },
+      { step:  2, phase: 'HO Prep',     from: { name: 'gNB-src', variant: 'ran' }, to: { name: 'AMF',     variant: 'amf' }, message: '[[NGAP]] Handover Required (target Cell ID, UE context)' },
+      { step:  3, phase: 'HO Prep',     from: { name: 'AMF',     variant: 'amf' }, to: { name: 'gNB-tgt', variant: 'ran' }, message: 'NGAP Handover Request (transparency container, [[QoS]])' },
+      { step:  4, phase: 'HO Prep',     from: { name: 'gNB-tgt', variant: 'ran' }, to: { name: 'AMF',     variant: 'amf' }, message: 'NGAP Handover Request Acknowledge (resources reserved)' },
+      { step:  5, phase: 'HO Exec',     from: { name: 'AMF',     variant: 'amf' }, to: { name: 'gNB-src', variant: 'ran' }, message: 'NGAP Handover Command (target [[RRC]] container)' },
+      { step:  6, phase: 'HO Exec',     from: { name: 'gNB-src', variant: 'ran' }, to: { name: 'UE',      variant: 'ue'  }, message: '[[RRC]] Reconfiguration — mobility control info for target' },
+      { step:  7, phase: 'HO Exec',     from: { name: 'UE',      variant: 'ue'  }, to: { name: 'gNB-tgt', variant: 'ran' }, message: '[[RACH]] + RRC Reconfiguration Complete on target' },
+      { step:  8, phase: 'HO Notify',   from: { name: 'gNB-tgt', variant: 'ran' }, to: { name: 'AMF',     variant: 'amf' }, message: 'NGAP Handover Notify — [[UE]] arrived at target' },
+      { step:  9, phase: 'Path Switch', from: { name: 'AMF',     variant: 'amf' }, to: { name: 'SMF',     variant: 'smf' }, message: 'Nsmf_PDUSession_UpdateSMContext — switch N3 path' },
+      { step: 10, phase: 'Path Switch', from: { name: 'SMF',     variant: 'smf' }, to: { name: 'UPF',     variant: 'upf' }, message: 'PFCP Session Modification — update N3 [[GTP-U]] tunnel endpoint' },
+      { step: 11, phase: 'Release',     from: { name: 'AMF',     variant: 'amf' }, to: { name: 'gNB-src', variant: 'ran' }, message: 'NGAP UE Context Release Command' },
+      { step: 12, phase: 'Release',     from: { name: 'gNB-src', variant: 'ran' }, to: { name: 'AMF',     variant: 'amf' }, message: 'NGAP UE Context Release Complete' },
+    ],
+  },
+  {
+    name: 'Service Request',
+    icon: '📱',
+    spec: '3GPP TS 23.502 §4.2.3',
+    steps: [
+      { step: 1, phase: 'Cell Access', from: { name: 'UE',  variant: 'ue'  }, to: { name: 'gNB', variant: 'ran' }, message: '[[RACH]] + [[RRC]] Setup Request (from [[RRC_IDLE]] or [[RRC_INACTIVE]])' },
+      { step: 2, phase: 'RRC',         from: { name: 'gNB', variant: 'ran' }, to: { name: 'UE',  variant: 'ue'  }, message: 'RRC Setup' },
+      { step: 3, phase: 'NAS',         from: { name: 'UE',  variant: 'ue'  }, to: { name: 'gNB', variant: 'ran' }, message: 'RRC Setup Complete + [[NAS]] Service Request' },
+      { step: 4, phase: 'NAS',         from: { name: 'gNB', variant: 'ran' }, to: { name: 'AMF', variant: 'amf' }, message: 'Initial UE Message ([[NGAP]])' },
+      { step: 5, phase: 'Security',    from: { name: 'AMF', variant: 'amf' }, to: { name: 'UE',  variant: 'ue'  }, message: 'NAS Security Mode Command (verify security context)' },
+      { step: 6, phase: 'Context',     from: { name: 'AMF', variant: 'amf' }, to: { name: 'gNB', variant: 'ran' }, message: 'Initial Context Setup Request / UE Context Modification (restore [[DRB]]s)' },
+      { step: 7, phase: 'RRC',         from: { name: 'gNB', variant: 'ran' }, to: { name: 'UE',  variant: 'ue'  }, message: '[[RRC]] Reconfiguration (restore [[DRB]]s + [[QoS]] flows)' },
+      { step: 8, phase: 'RRC',         from: { name: 'UE',  variant: 'ue'  }, to: { name: 'gNB', variant: 'ran' }, message: 'RRC Reconfiguration Complete' },
+      { step: 9, phase: 'UP Restore',  from: { name: 'AMF', variant: 'amf' }, to: { name: 'SMF', variant: 'smf' }, message: 'Nsmf_PDUSession_UpdateSMContext — notify CM-CONNECTED' },
+      { step: 10, phase: 'UP Restore', from: { name: 'SMF', variant: 'smf' }, to: { name: 'UPF', variant: 'upf' }, message: 'PFCP Session Modification — activate downlink path, clear buffer' },
+    ],
+  },
+  {
+    name: 'Deregistration',
+    icon: '🚪',
+    spec: '3GPP TS 23.502 §4.2.6',
+    steps: [
+      { step: 1, phase: 'NAS',         from: { name: 'UE',  variant: 'ue'  }, to: { name: 'AMF', variant: 'amf' }, message: '[[NAS]] Deregistration Request (type: normal, 3GPP access)' },
+      { step: 2, phase: 'SBI',         from: { name: 'AMF', variant: 'amf' }, to: { name: 'SMF', variant: 'smf' }, message: 'Nsmf_PDUSession_ReleaseSMContext — release all active PDU sessions' },
+      { step: 3, phase: 'UP Teardown', from: { name: 'SMF', variant: 'smf' }, to: { name: 'UPF', variant: 'upf' }, message: 'PFCP Session Deletion Request (N4)' },
+      { step: 4, phase: 'UP Teardown', from: { name: 'UPF', variant: 'upf' }, to: { name: 'SMF', variant: 'smf' }, message: 'PFCP Session Deletion Response' },
+      { step: 5, phase: 'N2',          from: { name: 'AMF', variant: 'amf' }, to: { name: 'gNB', variant: 'ran' }, message: '[[NGAP]] UE Context Release Command' },
+      { step: 6, phase: 'NAS',         from: { name: 'AMF', variant: 'amf' }, to: { name: 'UE',  variant: 'ue'  }, message: 'NAS Deregistration Accept' },
+      { step: 7, phase: 'Release',     from: { name: 'gNB', variant: 'ran' }, to: { name: 'UE',  variant: 'ue'  }, message: '[[RRC]] Release' },
+      { step: 8, phase: 'Release',     from: { name: 'gNB', variant: 'ran' }, to: { name: 'AMF', variant: 'amf' }, message: 'NGAP UE Context Release Complete' },
+    ],
+  },
+]} />

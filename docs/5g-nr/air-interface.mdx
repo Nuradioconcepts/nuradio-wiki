@@ -1,0 +1,35 @@
+---
+title: Air Interface
+description: 5G NR air interface — frame structure, numerology, frequency domain, resource blocks, and synchronization.
+---
+
+## Overview
+
+The 5G NR air interface (Uu) uses **OFDM** (Orthogonal Frequency Division Multiplexing) for both downlink and uplink. It supports flexible **numerologies** (subcarrier spacings) to accommodate diverse deployment scenarios.
+
+## Frame Structure
+
+- **10 ms radio frame**, divided into 10 subframes of 1 ms each
+- Each subframe contains **2^μ slots** depending on numerology μ
+- Each slot contains **14 OFDM symbols** (normal cyclic prefix)
+
+## Numerologies (μ)
+
+| μ | Subcarrier Spacing | Slot Duration |
+|---|-------------------|---------------|
+| 0 | 15 kHz | 1 ms |
+| 1 | 30 kHz | 0.5 ms |
+| 2 | 60 kHz | 0.25 ms |
+| 3 | 120 kHz | 0.125 ms |
+| 4 | 240 kHz | 0.0625 ms |
+
+## Resource Blocks
+
+A **Resource Block (RB)** consists of 12 consecutive subcarriers in the frequency domain. System bandwidth is expressed in terms of the number of RBs.
+
+## Synchronization Signals
+
+- **PSS** (Primary Synchronization Signal) — cell ID detection, frequency offset estimation
+- **SSS** (Secondary Synchronization Signal) — cell group and layer ID
+- **PBCH/MIB** — Master Information Block carried in the SSB
+- **SSB** (Synchronization Signal Block) — PSS + SSS + PBCH, transmitted in a burst
