@@ -1,17 +1,17 @@
 [
   {
+    "title": "System Architecture",
+    "filepath": "docs/5g-nr/architecture.mdx",
+    "route": "/5g-nr/architecture",
+    "section": "5G NR",
+    "mtime": "2026-04-09T20:47:34.251Z"
+  },
+  {
     "title": "Welcome 🚧",
     "filepath": "docs/overview.mdx",
     "route": "/",
     "section": "Dashboard",
     "mtime": "2026-04-09T20:45:01.491Z"
-  },
-  {
-    "title": "System Architecture",
-    "filepath": "docs/5g-nr/architecture.mdx",
-    "route": "/5g-nr/architecture",
-    "section": "5G NR",
-    "mtime": "2026-04-09T20:41:32.296Z"
   },
   {
     "title": "Computer Systems Glossary 🚧",

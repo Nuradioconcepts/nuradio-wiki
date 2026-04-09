@@ -6,25 +6,46 @@ function TypeBadge({ type }) {
   return <span className={`gl-badge gl-badge--${cls}`}>{type}</span>;
 }
 
-function GlossaryTermRow({ entry }) {
+// Highlight the first occurrence of `query` inside `text`
+function Highlight({ text, query }) {
+  if (!text || !query) return <>{text}</>;
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="gl-highlight">{text.slice(idx, idx + query.length)}</mark>
+      {text.slice(idx + query.length)}
+    </>
+  );
+}
+
+function GlossaryTermRow({ entry, query = '' }) {
   const [open, setOpen] = useState(false);
+
+  // Auto-expand rows when a search is active
+  const isSearching = query.length > 0;
 
   return (
     <>
       <div
         id={entry.id}
-        className={`gl-term-row${open ? ' gl-term-row--expanded' : ''}`}
+        className={`gl-term-row${open || isSearching ? ' gl-term-row--expanded' : ''}`}
         onClick={() => setOpen((v) => !v)}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => e.key === 'Enter' && setOpen((v) => !v)}
       >
         <div className="gl-term-row__term">
-          <span className={`gl-chevron${open ? ' gl-chevron--open' : ''}`}>›</span>
+          <span className={`gl-chevron${open || isSearching ? ' gl-chevron--open' : ''}`}>›</span>
           <div>
-            <div className="gl-term-row__abbr">{entry.term}</div>
+            <div className="gl-term-row__abbr">
+              <Highlight text={entry.term} query={query} />
+            </div>
             {entry.fullName && (
-              <div className="gl-term-row__full">{entry.fullName}</div>
+              <div className="gl-term-row__full">
+                <Highlight text={entry.fullName} query={query} />
+              </div>
             )}
           </div>
         </div>
@@ -32,15 +53,17 @@ function GlossaryTermRow({ entry }) {
           <TypeBadge type={entry.type} />
         </div>
         <div className="gl-term-row__layer">{entry.layer || '—'}</div>
-        <span className={`gl-expand-icon${open ? ' gl-expand-icon--open' : ''}`}>›</span>
+        <span className={`gl-expand-icon${open || isSearching ? ' gl-expand-icon--open' : ''}`}>›</span>
       </div>
 
-      {open && (
+      {(open || isSearching) && (
         <div className="gl-detail">
           <div className="gl-detail__grid">
             <div className="gl-detail__item gl-detail__item--wide">
               <span className="gl-detail__label">DEFINITION</span>
-              <span className="gl-detail__value">{entry.definition}</span>
+              <span className="gl-detail__value">
+                <Highlight text={entry.definition} query={query} />
+              </span>
             </div>
             {entry.related && entry.related.length > 0 && (
               <div className="gl-detail__item">
@@ -109,20 +132,24 @@ function LetterGroup({ letter, entries, isOpen, onToggle }) {
   );
 }
 
-function GlossaryFooter({ entries }) {
+function GlossaryFooter({ entries, filtered }) {
+  const displayEntries = filtered ?? entries;
+
   const typeCounts = useMemo(() => {
     const counts = {};
-    entries.forEach(({ type }) => {
+    displayEntries.forEach(({ type }) => {
       counts[type] = (counts[type] || 0) + 1;
     });
     return Object.entries(counts).sort((a, b) => b[1] - a[1]);
-  }, [entries]);
+  }, [displayEntries]);
 
   return (
     <div className="gl-footer">
       <div className="gl-footer__total">
-        <span className="gl-footer__total-number">{entries.length}</span>
-        <span className="gl-footer__total-label">total terms</span>
+        <span className="gl-footer__total-number">{displayEntries.length}</span>
+        <span className="gl-footer__total-label">
+          {filtered ? 'results' : 'total terms'}
+        </span>
       </div>
       <div className="gl-footer__breakdown">
         {typeCounts.map(([type, count]) => (
@@ -137,6 +164,9 @@ function GlossaryFooter({ entries }) {
 }
 
 export default function GlossaryTable({ entries }) {
+  const [query, setQuery]         = useState('');
+  const [openLetters, setOpenLetters] = useState(new Set());
+
   const sorted = useMemo(
     () => [...entries].sort((a, b) => a.term.localeCompare(b.term)),
     [entries]
@@ -155,7 +185,19 @@ export default function GlossaryTable({ entries }) {
     return { groups: g, idToLetter: idMap };
   }, [sorted]);
 
-  const [openLetters, setOpenLetters] = useState(new Set());
+  // Filtered results — null means "no search active"
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return null;
+    return sorted.filter(
+      (e) =>
+        e.term.toLowerCase().includes(q) ||
+        (e.fullName    && e.fullName.toLowerCase().includes(q)) ||
+        (e.definition  && e.definition.toLowerCase().includes(q)) ||
+        (e.type        && e.type.toLowerCase().includes(q)) ||
+        (e.layer       && e.layer.toLowerCase().includes(q))
+    );
+  }, [query, sorted]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -186,22 +228,58 @@ export default function GlossaryTable({ entries }) {
 
   return (
     <div className="gl-table">
+
+      {/* Search bar */}
+      <div className="gl-search">
+        <span className="gl-search__icon">⌕</span>
+        <input
+          type="search"
+          className="gl-search__input"
+          placeholder="Search terms, definitions, types…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          spellCheck={false}
+          autoComplete="off"
+        />
+        {filtered !== null && (
+          <span className="gl-search__count">
+            {filtered.length} result{filtered.length !== 1 ? 's' : ''}
+          </span>
+        )}
+      </div>
+
+      {/* Column headers */}
       <div className="gl-header">
         <span>TERM</span>
         <span>TYPE</span>
         <span>LAYER / DOMAIN</span>
         <span />
       </div>
-      {sortedKeys.map((letter) => (
-        <LetterGroup
-          key={letter}
-          letter={letter}
-          entries={groups[letter]}
-          isOpen={openLetters.has(letter)}
-          onToggle={() => toggleLetter(letter)}
-        />
-      ))}
-      <GlossaryFooter entries={entries} />
+
+      {/* Content */}
+      {filtered !== null ? (
+        filtered.length > 0 ? (
+          filtered.map((entry) => (
+            <GlossaryTermRow key={entry.id} entry={entry} query={query.trim()} />
+          ))
+        ) : (
+          <div className="gl-search__empty">
+            No terms match <strong>"{query}"</strong>
+          </div>
+        )
+      ) : (
+        sortedKeys.map((letter) => (
+          <LetterGroup
+            key={letter}
+            letter={letter}
+            entries={groups[letter]}
+            isOpen={openLetters.has(letter)}
+            onToggle={() => toggleLetter(letter)}
+          />
+        ))
+      )}
+
+      <GlossaryFooter entries={entries} filtered={filtered} />
     </div>
   );
 }

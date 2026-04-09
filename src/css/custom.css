@@ -919,6 +919,70 @@ pre code {
 
 /* ── Glossary Table ──────────────────────────────────────────────── */
 
+/* Search bar */
+.gl-search {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.gl-search__icon {
+  font-size: 1.1rem;
+  color: #3a6a5e;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.gl-search__input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #d9f2e8;
+  font-size: 0.88rem;
+  font-family: var(--ifm-font-family-base);
+  caret-color: #05dc60;
+}
+
+.gl-search__input::placeholder {
+  color: #2a4a40;
+}
+
+/* Hide browser's built-in clear button — we rely on the count badge as feedback */
+.gl-search__input::-webkit-search-cancel-button { display: none; }
+
+.gl-search__count {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #05dc60;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Empty state */
+.gl-search__empty {
+  padding: 2rem 1.25rem;
+  text-align: center;
+  color: #3a6a5e;
+  font-size: 0.88rem;
+}
+
+.gl-search__empty strong {
+  color: #6d9e90;
+}
+
+/* Highlight match */
+.gl-highlight {
+  background: rgba(177, 247, 39, 0.22);
+  color: #edfff6;
+  border-radius: 3px;
+  padding: 0 0.1em;
+}
+
 .gl-table {
   margin: 2rem 0;
   border: 1px solid rgba(5, 220, 96, 0.14);
