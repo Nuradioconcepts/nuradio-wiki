@@ -25,6 +25,8 @@ module.exports = {
             '5g-nr/procedures/ng-ran',
             '5g-nr/procedures/5g-core',
             '5g-nr/procedures/5g-system',
+            '5g-nr/procedures/ue-registration-flow',
+            '5g-nr/procedures/ue-mobility-flow',
           ],
         },
       ],

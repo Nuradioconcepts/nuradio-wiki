@@ -1,0 +1,390 @@
+---
+title: UE Registration Flow 🚧
+sidebar_label: "UE Registration Flow"
+description: Complete 5G NR UE initial registration procedure from power-on through PDU session establishment, with hover-detail log annotations from a live T-Mobile US capture.
+---
+
+# UE Registration Flow
+
+This flowchart shows the complete 5G NR UE initial registration procedure from power-on through PDU session establishment. Hover over any node for details from the captured log.
+
+> **Log source:** Device EQ1 · Capture start 15:38:47 · ARFCN 501390 (n41) · MCC 310 / MNC 260 (T-Mobile US)
+
+export const TIP_STYLE = {
+  position: 'fixed',
+  background: '#fff',
+  border: '1px solid #ddd',
+  borderRadius: '8px',
+  padding: '8px 12px',
+  fontSize: '12px',
+  color: '#555',
+  maxWidth: '260px',
+  pointerEvents: 'none',
+  zIndex: 9999,
+  lineHeight: 1.5,
+  boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+};
+
+export function FlowTip({ id }) {
+  return (
+    <div
+      id={id}
+      style={{ ...TIP_STYLE, display: 'none' }}
+    />
+  );
+}
+
+<div style={{width:'100%', overflowX:'auto'}}>
+
+<div style={{display:'flex',flexWrap:'wrap',gap:'10px',padding:'10px 0 6px',fontSize:'12px',color:'#666'}}>
+  <span style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{width:'12px',height:'12px',borderRadius:'3px',background:'#7F77DD',flexShrink:0,display:'inline-block'}}></span>PHY layer (assumed/implicit)</span>
+  <span style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{width:'12px',height:'12px',borderRadius:'3px',background:'#1D9E75',flexShrink:0,display:'inline-block'}}></span>RRC / L2 layer</span>
+  <span style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{width:'12px',height:'12px',borderRadius:'3px',background:'#D85A30',flexShrink:0,display:'inline-block'}}></span>NAS / MM5G layer</span>
+  <span style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{width:'12px',height:'12px',borderRadius:'3px',background:'#378ADD',flexShrink:0,display:'inline-block'}}></span>MAC / RACH procedure</span>
+  <span style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{width:'12px',height:'12px',borderRadius:'3px',background:'#888780',flexShrink:0,display:'inline-block'}}></span>State / configuration</span>
+</div>
+
+<svg width="100%" viewBox="0 0 680 2300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#aaa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </marker>
+    <marker id="arr-assumed-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#AFA9EC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </marker>
+  </defs>
+
+  {/* Phase bands */}
+  <rect x="0" y="0" width="680" height="120" fill="#7F77DD" fillOpacity="0.06"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="18">① POWER ON / IDLE</text>
+  <rect x="0" y="120" width="680" height="370" fill="#7F77DD" fillOpacity="0.09"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="138">② CELL SEARCH &amp; SYNCHRONISATION  ·  ASSUMED / IMPLICIT IN LOG</text>
+  <rect x="0" y="490" width="680" height="280" fill="#1D9E75" fillOpacity="0.07"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="508">③ SYSTEM INFORMATION ACQUISITION</text>
+  <rect x="0" y="770" width="680" height="380" fill="#378ADD" fillOpacity="0.07"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="788">④ RANDOM ACCESS &amp; RRC SETUP</text>
+  <rect x="0" y="1150" width="680" height="600" fill="#D85A30" fillOpacity="0.06"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="1168">⑤ NAS REGISTRATION PROCEDURE</text>
+  <rect x="0" y="1750" width="680" height="550" fill="#1D9E75" fillOpacity="0.06"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="1768">⑥ CONFIGURATION UPDATE, PDU SESSION &amp; CONNECTED MODE</text>
+
+  {/* ── NODES ── */}
+
+  {/* 1 Power on */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>UE power on / low power</strong>CM State: Idle · Operational mode: Low Power Mode · System mode: No Service';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="190" y="26" width="300" height="54" rx="8" fill="#88878022" stroke="#888780" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#333" x="340" y="48" textAnchor="middle" dominantBaseline="central">UE power on</text>
+    <text fontSize="12" fill="#666" x="340" y="65" textAnchor="middle" dominantBaseline="central">CM Idle · Low Power · No Service</text>
+  </g>
+  <line x1="340" y1="80" x2="340" y2="98" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 2 NAS MM5G init */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>NAS MM5G initialises</strong>MM5G State: DEREGISTERED · Substate: PLMN_SEARCH · Stored GUTI: MCC=310 MNC=260 · AMF Region 90, Set 256, Pointer 4';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="190" y="98" width="300" height="44" rx="8" fill="#D85A3022" stroke="#D85A30" strokeWidth="0.5"/>
+    <text fontSize="13" fontWeight="500" fill="#712B13" x="340" y="120" textAnchor="middle" dominantBaseline="central">NAS MM5G: DEREGISTERED / PLMN_SEARCH</text>
+  </g>
+  <line x1="340" y1="142" x2="340" y2="158" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 3 GSCN Raster assumed */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>GSCN raster scan [assumed]</strong>UE sweeps NR GSCN raster frequencies. ARFCN 501390 observed in logs (n41 band ~2.5 GHz). Modem scans candidate SSB center frequencies per 3GPP TS 38.104.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="158" width="350" height="54" rx="8" fill="#7F77DD22" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="5 3"/>
+    <text fontSize="14" fontWeight="500" fill="#3C3489" x="340" y="180" textAnchor="middle" dominantBaseline="central">GSCN raster scan</text>
+    <text fontSize="12" fill="#534AB7" x="340" y="197" textAnchor="middle" dominantBaseline="central">ARFCN 501390 targeted · [assumed]</text>
+  </g>
+  <line x1="340" y1="212" x2="340" y2="228" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="4 3" markerEnd="url(#arr-assumed-r)"/>
+
+  {/* 4 PSS/SSS */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>PSS/SSS detection [assumed]</strong>UE detects Primary Sync Signal (PSS) for SSB timing. SSS determines PCI. Two cells detected: PCI 862 and PCI 15 on ARFCN 501390. PBCH SFN=898 confirms sync.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="228" width="350" height="54" rx="8" fill="#7F77DD22" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="5 3"/>
+    <text fontSize="14" fontWeight="500" fill="#3C3489" x="340" y="250" textAnchor="middle" dominantBaseline="central">PSS / SSS detection</text>
+    <text fontSize="12" fill="#534AB7" x="340" y="267" textAnchor="middle" dominantBaseline="central">PCI 862 &amp; PCI 15 detected · [assumed]</text>
+  </g>
+  <line x1="340" y1="282" x2="340" y2="298" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="4 3" markerEnd="url(#arr-assumed-r)"/>
+
+  {/* 5 SSB */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>SSB detection &amp; beam measurement [assumed]</strong>SSB Index 0 found for both cells. RSRP: −112.84 dBm (PCI 862), −113.48 dBm (PCI 15). Frequency offset: 0.781 PPM. Two Rx beams measured.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="140" y="298" width="400" height="54" rx="8" fill="#7F77DD22" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="5 3"/>
+    <text fontSize="14" fontWeight="500" fill="#3C3489" x="340" y="320" textAnchor="middle" dominantBaseline="central">SSB detection &amp; beam measurement</text>
+    <text fontSize="12" fill="#534AB7" x="340" y="337" textAnchor="middle" dominantBaseline="central">SSB Idx 0 · RSRP −112.8/−113.5 dBm · [assumed]</text>
+  </g>
+  <line x1="340" y1="352" x2="340" y2="368" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="4 3" markerEnd="url(#arr-assumed-r)"/>
+
+  {/* 6 PBCH */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>PBCH decode → MIB extract [assumed]</strong>UE decodes PBCH to extract MIB. SFN=376/379 visible in searcher logs. Timing synchronisation completed.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="368" width="350" height="54" rx="8" fill="#7F77DD22" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="5 3"/>
+    <text fontSize="14" fontWeight="500" fill="#3C3489" x="340" y="390" textAnchor="middle" dominantBaseline="central">PBCH decode → MIB extract</text>
+    <text fontSize="12" fill="#534AB7" x="340" y="407" textAnchor="middle" dominantBaseline="central">SFN acquired · timing lock · [assumed]</text>
+  </g>
+  <line x1="340" y1="422" x2="340" y2="438" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="4 3" markerEnd="url(#arr-assumed-r)"/>
+
+  {/* 7 Cell selection */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>Cell selection (S-criteria)</strong>ML1 Searcher ACQ Config response logged. S-criteria evaluation on candidate cells. PCI 862 selected: RSRP −112.84 dBm, RSRQ −13.82 dB.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="438" width="350" height="54" rx="8" fill="#7F77DD33" stroke="#7F77DD" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#3C3489" x="340" y="460" textAnchor="middle" dominantBaseline="central">Cell selection · S-criteria pass</text>
+    <text fontSize="12" fill="#534AB7" x="340" y="477" textAnchor="middle" dominantBaseline="central">PCI 862 selected · RSRP −112.84 · RSRQ −13.82</text>
+  </g>
+  <line x1="340" y1="492" x2="340" y2="510" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 8 MIB decode */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>MIB decode (explicit in log)</strong>RRC MIB Info logged (0xB825). MIB from BCCH-BCH. Contains SFN, SCS, PDCCH config SIB1. Cell not barred — UE can camp.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="190" y="510" width="300" height="54" rx="8" fill="#1D9E7522" stroke="#1D9E75" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#085041" x="340" y="532" textAnchor="middle" dominantBaseline="central">MIB decode (BCCH-BCH)</text>
+    <text fontSize="12" fill="#0F6E56" x="340" y="549" textAnchor="middle" dominantBaseline="central">Cell not barred · SFN sync · SCS config</text>
+  </g>
+  <line x1="340" y1="564" x2="340" y2="580" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 9 SIB1 */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>SIB1 decode</strong>SIB1 decoded from PDSCH (BCCH-DL-SCH). Contains: PLMN identity, TAC, cellIdentity, ServingCellConfigCommon, si-SchedulingInfo. Enables further SIB reading.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="190" y="580" width="300" height="54" rx="8" fill="#1D9E7522" stroke="#1D9E75" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#085041" x="340" y="602" textAnchor="middle" dominantBaseline="central">SIB1 decode (BCCH-DL-SCH)</text>
+    <text fontSize="12" fill="#0F6E56" x="340" y="619" textAnchor="middle" dominantBaseline="central">PLMN · TAC · cell ID · SI schedule</text>
+  </g>
+  <line x1="340" y1="634" x2="340" y2="650" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 10 DL config / idle camp */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>DL common config &amp; idle camp</strong>ML1 DL Common Config applied. Idle S-criteria evaluated. UE camps on PCI 862. SNR measurements begin on SSB reference signal.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="190" y="650" width="300" height="54" rx="8" fill="#88878022" stroke="#888780" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#333" x="340" y="672" textAnchor="middle" dominantBaseline="central">DL common config · idle camp</text>
+    <text fontSize="12" fill="#666" x="340" y="689" textAnchor="middle" dominantBaseline="central">ML1 config applied · SNR tracking begins</text>
+  </g>
+  <line x1="340" y1="704" x2="340" y2="736" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 11 NAS reg trigger */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>NAS triggers registration</strong>MM5G transitions to REGISTERED_INITIATING. NSSAI prepared. Registration Request built (plain NAS container logged 0xB826). Initial registration — no prior 5G context on this cell.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="770" width="350" height="54" rx="8" fill="#D85A3022" stroke="#D85A30" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#712B13" x="340" y="792" textAnchor="middle" dominantBaseline="central">NAS triggers registration</text>
+    <text fontSize="12" fill="#993C1D" x="340" y="809" textAnchor="middle" dominantBaseline="central">MM5G: DEREGISTERED → initiating · NSSAI ready</text>
+  </g>
+  <line x1="340" y1="824" x2="340" y2="840" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 12 RACH trigger */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>RACH trigger → MSG1 preamble</strong>MAC RACH Trigger logged (0xB880). Reason: RRC connection request. UE selects PRACH preamble. MSG1 transmitted on PRACH. TA=13 after RAR.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="840" width="350" height="54" rx="8" fill="#378ADD22" stroke="#378ADD" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#042C53" x="340" y="862" textAnchor="middle" dominantBaseline="central">RACH trigger → MSG1 preamble (PRACH)</text>
+    <text fontSize="12" fill="#185FA5" x="340" y="879" textAnchor="middle" dominantBaseline="central">MAC RACH Trigger · preamble selected</text>
+  </g>
+  <line x1="340" y1="894" x2="340" y2="910" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 13 RAR */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>MSG2: RAR received</strong>MAC RACH Attempt logged (0xB881). RAR received from gNB. Contains TA=13, UL grant for MSG3, Temporary C-RNTI=23790. 1 attempt, success.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="910" width="350" height="54" rx="8" fill="#378ADD22" stroke="#378ADD" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#042C53" x="340" y="932" textAnchor="middle" dominantBaseline="central">MSG2: RAR received (Temp C-RNTI)</text>
+    <text fontSize="12" fill="#185FA5" x="340" y="949" textAnchor="middle" dominantBaseline="central">TA=13 · C-RNTI 23790 · RACH success</text>
+  </g>
+  <line x1="340" y1="964" x2="340" y2="980" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 14 RRC Setup Request */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>MSG3: RRC Setup Request</strong>RRC Setup Request on UL-CCCH (MSG3). UE identity (ng-5G-S-TMSI), establishmentCause: mo-Signalling. Sent via PUSCH using RAR grant.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="980" width="350" height="54" rx="8" fill="#1D9E7522" stroke="#1D9E75" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#04342C" x="340" y="1002" textAnchor="middle" dominantBaseline="central">MSG3: RRC Setup Request (UL-CCCH)</text>
+    <text fontSize="12" fill="#0F6E56" x="340" y="1019" textAnchor="middle" dominantBaseline="central">UE identity · mo-Signalling cause</text>
+  </g>
+  <line x1="340" y1="1034" x2="340" y2="1050" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 15 RRC Setup */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>MSG4: RRC Setup received</strong>RRC Setup on DL-CCCH (MSG4). Contains radioBearerConfig (SRB1), spCellConfig, uplinkConfig. L2 DL/UL Config applied. RLC/PDCP/MAC reconfigured for SRB1.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="1050" width="350" height="54" rx="8" fill="#1D9E7522" stroke="#1D9E75" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#04342C" x="340" y="1072" textAnchor="middle" dominantBaseline="central">MSG4: RRC Setup (DL-CCCH)</text>
+    <text fontSize="12" fill="#0F6E56" x="340" y="1089" textAnchor="middle" dominantBaseline="central">SRB1 established · L2 config applied</text>
+  </g>
+  <line x1="340" y1="1104" x2="340" y2="1120" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 16 RRC Setup Complete */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>RRC Setup Complete → RRC_CONNECTED</strong>RRC Setup Complete on UL-DCCH. NAS Registration Request piggybacked as dedicatedNAS-Message. SRB1 operational. RRC state = RRC_CONNECTED.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="1120" width="350" height="54" rx="8" fill="#1D9E7533" stroke="#1D9E75" strokeWidth="1"/>
+    <text fontSize="14" fontWeight="500" fill="#04342C" x="340" y="1142" textAnchor="middle" dominantBaseline="central">RRC Setup Complete (UL-DCCH)</text>
+    <text fontSize="12" fill="#0F6E56" x="340" y="1159" textAnchor="middle" dominantBaseline="central">NAS Reg. Req. piggybacked · RRC_CONNECTED</text>
+  </g>
+  <line x1="340" y1="1174" x2="340" y2="1190" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 17 Reg Request */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>NAS Registration Request (5GMM)</strong>Type: Initial Registration. 5G-GUTI: MCC=310, MNC=260, AMF Region 90, Set 256, Pointer 4. Includes UE caps, NSSAI, PDU session status. Via UL Information Transfer.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="1190" width="350" height="54" rx="8" fill="#D85A3022" stroke="#D85A30" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#712B13" x="340" y="1212" textAnchor="middle" dominantBaseline="central">NAS Registration Request (5GMM)</text>
+    <text fontSize="12" fill="#993C1D" x="340" y="1229" textAnchor="middle" dominantBaseline="central">5G-GUTI · NSSAI · UE capability IEs</text>
+  </g>
+  <line x1="340" y1="1244" x2="340" y2="1260" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 18 Auth Request */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>Authentication Request / 5G-AKA</strong>Auth Request via DL Information Transfer. RAND and AUTN from 5G-AKA. UE computes RES* via USIM. NAS security context keys generated (log 0xB831).';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="1260" width="350" height="54" rx="8" fill="#D85A3022" stroke="#D85A30" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#712B13" x="340" y="1282" textAnchor="middle" dominantBaseline="central">Authentication Request (5G-AKA)</text>
+    <text fontSize="12" fill="#993C1D" x="340" y="1299" textAnchor="middle" dominantBaseline="central">RAND / AUTN · USIM computation</text>
+  </g>
+  <line x1="340" y1="1314" x2="340" y2="1330" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 19 Auth Response */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>Authentication Response</strong>Auth Response via UL Information Transfer. RES* sent (HXRES* verified by AMF). Security context keys confirmed. Mutual authentication complete.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="1330" width="350" height="54" rx="8" fill="#D85A3022" stroke="#D85A30" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#712B13" x="340" y="1352" textAnchor="middle" dominantBaseline="central">Authentication Response (RES*)</text>
+    <text fontSize="12" fill="#993C1D" x="340" y="1369" textAnchor="middle" dominantBaseline="central">Security context keys derived</text>
+  </g>
+  <line x1="340" y1="1384" x2="340" y2="1400" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 20 NAS SMC */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>NAS Security Mode Command</strong>NAS SMC received (protected OTA 0xB826). Specifies NAS integrity (NIA) and ciphering (NEA) algorithms. SIB2/SIB4/SIB5 also received in this window.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="1400" width="350" height="54" rx="8" fill="#D85A3022" stroke="#D85A30" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#712B13" x="340" y="1422" textAnchor="middle" dominantBaseline="central">NAS Security Mode Command</text>
+    <text fontSize="12" fill="#993C1D" x="340" y="1439" textAnchor="middle" dominantBaseline="central">NIA / NEA algorithms · NAS security active</text>
+  </g>
+  <line x1="340" y1="1454" x2="340" y2="1470" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 21 SMC + RRC SMC */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>NAS &amp; RRC Security Mode Complete</strong>NAS SMC sent. NAS Security Context confirmed (0xB832). RRC Security Mode Command also received and completed (DL-DCCH). AS security (PDCP integrity/ciphering) now active.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="1470" width="350" height="54" rx="8" fill="#D85A3022" stroke="#D85A30" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#712B13" x="340" y="1492" textAnchor="middle" dominantBaseline="central">NAS + RRC Security Mode Complete</text>
+    <text fontSize="12" fill="#993C1D" x="340" y="1509" textAnchor="middle" dominantBaseline="central">NAS + AS security fully active</text>
+  </g>
+  <line x1="340" y1="1524" x2="340" y2="1540" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 22 UE Cap x2 */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>UE Capability Enquiry / Info (×2)</strong>Two UE Capability Enquiry messages received. UE responds with UE Capability Information both times — NR-RRC capability, CA combos, PDCP params, MIMO layers.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="1540" width="350" height="54" rx="8" fill="#1D9E7522" stroke="#1D9E75" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#04342C" x="340" y="1562" textAnchor="middle" dominantBaseline="central">UE Capability Enquiry → Info (×2)</text>
+    <text fontSize="12" fill="#0F6E56" x="340" y="1579" textAnchor="middle" dominantBaseline="central">CA combos · MIMO · PDCP / RLC caps</text>
+  </g>
+  <line x1="340" y1="1594" x2="340" y2="1610" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 23 Reg Accept */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>Registration Accept → REGISTERED</strong>Received via DL Information Transfer. Contains: assigned 5G-GUTI, allowed NSSAI, TAI list, PDU session status. MM5G state → REGISTERED.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="1610" width="350" height="54" rx="8" fill="#D85A3033" stroke="#D85A30" strokeWidth="1"/>
+    <text fontSize="14" fontWeight="500" fill="#712B13" x="340" y="1632" textAnchor="middle" dominantBaseline="central">Registration Accept → REGISTERED</text>
+    <text fontSize="12" fill="#993C1D" x="340" y="1649" textAnchor="middle" dominantBaseline="central">5G-GUTI assigned · allowed NSSAI · TAI list</text>
+  </g>
+  <line x1="340" y1="1664" x2="340" y2="1680" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 24 Reg Complete */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>Registration Complete</strong>Sent via UL Information Transfer. Acknowledges new 5G-GUTI to AMF. MM5G state: REGISTERED. GMM/MM state events logged.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="190" y="1680" width="300" height="44" rx="8" fill="#D85A3022" stroke="#D85A30" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#712B13" x="340" y="1702" textAnchor="middle" dominantBaseline="central">Registration Complete (UL-DCCH)</text>
+  </g>
+  <line x1="340" y1="1724" x2="340" y2="1756" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 25 Config Update */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>Configuration Update Command</strong>Received from AMF via DL Information Transfer. Contains updated NSSAI / TAI list parameters.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="190" y="1760" width="300" height="54" rx="8" fill="#88878022" stroke="#888780" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#333" x="340" y="1782" textAnchor="middle" dominantBaseline="central">Configuration Update Command</text>
+    <text fontSize="12" fill="#666" x="340" y="1799" textAnchor="middle" dominantBaseline="central">AMF updates NSSAI / TAI list</text>
+  </g>
+  <line x1="340" y1="1814" x2="340" y2="1830" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 26 PDU session */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>PDU Session Establishment Request (×2)</strong>Two PDU session requests sent via UL NAS Transport → UL Information Transfer. PDU session ID, type, S-NSSAI, DNN included.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="1830" width="350" height="54" rx="8" fill="#D85A3022" stroke="#D85A30" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#712B13" x="340" y="1852" textAnchor="middle" dominantBaseline="central">PDU Session Est. Request (×2)</text>
+    <text fontSize="12" fill="#993C1D" x="340" y="1869" textAnchor="middle" dominantBaseline="central">UL NAS Transport · DNN · S-NSSAI</text>
+  </g>
+  <line x1="340" y1="1884" x2="340" y2="1900" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 27 RRC Reconfig DRB */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>RRC Reconfiguration (DRB + CA setup)</strong>DRBs added for PDU session. 3-CC Carrier Aggregation configured: CC0 15 kHz, CC1+CC2 30 kHz. L2 DL/UL config logs follow.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="1900" width="350" height="54" rx="8" fill="#1D9E7533" stroke="#1D9E75" strokeWidth="1"/>
+    <text fontSize="14" fontWeight="500" fill="#04342C" x="340" y="1922" textAnchor="middle" dominantBaseline="central">RRC Reconfiguration (DL-DCCH)</text>
+    <text fontSize="12" fill="#0F6E56" x="340" y="1939" textAnchor="middle" dominantBaseline="central">DRBs added · 3-CC CA configured</text>
+  </g>
+  <line x1="340" y1="1954" x2="340" y2="1970" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* 28 Connected */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-r');t.style.display='block';t.innerHTML='<strong>RRC_CONNECTED: data transfer + CA</strong>3 carriers active: CC0 15 kHz (107k decodes BLER 5.2%), CC1 30 kHz (88 decodes BLER 7.9%), CC2 30 kHz (5692 decodes BLER 12.2%). DRX cycling observed.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-r');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-r').style.display='none';}}>
+    <rect x="165" y="1970" width="350" height="54" rx="8" fill="#1D9E7533" stroke="#1D9E75" strokeWidth="1"/>
+    <text fontSize="14" fontWeight="500" fill="#04342C" x="340" y="1992" textAnchor="middle" dominantBaseline="central">RRC_CONNECTED · data transfer · CA</text>
+    <text fontSize="12" fill="#0F6E56" x="340" y="2009" textAnchor="middle" dominantBaseline="central">3-CC active · DRX cycling · HARQ active</text>
+  </g>
+  <line x1="340" y1="2024" x2="340" y2="2050" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-r)"/>
+
+  {/* End */}
+  <rect x="220" y="2050" width="240" height="44" rx="22" fill="#1D9E7533" stroke="#1D9E75" strokeWidth="1"/>
+  <text fontSize="14" fontWeight="500" fill="#085041" x="340" y="2072" textAnchor="middle" dominantBaseline="central">5G NR connected · log ends</text>
+
+  {/* Assumed legend */}
+  <line x1="40" y1="2150" x2="80" y2="2150" stroke="#AFA9EC" strokeWidth="1.5" strokeDasharray="5 3"/>
+  <text fontSize="12" fill="#888" x="88" y="2154" dominantBaseline="central">dashed outline = assumed / implicit (not explicit in log)</text>
+</svg>
+
+</div>
+
+<div id="tip-r" style={{position:'fixed',background:'#fff',border:'1px solid #ddd',borderRadius:'8px',padding:'8px 12px',fontSize:'12px',color:'#555',maxWidth:'260px',pointerEvents:'none',zIndex:9999,display:'none',lineHeight:1.5,boxShadow:'0 2px 8px rgba(0,0,0,0.12)'}}></div>

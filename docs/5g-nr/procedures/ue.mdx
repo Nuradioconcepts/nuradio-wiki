@@ -501,3 +501,26 @@ import ProtocolTable from '@site/src/components/ProtocolTable';
     ],
   },
 ]} />
+
+---
+
+## Flow Charts
+
+Step-by-step interactive flowcharts derived from live T-Mobile US UE log captures. Hover over any node for log-level detail.
+
+<div style={{display:'flex',gap:'16px',flexWrap:'wrap',marginTop:'8px'}}>
+  <a href="/docs/5g-nr/procedures/ue-registration-flow" style={{display:'flex',alignItems:'center',gap:'10px',padding:'14px 20px',background:'var(--ifm-color-primary-lightest, #e8f4f0)',border:'1.5px solid var(--ifm-color-primary)',borderRadius:'10px',textDecoration:'none',color:'var(--ifm-color-primary-darkest)',fontWeight:'600',fontSize:'15px',flex:'1',minWidth:'240px'}}>
+    <span style={{fontSize:'22px'}}>📋</span>
+    <div>
+      <div>UE Registration</div>
+      <div style={{fontWeight:'400',fontSize:'12px',color:'var(--ifm-color-emphasis-600)',marginTop:'2px'}}>Power-on → Cell Search → RRC → NAS → PDU Session</div>
+    </div>
+  </a>
+  <a href="/docs/5g-nr/procedures/ue-mobility-flow" style={{display:'flex',alignItems:'center',gap:'10px',padding:'14px 20px',background:'var(--ifm-color-warning-contrast-background, #fff8eb)',border:'1.5px solid #EF9F27',borderRadius:'10px',textDecoration:'none',color:'#633806',fontWeight:'600',fontSize:'15px',flex:'1',minWidth:'240px'}}>
+    <span style={{fontSize:'22px'}}>📡</span>
+    <div>
+      <div>UE Mobility</div>
+      <div style={{fontWeight:'400',fontSize:'12px',color:'#854F0B',marginTop:'2px'}}>Handover (A5) · RRC Release · Cell Reselection</div>
+    </div>
+  </a>
+</div>

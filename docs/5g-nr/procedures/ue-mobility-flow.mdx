@@ -1,0 +1,330 @@
+---
+title: UE Mobility Flow 🚧
+sidebar_label: "UE Mobility Flow"
+description: Complete 5G NR UE mobility sequence — inter-frequency handover (PCI 862→545), RRC Release, idle camp, and inter-frequency cell reselection (PCI 453→862), with hover-detail log annotations.
+---
+
+# UE Mobility Flow
+
+This flowchart covers the complete mobility sequence observed in the UE log: an **inter-frequency handover** (PCI 862 → 545) triggered by an A5 event, followed by an **RRC Release**, idle-mode camp, and **inter-frequency cell reselection** (PCI 453 → 862). Hover over any node for log-level detail.
+
+> **Log source:** Device EQ1 · Capture window 15:39:05–15:41:24 · T-Mobile US (MCC 310 / MNC 260)
+
+<div style={{width:'100%', overflowX:'auto'}}>
+
+<div style={{display:'flex',flexWrap:'wrap',gap:'10px',padding:'10px 0 6px',fontSize:'12px',color:'#666'}}>
+  <span style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{width:'12px',height:'12px',borderRadius:'3px',background:'#7F77DD',flexShrink:0,display:'inline-block'}}></span>PHY / assumed</span>
+  <span style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{width:'12px',height:'12px',borderRadius:'3px',background:'#1D9E75',flexShrink:0,display:'inline-block'}}></span>RRC / L2</span>
+  <span style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{width:'12px',height:'12px',borderRadius:'3px',background:'#D85A30',flexShrink:0,display:'inline-block'}}></span>NAS / mobility event</span>
+  <span style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{width:'12px',height:'12px',borderRadius:'3px',background:'#378ADD',flexShrink:0,display:'inline-block'}}></span>RACH / MAC</span>
+  <span style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{width:'12px',height:'12px',borderRadius:'3px',background:'#888780',flexShrink:0,display:'inline-block'}}></span>State / idle</span>
+  <span style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{width:'12px',height:'12px',borderRadius:'3px',background:'#EF9F27',flexShrink:0,display:'inline-block'}}></span>Handover trigger</span>
+</div>
+
+<svg width="100%" viewBox="0 0 680 2020" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr-m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#aaa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </marker>
+    <marker id="arr-as-m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#AFA9EC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </marker>
+  </defs>
+
+  {/* Phase bands */}
+  <rect x="0" y="0" width="680" height="80" fill="#1D9E75" fillOpacity="0.06"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="16">① RRC_CONNECTED  ·  SOURCE CELL: PCI 862  ·  ARFCN 501390</text>
+  <rect x="0" y="80" width="680" height="280" fill="#EF9F27" fillOpacity="0.07"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="98">② MEASUREMENT REPORTING &amp; A5 EVENT TRIGGER</text>
+  <rect x="0" y="360" width="680" height="420" fill="#378ADD" fillOpacity="0.07"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="378">③ INTER-FREQUENCY HANDOVER  ·  PCI 862 → PCI 545  ·  ARFCN 501390 → 125530  ·  43.4 ms</text>
+  <rect x="0" y="780" width="680" height="90" fill="#1D9E75" fillOpacity="0.06"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="798">④ RRC_CONNECTED  ·  TARGET CELL: PCI 545  ·  ARFCN 125530</text>
+  <rect x="0" y="870" width="680" height="230" fill="#888780" fillOpacity="0.07"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="888">⑤ RRC RELEASE  →  RRC_IDLE  ·  PCI 453  ARFCN 397230</text>
+  <rect x="0" y="1100" width="680" height="236" fill="#888780" fillOpacity="0.05"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="1118">⑥ IDLE MODE CAMP  ·  PCI 453  ·  ~15:40:03 → 15:41:18  (~75 s)</text>
+  <rect x="0" y="1336" width="680" height="420" fill="#7F77DD" fillOpacity="0.08"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="1354">⑦ INTER-FREQUENCY CELL RESELECTION  ·  PCI 453 → PCI 862  ·  ARFCN 397230 → 501390</text>
+  <rect x="0" y="1756" width="680" height="264" fill="#D85A30" fillOpacity="0.06"/>
+  <text fontSize="10" fontWeight="500" fill="#aaa" letterSpacing="0.05em" x="14" y="1774">⑧ NEW REGISTRATION ON PCI 862  ·  15:41:19+</text>
+
+  {/* Timestamp column */}
+  <text fontSize="11" fill="#bbb" x="648" y="42" textAnchor="end">~15:39:05</text>
+  <text fontSize="11" fill="#bbb" x="648" y="270" textAnchor="end">15:39:06.197</text>
+  <text fontSize="11" fill="#bbb" x="648" y="460" textAnchor="end">15:39:06.246</text>
+  <text fontSize="11" fill="#bbb" x="648" y="620" textAnchor="end">15:39:06.413</text>
+  <text fontSize="11" fill="#bbb" x="648" y="750" textAnchor="end">15:39:06.406</text>
+  <text fontSize="11" fill="#bbb" x="648" y="930" textAnchor="end">15:40:02.922</text>
+  <text fontSize="11" fill="#bbb" x="648" y="1180" textAnchor="end">~15:40:03–41:18</text>
+  <text fontSize="11" fill="#bbb" x="648" y="1560" textAnchor="end">15:41:19.020</text>
+  <text fontSize="11" fill="#bbb" x="648" y="1880" textAnchor="end">15:41:19+</text>
+
+  {/* ── NODES ── */}
+
+  {/* 1 Connected PCI 862 */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>RRC_CONNECTED on PCI 862</strong>Source cell: PCI 862, ARFCN 501390. 3-CC CA active (15 kHz + 30 kHz + 30 kHz). DRBs established. CDRX cycling. Serving RSRP degrading over time.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="190" y="20" width="300" height="44" rx="8" fill="#1D9E7522" stroke="#1D9E75" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#085041" x="340" y="42" textAnchor="middle" dominantBaseline="central">RRC_CONNECTED · PCI 862 · ARFCN 501390</text>
+  </g>
+  <line x1="340" y1="64" x2="340" y2="104" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 2 CSF reports */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>CSF / CQI reporting</strong>MAC CSF Reports logged. UE reports CQI/PMI/RI to gNB. Searcher DB updates with RSRP/RSRQ of PCI 862 and neighbours PCI 15, 545, 664 building up.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="215" y="104" width="250" height="44" rx="8" fill="#88878022" stroke="#888780" strokeWidth="0.5"/>
+    <text fontSize="13" fontWeight="500" fill="#444" x="340" y="126" textAnchor="middle" dominantBaseline="central">CSF / CQI reports · neighbour measurement</text>
+  </g>
+  <line x1="340" y1="148" x2="340" y2="164" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 3 RSRP degrading */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>Serving cell RSRP deteriorating</strong>PCI 862 RSRP: −112.84 → −115.84 → −126.47 → −128.87 dBm. Neighbour PCI 545 (ARFCN 125530): −92.69 dBm RSRQ −11.69 dB — significantly stronger.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="165" y="164" width="350" height="54" rx="8" fill="#EF9F2722" stroke="#EF9F27" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#633806" x="340" y="186" textAnchor="middle" dominantBaseline="central">Serving PCI 862 RSRP degrading</text>
+    <text fontSize="12" fill="#854F0B" x="340" y="203" textAnchor="middle" dominantBaseline="central">RSRP: −112 → −128 dBm · PCI 545 at −92 dBm</text>
+  </g>
+  <line x1="340" y1="218" x2="340" y2="234" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 4 A5 event + Meas Reports */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>A5 event → 3× Measurement Reports</strong>A5 logged: SpCell (PCI 862) &lt; threshold1 (RSRP −111 dBm) AND PCI 545 &gt; threshold2 (RSRP −114 dBm). Hysteresis: 1 dB. measId 19. Serving: RSRP −116 / SINR 1.0 dB. Neighbour PCI 545: RSRP −93 / SINR 5.0 dB.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="140" y="234" width="400" height="68" rx="8" fill="#EF9F2733" stroke="#BA7517" strokeWidth="1"/>
+    <text fontSize="14" fontWeight="500" fill="#412402" x="340" y="257" textAnchor="middle" dominantBaseline="central">A5 event → 3× Measurement Reports</text>
+    <text fontSize="12" fill="#633806" x="340" y="274" textAnchor="middle" dominantBaseline="central">Serving RSRP &lt;−111 dBm · PCI 545 RSRP &gt;−114 dBm</text>
+    <text fontSize="11" fill="#854F0B" x="340" y="290" textAnchor="middle" dominantBaseline="central">measId 19 · hysteresis 1 dB · 3 consecutive reports</text>
+  </g>
+  <line x1="340" y1="302" x2="340" y2="318" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 5 gNB decision assumed */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>gNB handover decision [assumed]</strong>Source gNB ID 0442B8 evaluates A5 reports and initiates handover toward target PCI 545 (same gNB — intra-gNB inter-frequency HO). X2/Xn prep not visible in UE log.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="165" y="318" width="350" height="54" rx="8" fill="#EF9F2722" stroke="#EF9F27" strokeWidth="0.5" strokeDasharray="5 3"/>
+    <text fontSize="14" fontWeight="500" fill="#633806" x="340" y="340" textAnchor="middle" dominantBaseline="central">gNB handover decision [assumed]</text>
+    <text fontSize="12" fill="#854F0B" x="340" y="357" textAnchor="middle" dominantBaseline="central">Intra-gNB · gNB ID 0442B8 · inter-frequency</text>
+  </g>
+  <line x1="340" y1="372" x2="340" y2="388" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 6 RRC Reconfig HO command */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>RRC Reconfiguration — HO Command</strong>Received on DL-DCCH from PCI 862 (SFN 159). mobilityControlInfo: targetPCI=545, newUE-Identity=28504, t304=1000 ms, PRACH Config 46. reestablishPDCP=true on SRB1/SRB2. 1520 bytes.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="140" y="388" width="400" height="68" rx="8" fill="#378ADD33" stroke="#378ADD" strokeWidth="1"/>
+    <text fontSize="14" fontWeight="500" fill="#042C53" x="340" y="411" textAnchor="middle" dominantBaseline="central">RRC Reconfiguration · HO Command (DL-DCCH)</text>
+    <text fontSize="12" fill="#185FA5" x="340" y="428" textAnchor="middle" dominantBaseline="central">targetPCI=545 · newUE-Id=28504 · t304=1 s</text>
+    <text fontSize="11" fill="#185FA5" x="340" y="444" textAnchor="middle" dominantBaseline="central">reestablishPDCP SRB1/SRB2 · full spCellConfig · 1520 B</text>
+  </g>
+  <line x1="340" y1="456" x2="340" y2="472" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 7 Tune to target assumed */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>Tune to ARFCN 125530 · SSB sync [assumed]</strong>UE stops Tx to source. Tunes to ARFCN 125530. Detects SSB on PCI 545 (SSB Index 1 post-HO). Acquires timing. PDCP/RLC re-establishment begins.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="165" y="472" width="350" height="54" rx="8" fill="#7F77DD22" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="5 3"/>
+    <text fontSize="14" fontWeight="500" fill="#3C3489" x="340" y="494" textAnchor="middle" dominantBaseline="central">Tune to ARFCN 125530 · SSB sync [assumed]</text>
+    <text fontSize="12" fill="#534AB7" x="340" y="511" textAnchor="middle" dominantBaseline="central">PCI 545 SSB Idx 1 · PDCP/RLC re-establishment</text>
+  </g>
+  <line x1="340" y1="526" x2="340" y2="542" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 8 RACH HO */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>RACH on target — reason: Handover</strong>RACH Trigger: RACH Reason=Handover. PRACH Config 46, MIXED_MODE. MSG1 at 15:39:06.413. RAR: TA=6, T-RNTI=28504 (matches newUE-Identity). 1 attempt. PCI 545, ARFCN 125530.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="140" y="542" width="400" height="68" rx="8" fill="#378ADD33" stroke="#378ADD" strokeWidth="1"/>
+    <text fontSize="14" fontWeight="500" fill="#042C53" x="340" y="565" textAnchor="middle" dominantBaseline="central">RACH on target · reason: Handover</text>
+    <text fontSize="12" fill="#185FA5" x="340" y="582" textAnchor="middle" dominantBaseline="central">MSG1 PRACH idx 46 · RAR TA=6 · T-RNTI=28504</text>
+    <text fontSize="11" fill="#185FA5" x="340" y="598" textAnchor="middle" dominantBaseline="central">1 attempt · MIXED mode · success @ 15:39:06.413</text>
+  </g>
+  <line x1="340" y1="610" x2="340" y2="626" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 9 MIB on target */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>MIB decoded on target PCI 545</strong>MIB decoded on ARFCN 125530, PCI 545, SFN 0 (re-read after HO). RRC MIB Info log confirms successful cell lock on target.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="190" y="626" width="300" height="44" rx="8" fill="#1D9E7522" stroke="#1D9E75" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#04342C" x="340" y="648" textAnchor="middle" dominantBaseline="central">MIB decode on PCI 545 (ARFCN 125530)</text>
+  </g>
+  <line x1="340" y1="670" x2="340" y2="686" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 10 RRC Reconfig Complete = HO done */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>RRC Reconfiguration Complete → HO done</strong>Sent from PCI 545 (SFN 164). HO ID 1 complete. Duration: 43.4 ms. Source: ARFCN 501390 / PCI 862 / Cell ID 110AE312E / gNB 0442B8 / TAC 844000. Target: ARFCN 125530 / PCI 545 / Cell ID 110AE3002.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="140" y="686" width="400" height="54" rx="8" fill="#1D9E7533" stroke="#1D9E75" strokeWidth="1"/>
+    <text fontSize="14" fontWeight="500" fill="#04342C" x="340" y="708" textAnchor="middle" dominantBaseline="central">RRC Reconfiguration Complete → HO done</text>
+    <text fontSize="12" fill="#0F6E56" x="340" y="725" textAnchor="middle" dominantBaseline="central">PCI 545 · Cell ID 110AE3002 · gNB 0442B8 · 43.4 ms</text>
+  </g>
+  <line x1="340" y1="740" x2="340" y2="778" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 11 Connected PCI 545 */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>RRC_CONNECTED on PCI 545</strong>Connected on ARFCN 125530. RRC config updated. SIP REGISTER and SUBSCRIBE observed — IMS/VoNR active. Further RRC Reconfigs (CA add/remove) and Measurement Reports continue. 3 more RRC Reconfigs logged on this cell.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="190" y="790" width="300" height="44" rx="8" fill="#1D9E7533" stroke="#1D9E75" strokeWidth="1"/>
+    <text fontSize="14" fontWeight="500" fill="#085041" x="340" y="812" textAnchor="middle" dominantBaseline="central">RRC_CONNECTED · PCI 545 · SIP/IMS active</text>
+  </g>
+  <line x1="340" y1="834" x2="340" y2="870" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 12 RRC Release from PCI 453 */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>RRC Release received (from PCI 453)</strong>RRC Release on DL-DCCH from PCI 453, ARFCN 397230 at 15:40:02.922. rrcRelease decoded. Idle Mode annotation in log. L2 teardown: RLC/PDCP stats flushed. RRC state → Idle at 15:40:03.251.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="140" y="878" width="400" height="68" rx="8" fill="#88878022" stroke="#888780" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#333" x="340" y="901" textAnchor="middle" dominantBaseline="central">RRC Release (DL-DCCH · PCI 453)</text>
+    <text fontSize="12" fill="#666" x="340" y="918" textAnchor="middle" dominantBaseline="central">15:40:02.922 · Idle Mode · ARFCN 397230</text>
+    <text fontSize="11" fill="#888" x="340" y="934" textAnchor="middle" dominantBaseline="central">L2 teardown · RLC/PDCP flushed · RRC state → Idle</text>
+  </g>
+  <line x1="340" y1="946" x2="340" y2="962" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 13 Camp PCI 453 */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>Camp on PCI 453 (release cell)</strong>UE camps on PCI 453, ARFCN 397230 immediately post-release. MIB decoded (PDCCH SIB1=114). Idle S-criteria evaluated. SIB2/SIB4/SIB5 received. Paging every ~4–7 s.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="165" y="962" width="350" height="54" rx="8" fill="#88878022" stroke="#888780" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#333" x="340" y="984" textAnchor="middle" dominantBaseline="central">Camp · PCI 453 · ARFCN 397230</text>
+    <text fontSize="12" fill="#666" x="340" y="1001" textAnchor="middle" dominantBaseline="central">MIB + SIB2/4/5 · idle S-criteria pass · paging rx</text>
+  </g>
+  <line x1="340" y1="1016" x2="340" y2="1032" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 14 MM5G REGISTERED/PLMN_SEARCH */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>MM5G: REGISTERED / PLMN_SEARCH</strong>NAS MM5G State at 15:40:03.961: REGISTERED, Substate=PLMN_SEARCH. UE still registered (valid GUTI + security context) but searching for suitable PLMN frequency.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="190" y="1032" width="300" height="44" rx="8" fill="#D85A3022" stroke="#D85A30" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#712B13" x="340" y="1054" textAnchor="middle" dominantBaseline="central">MM5G: REGISTERED / PLMN_SEARCH</text>
+  </g>
+  <line x1="340" y1="1076" x2="340" y2="1130" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 15 Idle ~75s */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>Idle camp on PCI 453 (~75 seconds)</strong>UE camped 15:40:03–15:41:18. Searcher tracks PCI 453 + PCI 514. Paging received. CM State Response at 1 Hz. No service established. MM5G remains REGISTERED/PLMN_SEARCH.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="165" y="1130" width="350" height="68" rx="8" fill="#88878022" stroke="#888780" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#333" x="340" y="1153" textAnchor="middle" dominantBaseline="central">Idle camp on PCI 453 (~75 seconds)</text>
+    <text fontSize="12" fill="#666" x="340" y="1170" textAnchor="middle" dominantBaseline="central">Paging rx · SNR tracked · PCI 514 neighbour</text>
+    <text fontSize="11" fill="#888" x="340" y="1186" textAnchor="middle" dominantBaseline="central">15:40:03 → 15:41:18 · MM5G REGISTERED/PLMN_SEARCH</text>
+  </g>
+  <line x1="340" y1="1198" x2="340" y2="1218" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 16 REGISTERED/PLMN_SEARCH again */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>MM5G: REGISTERED / PLMN_SEARCH at 15:41:18</strong>MM5G State log at 15:41:18.926. Immediately followed by RRC state=Idle and searcher scan beginning on ARFCN 501390 — cell reselection imminent.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="215" y="1218" width="250" height="44" rx="8" fill="#D85A3022" stroke="#D85A30" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#712B13" x="340" y="1240" textAnchor="middle" dominantBaseline="central">MM5G: REGISTERED / PLMN_SEARCH</text>
+  </g>
+  <line x1="340" y1="1262" x2="340" y2="1286" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 17 Inter-freq scan assumed */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>Inter-frequency scan: ARFCN 501390 [assumed]</strong>UE follows SIB4 reselection priorities. ARFCN 501390 has cellReselectionPriority=7 vs 397230 priority=6. t-ReselectionNR=2 s timer applies before committing to new cell.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="165" y="1286" width="350" height="54" rx="8" fill="#7F77DD22" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="5 3"/>
+    <text fontSize="14" fontWeight="500" fill="#3C3489" x="340" y="1308" textAnchor="middle" dominantBaseline="central">Inter-freq scan: ARFCN 501390 [assumed]</text>
+    <text fontSize="12" fill="#534AB7" x="340" y="1325" textAnchor="middle" dominantBaseline="central">Higher priority cell · t-ReselectionNR=2 s</text>
+  </g>
+  <line x1="340" y1="1340" x2="340" y2="1356" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="4 3" markerEnd="url(#arr-as-m)"/>
+
+  {/* 18 SSB detect */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>PSS/SSS/SSB detect on ARFCN 501390 [assumed]</strong>UE detects SSB. PSS/SSS identify PCI 862 + PCI 15 + PCI 412. Searcher DB logged at 15:41:18.993: Raster ARFCN 501390, serving=N/A (still idle pre-reselection).';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="165" y="1356" width="350" height="54" rx="8" fill="#7F77DD22" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="5 3"/>
+    <text fontSize="14" fontWeight="500" fill="#3C3489" x="340" y="1378" textAnchor="middle" dominantBaseline="central">PSS/SSS/SSB detect on ARFCN 501390 [assumed]</text>
+    <text fontSize="12" fill="#534AB7" x="340" y="1395" textAnchor="middle" dominantBaseline="central">PCI 862 + PCI 15 + PCI 412 detected</text>
+  </g>
+  <line x1="340" y1="1410" x2="340" y2="1426" stroke="#AFA9EC" strokeWidth="1" strokeDasharray="4 3" markerEnd="url(#arr-as-m)"/>
+
+  {/* 19 S-criteria */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>S-criteria &amp; reselection threshold pass</strong>ML1 ACQ at 15:41:18.993: ARFCN 501390 NR Acq=True. Idle S-criteria log at 15:41:19.020. PCI 862 passes Srxlev. Thresh-X-High for higher-priority cell satisfied.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="165" y="1426" width="350" height="54" rx="8" fill="#7F77DD33" stroke="#7F77DD" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#3C3489" x="340" y="1448" textAnchor="middle" dominantBaseline="central">S-criteria &amp; reselection threshold pass</text>
+    <text fontSize="12" fill="#534AB7" x="340" y="1465" textAnchor="middle" dominantBaseline="central">ACQ=True · Srxlev pass · Thresh-X-High met</text>
+  </g>
+  <line x1="340" y1="1480" x2="340" y2="1496" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 20 Cell Reselection EXPLICIT */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>✓ Cell Reselection — explicit in log</strong>"Cell Reselection New cell: NR-ARFCN 501390, Cell 862" at 15:41:19.020. MIB decode on PCI 862 immediately follows. RRC Serving Cell Info: PCI 862, SSB ARFCN 501390, BW 100 MHz. MM5G → REGISTERED_INITIATED.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="130" y="1496" width="420" height="68" rx="8" fill="#7F77DD44" stroke="#7F77DD" strokeWidth="1.5"/>
+    <text fontSize="14" fontWeight="500" fill="#26215C" x="340" y="1519" textAnchor="middle" dominantBaseline="central">✓ Cell Reselection · PCI 453 → PCI 862</text>
+    <text fontSize="12" fill="#3C3489" x="340" y="1536" textAnchor="middle" dominantBaseline="central">ARFCN 397230 → 501390 · 15:41:19.020</text>
+    <text fontSize="11" fill="#534AB7" x="340" y="1552" textAnchor="middle" dominantBaseline="central">Explicit log entry · BW 100 MHz · SIB2/4 decoded</text>
+  </g>
+  <line x1="340" y1="1564" x2="340" y2="1580" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 21 MIB SIB1 */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>MIB + SIB1 decode on PCI 862</strong>MIB: PCI 862, ARFCN 501390, PDCCH SIB1=196, BW=100 MHz. SIB1 decoded immediately after. SIB2/SIB4 also read. MM5G → REGISTERED_INITIATED.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="190" y="1580" width="300" height="54" rx="8" fill="#1D9E7522" stroke="#1D9E75" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#04342C" x="340" y="1602" textAnchor="middle" dominantBaseline="central">MIB + SIB1 decode · PCI 862</text>
+    <text fontSize="12" fill="#0F6E56" x="340" y="1619" textAnchor="middle" dominantBaseline="central">BW 100 MHz · SIB2/4 read · RRC state Idle</text>
+  </g>
+  <line x1="340" y1="1634" x2="340" y2="1650" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 22 MM5G REGISTERED_INITIATED */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>MM5G → REGISTERED_INITIATED</strong>State at 15:41:19.020. UE already has valid registration (GUTI + security context). Initiates service request to re-establish user plane. NSSAI and NAS container ready.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="165" y="1650" width="350" height="54" rx="8" fill="#D85A3022" stroke="#D85A30" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#712B13" x="340" y="1672" textAnchor="middle" dominantBaseline="central">MM5G: REGISTERED_INITIATED</text>
+    <text fontSize="12" fill="#993C1D" x="340" y="1689" textAnchor="middle" dominantBaseline="central">Service request · NSSAI + NAS container ready</text>
+  </g>
+  <line x1="340" y1="1704" x2="340" y2="1756" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* 23 RACH + RRC Setup */}
+  <g style={{cursor:'pointer'}}
+    onMouseEnter={e=>{const t=document.getElementById('tip-m');t.style.display='block';t.innerHTML='<strong>RACH → RRC Setup → Registration on PCI 862</strong>Full RACH procedure: MAC Trigger → MSG1 → RAR → RRC Setup Request → RRC Setup → RRC Setup Complete (NAS Service Request piggybacked). New connection on PCI 862 using existing 5G-GUTI.';}}
+    onMouseMove={e=>{const t=document.getElementById('tip-m');let x=e.clientX+14,y=e.clientY-10;if(x+260>window.innerWidth)x=e.clientX-266;t.style.left=x+'px';t.style.top=y+'px';}}
+    onMouseLeave={()=>{document.getElementById('tip-m').style.display='none';}}>
+    <rect x="165" y="1770" width="350" height="68" rx="8" fill="#378ADD22" stroke="#378ADD" strokeWidth="0.5"/>
+    <text fontSize="14" fontWeight="500" fill="#042C53" x="340" y="1793" textAnchor="middle" dominantBaseline="central">RACH → RRC Setup → Registration</text>
+    <text fontSize="12" fill="#185FA5" x="340" y="1810" textAnchor="middle" dominantBaseline="central">Service request on PCI 862 · NAS piggybacked</text>
+    <text fontSize="11" fill="#185FA5" x="340" y="1826" textAnchor="middle" dominantBaseline="central">SIB2/4 decoded · SNR tracked · 15:41:19+</text>
+  </g>
+  <line x1="340" y1="1838" x2="340" y2="1862" stroke="#aaa" strokeWidth="1" markerEnd="url(#arr-m)"/>
+
+  {/* End */}
+  <rect x="210" y="1862" width="260" height="44" rx="22" fill="#1D9E7533" stroke="#1D9E75" strokeWidth="1"/>
+  <text fontSize="14" fontWeight="500" fill="#085041" x="340" y="1884" textAnchor="middle" dominantBaseline="central">RRC_CONNECTED · PCI 862 · log ends</text>
+
+  {/* Assumed legend */}
+  <line x1="40" y1="1970" x2="80" y2="1970" stroke="#AFA9EC" strokeWidth="1.5" strokeDasharray="5 3"/>
+  <text fontSize="12" fill="#aaa" x="88" y="1974" dominantBaseline="central">dashed = assumed / implicit (not explicit in log)</text>
+</svg>
+
+</div>
+
+<div id="tip-m" style={{position:'fixed',background:'#fff',border:'1px solid #ddd',borderRadius:'8px',padding:'8px 12px',fontSize:'12px',color:'#555',maxWidth:'260px',pointerEvents:'none',zIndex:9999,display:'none',lineHeight:1.5,boxShadow:'0 2px 8px rgba(0,0,0,0.12)'}}></div>
