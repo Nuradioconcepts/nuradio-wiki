@@ -1,10 +1,11 @@
 ---
-title: 5G System Procedures 🚧
+title: 5G System Procedures 
 sidebar_label: "5G System Procedures"
 description: End-to-end 5G system procedures spanning UE, NG-RAN, and 5G Core — registration, PDU session, handover, service request, and deregistration.
 ---
 
 import SystemProcedureTable from '@site/src/components/SystemProcedureTable';
+import Link from '@docusaurus/Link';
 
 # 5G System Procedures
 
@@ -122,3 +123,18 @@ import SystemProcedureTable from '@site/src/components/SystemProcedureTable';
     ],
   },
 ]} />
+
+## Interactive Flowcharts
+
+<div className="card-grid">
+  <Link to="/5g-nr/procedures/ue-registration-flow" className="doc-card">
+    <span className="doc-card__emoji">📋</span>
+    <strong>UE Registration Flow</strong>
+    <span>Step-by-step interactive flowchart from power-on through PDU session establishment, annotated from a live T-Mobile US capture.</span>
+  </Link>
+  <Link to="/5g-nr/procedures/ue-mobility-flow" className="doc-card">
+    <span className="doc-card__emoji">🔄</span>
+    <strong>UE Mobility Flow</strong>
+    <span>Interactive flowchart covering inter-frequency handover, RRC Release, idle camp, and cell reselection with log-level annotations.</span>
+  </Link>
+</div>

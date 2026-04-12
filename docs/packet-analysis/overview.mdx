@@ -4,13 +4,55 @@ slug: /packet-analysis
 description: Capture methodology, protocol field references, Wireshark tips, and troubleshooting guides.
 ---
 
-## Overview
+import Link from '@docusaurus/Link';
 
-This section covers practical packet analysis for 5G NR and infrastructure protocols — including capture strategy, Wireshark configuration, protocol decodes, and common troubleshooting patterns.
+<div className="hero-panel">
+  <span className="hero-panel__eyebrow">Packet Analysis</span>
+  <h1>Packet Analysis</h1>
+  <p>Practical packet analysis for 5G NR and infrastructure protocols — from capture strategy to protocol decodes and common troubleshooting patterns.</p>
+</div>
 
-## Topics
-
-- **Capture Methodology** — interface selection, capture points, ring buffers
-- **Protocol References** — GTP-U, NGAP, F1AP, SCTP field names and filter strings
-- **Wireshark Tips** — profiles, coloring rules, display filters, telephony views
-- **Troubleshooting** — common decode issues, missing dissectors, high-loss scenarios
+<div className="card-grid">
+  <Link to="/packet-analysis/basics" className="doc-card doc-card--icon-left">
+    <span className="doc-card__icon-box">📋</span>
+    <span className="doc-card__body">
+      <strong>Basics</strong>
+      <span>Essential packet fields and their application in 5G NR captures.</span>
+    </span>
+  </Link>
+  <Link to="/packet-analysis/considerations" className="doc-card doc-card--icon-left">
+    <span className="doc-card__icon-box">🤔</span>
+    <span className="doc-card__body">
+      <strong>Considerations</strong>
+      <span>Foundational knowledge for effective analysis before you capture.</span>
+    </span>
+  </Link>
+  <Link to="/packet-analysis/tips-and-tricks" className="doc-card doc-card--icon-left">
+    <span className="doc-card__icon-box">💡</span>
+    <span className="doc-card__body">
+      <strong>Tips &amp; Tricks</strong>
+      <span>Wireshark profiles, coloring rules, display filters, and productivity highlights.</span>
+    </span>
+  </Link>
+  <Link to="/packet-analysis/protocols" className="doc-card doc-card--icon-left">
+    <span className="doc-card__icon-box">📡</span>
+    <span className="doc-card__body">
+      <strong>Protocols</strong>
+      <span>Foundation protocols, field references, and dissector configurations.</span>
+    </span>
+  </Link>
+  <Link to="/packet-analysis/analysis" className="doc-card doc-card--icon-left">
+    <span className="doc-card__icon-box">🔬</span>
+    <span className="doc-card__body">
+      <strong>Analysis</strong>
+      <span>Bringing it to life — at the heart of practical Wireshark analysis.</span>
+    </span>
+  </Link>
+  <Link to="/packet-analysis/troubleshooting" className="doc-card doc-card--icon-left">
+    <span className="doc-card__icon-box">🔧</span>
+    <span className="doc-card__body">
+      <strong>Troubleshooting</strong>
+      <span>Common decode issues, missing dissectors, and high-loss scenarios.</span>
+    </span>
+  </Link>
+</div>

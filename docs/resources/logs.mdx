@@ -1,0 +1,146 @@
+---
+title: Logs 🚧
+sidebar_label: "Logs"
+description: Log file references and downloads for UE Drive Test, OCUDU, Open5GS, srsUE, and Wireshark.
+---
+
+import LogTable from '@site/src/components/LogTable';
+
+# Logs
+
+Reference log files organized by source. Expand a source to browse its log entries — each entry lists the log location, key events to look for, and any uploaded sample files available for download or review.
+
+<LogTable sources={[
+  {
+    id: 'ue-drive-test',
+    name: 'UE Drive Test',
+    icon: '📱',
+    subtitle: 'Mobile / Drive Test App',
+    type: 'UE',
+    format: 'Plain text',
+    logs: [
+      {
+        name: 'UE Initial & Mobility Procedures',
+        component: 'TEMS · T-MOBILE',
+        location: 'Exported from TEMS drive test application',
+        keyEvents: 'UE Cell Search from De-Registered state to Registered. Follow on Mobility; Cell Reselection and Handover events.',
+        notes: 'Captured on T-Mobile network. Log file contains L3 messages and L2/L1 event reports and messages.',
+        files: [
+          { name: 'TEMS_TMO_INITIAL_MOBILITY.txt', url: '/Logs/TEMS_TMO_INITIAL_MOBILITY.txt' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'ocudu',
+    name: 'OCUDU',
+    icon: '📡',
+    subtitle: 'Open-Source gNB (CU/DU)',
+    type: 'RAN',
+    format: 'Plain text',
+    logs: [
+      {
+        name: 'CU Log',
+        component: 'gNB-CU',
+        location: 'stdout or --log-file path specified at runtime',
+        keyEvents: 'F1 Setup, UE Context Setup/Release, E1AP bearer setup, PDCP stats, RRC messages',
+        notes: 'Log verbosity controlled via runtime config flags.',
+        files: [],
+      },
+      {
+        name: 'DU Log',
+        component: 'gNB-DU',
+        location: 'stdout or --log-file path specified at runtime',
+        keyEvents: 'MAC scheduler decisions, HARQ retransmissions, PRACH events, RLC retransmissions, PHY cell bring-up',
+        notes: 'High verbosity PHY logs can grow quickly — use ring buffers or filtered captures.',
+        files: [],
+      },
+    ],
+  },
+  {
+    id: 'open5gs',
+    name: 'Open5GS',
+    icon: '🔵',
+    subtitle: '5G/4G Core Network',
+    type: 'Core',
+    format: 'Plain text / JSON',
+    logs: [
+      {
+        name: 'AMF Log',
+        component: 'AMF',
+        location: '/var/log/open5gs/amf.log  |  journalctl -u open5gs-amfd',
+        keyEvents: 'UE Registration, Authentication (AUSF), NAS signaling, PDU Session requests forwarded to SMF',
+        notes: 'Log level configured in /etc/open5gs/amf.yaml under logger.level',
+        files: [],
+      },
+      {
+        name: 'SMF Log',
+        component: 'SMF',
+        location: '/var/log/open5gs/smf.log  |  journalctl -u open5gs-smfd',
+        keyEvents: 'PDU Session Establishment/Release, UPF N4 PFCP sessions, QoS rule application',
+        notes: 'Log level configured in /etc/open5gs/smf.yaml under logger.level',
+        files: [],
+      },
+      {
+        name: 'UPF Log',
+        component: 'UPF',
+        location: '/var/log/open5gs/upf.log  |  journalctl -u open5gs-upfd',
+        keyEvents: 'N4 PFCP session setup, GTP-U tunnel creation, data plane forwarding errors',
+        notes: 'Log level configured in /etc/open5gs/upf.yaml under logger.level',
+        files: [],
+      },
+    ],
+  },
+  {
+    id: 'srsue',
+    name: 'srsUE',
+    icon: '📶',
+    subtitle: 'Software UE (srsRAN)',
+    type: 'UE (Software)',
+    format: 'Plain text',
+    logs: [
+      {
+        name: 'UE Log',
+        component: 'srsUE',
+        location: 'ue.log in working directory — set via log.filename in ue.conf',
+        keyEvents: 'Cell search, PRACH, RRC connection setup, NAS Registration, bearer setup, PDCP/RLC/MAC layer traces',
+        notes: 'Per-layer verbosity set in ue.conf under [log] — e.g. rrc_level = debug. Files grow large at debug level.',
+        files: [],
+      },
+    ],
+  },
+  {
+    id: 'wireshark',
+    name: 'Wireshark',
+    icon: '🦈',
+    subtitle: 'Packet Capture & Analyzer',
+    type: 'Capture',
+    format: 'PCAP / PCAPNG',
+    logs: [
+      {
+        name: 'N2 Capture (NGAP)',
+        component: 'AMF ↔ gNB',
+        location: 'User-specified .pcapng — capture on N2 interface',
+        keyEvents: 'NGAP: Initial UE Message, UE Context Setup, PDU Session Resource Setup, Paging, Handover',
+        notes: 'Capture filter: sctp port 38412. Enable NGAP dissector in Wireshark preferences.',
+        files: [],
+      },
+      {
+        name: 'N3 Capture (GTP-U)',
+        component: 'UPF ↔ gNB',
+        location: 'User-specified .pcapng — capture on N3 interface',
+        keyEvents: 'GTP-U: tunnel creation/teardown, encapsulated user-plane PDUs, TEID correlation',
+        notes: 'Capture filter: udp port 2152. Use Wireshark GTP-U dissector to inspect inner packets.',
+        files: [],
+      },
+      {
+        name: 'F1 Capture (F1AP)',
+        component: 'gNB-CU ↔ gNB-DU',
+        location: 'User-specified .pcapng — capture on F1 interface',
+        keyEvents: 'F1AP: F1 Setup, UE Context Setup/Release, DL/UL RRC Message Transfer, Paging',
+        notes: 'Capture filter: sctp port 38472. Enable F1AP dissector.',
+        files: [],
+      },
+    ],
+  },
+]} />

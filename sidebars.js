@@ -25,8 +25,6 @@ module.exports = {
             '5g-nr/procedures/ng-ran',
             '5g-nr/procedures/5g-core',
             '5g-nr/procedures/5g-system',
-            '5g-nr/procedures/ue-registration-flow',
-            '5g-nr/procedures/ue-mobility-flow',
           ],
         },
       ],
@@ -47,7 +45,14 @@ module.exports = {
         type: 'doc',
         id: 'packet-analysis/overview',
       },
-      items: [],
+      items: [
+        'packet-analysis/basics',
+        'packet-analysis/considerations',
+        'packet-analysis/tips-and-tricks',
+        'packet-analysis/protocols',
+        'packet-analysis/analysis',
+        'packet-analysis/troubleshooting',
+      ],
     },
     {
       type: 'category',
@@ -56,7 +61,9 @@ module.exports = {
         type: 'doc',
         id: 'resources/overview',
       },
-      items: [],
+      items: [
+        'resources/logs',
+      ],
     },
     {
       type: 'category',

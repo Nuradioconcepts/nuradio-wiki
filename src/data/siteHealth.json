@@ -1,19 +1,19 @@
 {
-  "totalPages": 17,
-  "totalLinks": 615,
+  "totalPages": 26,
+  "totalLinks": 625,
   "orphanPages": [
     {
-      "title": "5G Core Procedures 🚧",
+      "title": "5G Core Procedures",
       "route": "/5g-nr/procedures/5g-core",
       "filepath": "docs/5g-nr/procedures/5g-core.mdx"
     },
     {
-      "title": "5G System Procedures 🚧",
+      "title": "5G System Procedures",
       "route": "/5g-nr/procedures/5g-system",
       "filepath": "docs/5g-nr/procedures/5g-system.mdx"
     },
     {
-      "title": "NG-RAN Procedures 🚧",
+      "title": "NG-RAN Procedures",
       "route": "/5g-nr/procedures/ng-ran",
       "filepath": "docs/5g-nr/procedures/ng-ran.mdx"
     },
@@ -23,25 +23,30 @@
       "filepath": "docs/5g-nr/procedures/ue.mdx"
     },
     {
-      "title": "5G NR Glossary 🚧",
+      "title": "5G NR Glossary",
       "route": "/glossary/5g-nr",
       "filepath": "docs/glossary/5g-nr.mdx"
     },
     {
-      "title": "Computer Systems Glossary 🚧",
+      "title": "Computer Systems Glossary",
       "route": "/glossary/computer-systems",
       "filepath": "docs/glossary/computer-systems.mdx"
     },
     {
-      "title": "O-RAN Glossary 🚧",
+      "title": "O-RAN Glossary",
       "route": "/glossary/o-ran",
       "filepath": "docs/glossary/o-ran.mdx"
     },
     {
-      "title": "Project Overview 🚧",
+      "title": "Project Overview",
       "route": "/project-overview",
       "filepath": "docs/project-overview.mdx"
+    },
+    {
+      "title": "Logs 🚧",
+      "route": "/resources/logs",
+      "filepath": "docs/resources/logs.mdx"
     }
   ],
-  "generatedAt": "2026-04-09T20:49:47.364Z"
+  "generatedAt": "2026-04-12T17:52:56.833Z"
 }
