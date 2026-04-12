@@ -62,7 +62,7 @@ Replace `YOUR_USERNAME` with the GitHub username where this repo lives.
 ### Step 2 — Move into the project folder
 
 ```bash
-cd nuradio-wiki-v2
+cd nuradio-wiki
 ```
 
 ### Step 3 — Install dependencies
