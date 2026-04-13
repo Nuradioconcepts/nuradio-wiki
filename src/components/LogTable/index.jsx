@@ -26,23 +26,27 @@ function EyeIcon({ open }) {
 
 function LogEntryRow({ entry }) {
   const [detailOpen, setDetailOpen] = useState(false);
-  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewingFile, setViewingFile] = useState(null); // { name, url }
   const [fileContent, setFileContent] = useState(null);
   const [loading, setLoading] = useState(false);
   const hasFiles = entry.files && entry.files.length > 0;
-  const primaryFile = hasFiles ? entry.files[0] : null;
+  const isSingleFile = hasFiles && entry.files.length === 1;
+  const primaryFile = isSingleFile ? entry.files[0] : null;
 
-  function handleView(e) {
+  function openViewer(file, e) {
     e.stopPropagation();
     if (!detailOpen) setDetailOpen(true);
-    if (!viewerOpen && !fileContent && primaryFile) {
-      setLoading(true);
-      fetch(primaryFile.url)
-        .then((r) => r.text())
-        .then((text) => { setFileContent(text); setLoading(false); })
-        .catch(() => { setFileContent('Error loading file.'); setLoading(false); });
+    if (viewingFile?.url === file.url) {
+      setViewingFile(null);
+      return;
     }
-    setViewerOpen((v) => !v);
+    setViewingFile(file);
+    setFileContent(null);
+    setLoading(true);
+    fetch(file.url)
+      .then((r) => r.text())
+      .then((text) => { setFileContent(text); setLoading(false); })
+      .catch(() => { setFileContent('Error loading file.'); setLoading(false); });
   }
 
   function handleDownload(e) {
@@ -66,7 +70,7 @@ function LogEntryRow({ entry }) {
           </div>
         </div>
 
-        {hasFiles && (
+        {isSingleFile && (
           <div className="lt-entry-row__actions">
             <a
               href={primaryFile.url}
@@ -78,12 +82,18 @@ function LogEntryRow({ entry }) {
               <DownloadIcon />
             </a>
             <button
-              className={`lt-action-btn lt-action-btn--view${viewerOpen ? ' lt-action-btn--view-active' : ''}`}
-              onClick={handleView}
-              title={viewerOpen ? 'Close viewer' : 'View file'}
+              className={`lt-action-btn lt-action-btn--view${viewingFile?.url === primaryFile.url ? ' lt-action-btn--view-active' : ''}`}
+              onClick={(e) => openViewer(primaryFile, e)}
+              title={viewingFile?.url === primaryFile.url ? 'Close viewer' : 'View file'}
             >
-              <EyeIcon open={viewerOpen} />
+              <EyeIcon open={viewingFile?.url === primaryFile.url} />
             </button>
+          </div>
+        )}
+
+        {hasFiles && !isSingleFile && (
+          <div className="lt-entry-row__actions">
+            <span className="lt-file-count-badge">{entry.files.length} files</span>
           </div>
         )}
       </div>
@@ -115,6 +125,13 @@ function LogEntryRow({ entry }) {
                     <span className="lt-file-row__name">{f.name}</span>
                     {f.size && <span className="lt-file-row__meta">{f.size}</span>}
                     {f.date && <span className="lt-file-row__meta">{f.date}</span>}
+                    <button
+                      className={`lt-file-row__view-btn lt-action-btn lt-action-btn--view${viewingFile?.url === f.url ? ' lt-action-btn--view-active' : ''}`}
+                      onClick={(e) => openViewer(f, e)}
+                      title={viewingFile?.url === f.url ? 'Close viewer' : `View ${f.name}`}
+                    >
+                      <EyeIcon open={viewingFile?.url === f.url} />
+                    </button>
                     <a href={f.url} download className="lt-file-row__dl-link" title="Download">
                       <DownloadIcon />
                     </a>
@@ -131,11 +148,11 @@ function LogEntryRow({ entry }) {
             </div>
           )}
 
-          {viewerOpen && (
+          {viewingFile && (
             <div className="lt-viewer">
               <div className="lt-viewer__header">
-                <span className="lt-viewer__filename">{primaryFile?.name}</span>
-                <button className="lt-viewer__close" onClick={(e) => { e.stopPropagation(); setViewerOpen(false); }}>✕</button>
+                <span className="lt-viewer__filename">{viewingFile.name}</span>
+                <button className="lt-viewer__close" onClick={(e) => { e.stopPropagation(); setViewingFile(null); }}>✕</button>
               </div>
               <div className="lt-viewer__body">
                 {loading

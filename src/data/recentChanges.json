@@ -1,5 +1,54 @@
 [
   {
+    "title": "Resources 🚧",
+    "filepath": "docs/resources/overview.mdx",
+    "route": "/resources",
+    "section": "Resources",
+    "mtime": "2026-04-13T12:48:51.607Z"
+  },
+  {
+    "title": "5G NR Glossary",
+    "filepath": "docs/glossary/5g-nr.mdx",
+    "route": "/glossary/5g-nr",
+    "section": "Glossary",
+    "mtime": "2026-04-13T12:44:17.525Z"
+  },
+  {
+    "title": "Computer Systems Glossary",
+    "filepath": "docs/glossary/computer-systems.mdx",
+    "route": "/glossary/computer-systems",
+    "section": "Glossary",
+    "mtime": "2026-04-13T12:44:17.525Z"
+  },
+  {
+    "title": "O-RAN Glossary",
+    "filepath": "docs/glossary/o-ran.mdx",
+    "route": "/glossary/o-ran",
+    "section": "Glossary",
+    "mtime": "2026-04-13T12:44:17.525Z"
+  },
+  {
+    "title": "Logs 🚧",
+    "filepath": "docs/resources/logs.mdx",
+    "route": "/resources/logs",
+    "section": "Resources",
+    "mtime": "2026-04-13T12:32:31.627Z"
+  },
+  {
+    "title": "UE Registration Flow 🚧",
+    "filepath": "docs/5g-nr/procedures/ue-registration-flow.mdx",
+    "route": "/5g-nr/procedures/ue-registration-flow",
+    "section": "5G NR",
+    "mtime": "2026-04-13T11:34:53.492Z"
+  },
+  {
+    "title": "UE Mobility Flow 🚧",
+    "filepath": "docs/5g-nr/procedures/ue-mobility-flow.mdx",
+    "route": "/5g-nr/procedures/ue-mobility-flow",
+    "section": "5G NR",
+    "mtime": "2026-04-13T11:34:42.626Z"
+  },
+  {
     "title": "Troubleshooting 🚧",
     "filepath": "docs/packet-analysis/troubleshooting.mdx",
     "route": "/packet-analysis/troubleshooting",
@@ -49,59 +98,10 @@
     "mtime": "2026-04-12T17:51:04.016Z"
   },
   {
-    "title": "Logs 🚧",
-    "filepath": "docs/resources/logs.mdx",
-    "route": "/resources/logs",
-    "section": "Resources",
-    "mtime": "2026-04-12T15:57:56.398Z"
-  },
-  {
     "title": "5G System Procedures",
     "filepath": "docs/5g-nr/procedures/5g-system.mdx",
     "route": "/5g-nr/procedures/5g-system",
     "section": "5G NR",
     "mtime": "2026-04-12T15:13:56.768Z"
-  },
-  {
-    "title": "UE Mobility Flow 🚧",
-    "filepath": "docs/5g-nr/procedures/ue-mobility-flow.mdx",
-    "route": "/5g-nr/procedures/ue-mobility-flow",
-    "section": "5G NR",
-    "mtime": "2026-04-12T15:13:43.855Z"
-  },
-  {
-    "title": "UE Registration Flow 🚧",
-    "filepath": "docs/5g-nr/procedures/ue-registration-flow.mdx",
-    "route": "/5g-nr/procedures/ue-registration-flow",
-    "section": "5G NR",
-    "mtime": "2026-04-12T15:13:42.838Z"
-  },
-  {
-    "title": "Welcome",
-    "filepath": "docs/overview.mdx",
-    "route": "/",
-    "section": "Dashboard",
-    "mtime": "2026-04-12T15:11:21.583Z"
-  },
-  {
-    "title": "Procedures",
-    "filepath": "docs/5g-nr/procedures/overview.mdx",
-    "route": "/5g-nr/procedures",
-    "section": "5G NR",
-    "mtime": "2026-04-10T18:27:37.219Z"
-  },
-  {
-    "title": "UE Procedures 🚧",
-    "filepath": "docs/5g-nr/procedures/ue.mdx",
-    "route": "/5g-nr/procedures/ue",
-    "section": "5G NR",
-    "mtime": "2026-04-10T18:26:59.199Z"
-  },
-  {
-    "title": "Data Encapsulation",
-    "filepath": "docs/5g-nr/data-encapsulation.mdx",
-    "route": "/5g-nr/data-encapsulation",
-    "section": "5G NR",
-    "mtime": "2026-04-10T13:20:59.241Z"
   }
 ]

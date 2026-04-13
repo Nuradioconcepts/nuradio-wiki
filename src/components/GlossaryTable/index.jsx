@@ -1,5 +1,28 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from '@docusaurus/Link';
+import { specificationsData } from '@site/src/data/specifications';
+
+// Build a lookup: spec string → anchor id on /resources
+function buildSpecLinkMap() {
+  const map = new Map();
+  specificationsData.forEach((cat) => {
+    cat.series.forEach((series) => {
+      series.specs.forEach((spec) => {
+        map.set(spec, `spec-${spec.id}`);
+      });
+    });
+  });
+  return map;
+}
+const specLinkEntries = buildSpecLinkMap();
+
+function resolveSpecLink(specString) {
+  if (!specString) return null;
+  for (const [spec, anchor] of specLinkEntries) {
+    if (spec.matchSpec(specString)) return `/resources#${anchor}`;
+  }
+  return null;
+}
 
 function TypeBadge({ type }) {
   const cls = type.toLowerCase().replace(/[\s'/]+/g, '-');
@@ -84,7 +107,13 @@ function GlossaryTermRow({ entry, query = '' }) {
             {entry.spec && (
               <div className="gl-detail__item">
                 <span className="gl-detail__label">SPEC REFERENCE</span>
-                <span className="gl-detail__value">{entry.spec}</span>
+                {resolveSpecLink(entry.spec) ? (
+                  <Link to={resolveSpecLink(entry.spec)} className="gl-spec-link">
+                    {entry.spec}
+                  </Link>
+                ) : (
+                  <span className="gl-detail__value">{entry.spec}</span>
+                )}
               </div>
             )}
             {entry.configParams && (
