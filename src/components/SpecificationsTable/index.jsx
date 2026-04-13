@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from '@docusaurus/Link';
 
 // ─── Helper: build a slug-safe anchor id from a spec id ─────────────────────
@@ -147,6 +147,28 @@ function CategoryPanel({ category, allTerms }) {
     });
   };
 
+  // Listen for hash-navigation events from the parent
+  useEffect(() => {
+    function handler(e) {
+      const { seriesId, specId } = e.detail;
+      setOpenSeries((prev) => {
+        const next = new Set(prev);
+        next.add(seriesId);
+        return next;
+      });
+      // After the series expands, scroll to and open the spec row
+      setTimeout(() => {
+        const el = document.getElementById(`spec-${specId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.click();
+        }
+      }, 80);
+    }
+    window.addEventListener('st-open-series', handler);
+    return () => window.removeEventListener('st-open-series', handler);
+  }, []);
+
   return (
     <div className="st-category-panel">
       {category.series.map((series) => (
@@ -165,6 +187,34 @@ function CategoryPanel({ category, allTerms }) {
 // ─── Main component ──────────────────────────────────────────────────────────
 export default function SpecificationsTable({ specs, allTerms = [] }) {
   const [activeCategory, setActiveCategory] = useState(specs[0]?.id ?? '');
+
+  // On mount, check the URL hash and auto-navigate to the referenced spec
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const hash = window.location.hash.slice(1); // e.g. "spec-ts-38-321"
+    if (!hash.startsWith('spec-')) return;
+
+    const specId = hash.slice('spec-'.length); // e.g. "ts-38-321"
+
+    // Find which category + series contains this spec
+    for (const cat of specs) {
+      for (const series of cat.series) {
+        const found = series.specs.find((s) => s.id === specId);
+        if (found) {
+          setActiveCategory(cat.id);
+          // Signal to CategoryPanel which series to open; pass via a custom event
+          // so we don't need to lift state here. We use a small delay so the
+          // panel has time to render before we dispatch.
+          setTimeout(() => {
+            window.dispatchEvent(
+              new CustomEvent('st-open-series', { detail: { seriesId: series.id, specId } })
+            );
+          }, 50);
+          return;
+        }
+      }
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const active = specs.find((c) => c.id === activeCategory) ?? specs[0];
 
