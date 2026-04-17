@@ -14,11 +14,13 @@ const config = {
     v4: true,
   },
 
-  url: 'https://your-domain.example.com',
-  baseUrl: '/',
+  url: 'https://nuradioconcepts.github.io',
+  baseUrl: '/nuradio-wiki/',
 
-  organizationName: 'ryandecker',
-  projectName: 'nuradio-atlas',
+  organizationName: 'Nuradioconcepts',
+  projectName: 'nuradio-wiki',
+  deploymentBranch: 'gh-pages',
+  trailingSlash: false,
 
   onBrokenLinks: 'warn',
 
