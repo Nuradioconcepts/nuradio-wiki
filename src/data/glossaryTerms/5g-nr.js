@@ -1,871 +1,7 @@
 // Auto-extracted from docs/glossary/5g-nr.mdx
 // eslint-disable-next-line
 const terms = [
-  // ── Numbers ──────────────────────────────────────────────────────
-  {
-    id: '5g-aka',
-    term: '5G-AKA',
-    fullName: '5G Authentication and Key Agreement',
-    type: 'Procedure',
-    layer: 'NAS',
-    definition: 'The primary 5G authentication mechanism. The network delivers RAND and AUTN to the UE; the UE computes RES*, which the AUSF verifies against HRES*. Successful completion derives KAUSF and KAMF for subsequent NAS and AS security.',
-    related: ['AUSF', 'AMF', 'SUCI', '5G-GUTI', 'EAP-AKA'],
-    spec: '3GPP TS 33.501',
-  },
-  {
-    id: '5g-guti',
-    term: '5G-GUTI',
-    fullName: '5G Globally Unique Temporary Identifier',
-    type: 'Identifier',
-    layer: 'NAS',
-    definition: 'A temporary identifier assigned to a UE by the AMF after successful registration. Replaces the SUPI on the air interface to prevent subscriber tracking. Composed of GUAMI (identifying the AMF) and 5G-TMSI.',
-    related: ['SUCI', 'AMF', 'PLMN', 'NAS'],
-    spec: '3GPP TS 23.003',
-  },
-  {
-    id: '5gmm',
-    term: '5GMM',
-    fullName: '5G Mobility Management',
-    type: 'Concept',
-    layer: 'NAS',
-    definition: 'The NAS sublayer responsible for mobility management in 5G, including registration, deregistration, authentication, and security mode command procedures. All 5GMM procedures terminate at the AMF.',
-    related: ['NAS', 'AMF', 'RRC'],
-    spec: '3GPP TS 24.501',
-  },
-  // ── A ────────────────────────────────────────────────────────────
-  {
-    id: 'amf',
-    term: 'AMF',
-    fullName: 'Access and Mobility Management Function',
-    type: 'Component',
-    layer: '5GC',
-    definition: 'The 5G Core network function responsible for UE access and mobility management. Terminates N1 (NAS toward UE), N2 (NGAP toward gNB), and interfaces with SMF (N11) and AUSF. Handles registration, authentication coordination, paging, and handover signaling.',
-    related: ['SMF', 'UPF', 'AUSF', 'NGAP', 'N1', 'N2'],
-    spec: '3GPP TS 23.501',
-    configParams: '#OCUDU gNB & CU CP\n amf:\n  addrs: 127.0.1.100\n    bind_addrs: 127.0.10.2\n     supported_tracking_areas:\n      - tac: 7',
-    logReference: '#Open5gs\n[AMF][Info] UE Registration Request received\n[AMF][Debug] NAS container decoded: 5GMM Registration Request',
-    packetCapture: 'ngap.procedureCode == 21  // InitialUEMessage\nngap.procedureCode == 14  // DownlinkNASTransport',
-  },
-  {
-    id: 'arq',
-    term: 'ARQ',
-    fullName: 'Automatic Repeat Request',
-    type: 'Procedure',
-    layer: 'RLC',
-    definition: 'A link-layer error correction mechanism in RLC AM mode. The receiver sends STATUS PDUs containing ACK/NACK bitmasks; the transmitter retransmits NACKed PDUs. ARQ operates above HARQ, handling residual errors that HARQ chase-combining fails to correct.',
-    related: ['HARQ', 'RLC', 'PDCP'],
-    spec: '3GPP TS 38.322',
-  },
-  {
-    id: 'ausf',
-    term: 'AUSF',
-    fullName: 'Authentication Server Function',
-    type: 'Component',
-    layer: '5GC',
-    definition: 'A 5G Core network function that executes UE authentication on behalf of the AMF. Retrieves credentials from the UDM and verifies the UE response in 5G-AKA or EAP-AKA\' procedures. Derives and stores KAUSF.',
-    related: ['AMF', '5G-AKA', 'SUCI'],
-    spec: '3GPP TS 33.501',
-  },
-  // ── B ────────────────────────────────────────────────────────────
-  {
-    id: 'bsr',
-    term: 'BSR',
-    fullName: 'Buffer Status Report',
-    type: 'Procedure',
-    layer: 'MAC',
-    definition: 'A MAC control element sent by the UE to inform the gNB scheduler of the volume of uplink data waiting in its logical channel buffers. Triggers the gNB to allocate appropriate UL resources. Three types: Short BSR, Long BSR, and Truncated BSR.',
-    related: ['MAC', 'SR', 'LCP', 'DRB'],
-    spec: '3GPP TS 38.321',
-  },
-  // ── C ────────────────────────────────────────────────────────────
-  {
-    id: 'c-rnti',
-    term: 'C-RNTI',
-    fullName: 'Cell Radio Network Temporary Identifier',
-    type: 'Identifier',
-    layer: 'MAC',
-    definition: 'A cell-specific 16-bit identifier assigned to a UE upon successful contention resolution in the random access procedure. Used to address the UE in PDCCH DCI for scheduling, HARQ feedback, and MAC control signaling.',
-    related: ['RNTI', 'MAC', 'DCI', 'RACH'],
-    spec: '3GPP TS 38.321',
-  },
-  {
-    id: 'cqi',
-    term: 'CQI',
-    fullName: 'Channel Quality Indicator',
-    type: 'Concept',
-    layer: 'PHY',
-    definition: 'A 4-bit value reported by the UE indicating the downlink channel quality observed during a measurement interval. The gNB scheduler uses CQI to select a Modulation and Coding Scheme (MCS) for PDSCH that the UE can receive with at most 10% BLER.',
-    related: ['PMI', 'RI', 'CSI', 'CSI-RS', 'PUCCH'],
-    spec: '3GPP TS 38.214',
-  },
-  {
-    id: 'crc',
-    term: 'CRC',
-    fullName: 'Cyclic Redundancy Check',
-    type: 'Concept',
-    layer: 'PHY',
-    definition: 'An error detection code appended to transport blocks at the physical layer. After channel decoding, the receiver verifies the CRC; a failed check triggers a HARQ NACK and retransmission request.',
-    related: ['HARQ', 'PHY', 'MAC'],
-    spec: '3GPP TS 38.212',
-  },
-  {
-    id: 'csi',
-    term: 'CSI',
-    fullName: 'Channel State Information',
-    type: 'Concept',
-    layer: 'PHY',
-    definition: 'The collection of measurements describing the current state of the radio channel between UE and gNB — including CQI, PMI, RI, L1-RSRP, and L1-SINR. The UE measures and reports CSI to enable adaptive modulation, rank selection, and beamforming.',
-    related: ['CQI', 'PMI', 'RI', 'CSI-RS'],
-    spec: '3GPP TS 38.214',
-  },
-  {
-    id: 'csi-rs',
-    term: 'CSI-RS',
-    fullName: 'Channel State Information Reference Signal',
-    type: 'Signal',
-    layer: 'PHY',
-    definition: 'A configurable downlink reference signal transmitted by the gNB for channel measurement. The UE measures CSI-RS to derive and report CQI, PMI, and RI. Also used for beam management (L1 RSRP measurement) and RRM/mobility measurements.',
-    related: ['CSI', 'CQI', 'PMI', 'RI', 'SSB'],
-    spec: '3GPP TS 38.211',
-  },
-  // ── D ────────────────────────────────────────────────────────────
-  {
-    id: 'dci',
-    term: 'DCI',
-    fullName: 'Downlink Control Information',
-    type: 'Concept',
-    layer: 'PHY',
-    definition: 'Control information carried on the PDCCH, used to schedule PDSCH (DL assignment) or PUSCH (UL grant) and to deliver TPC commands. Multiple DCI formats address different scenarios — DCI 0_0/0_1 for UL, DCI 1_0/1_1 for DL.',
-    related: ['PDCCH', 'PDSCH', 'PUSCH', 'TPC', 'C-RNTI'],
-    spec: '3GPP TS 38.212',
-  },
-  {
-    id: 'dn',
-    term: 'DN',
-    fullName: 'Data Network',
-    type: 'Component',
-    layer: 'External',
-    definition: 'An external IP network or service that UEs access via a PDU session. Examples include the public internet or an operator IMS/enterprise network. Connected to the 5GC via the UPF on the N6 interface.',
-    related: ['UPF', 'N6', 'DNN', 'SMF'],
-    spec: '3GPP TS 23.501',
-  },
-  {
-    id: 'dnn',
-    term: 'DNN',
-    fullName: 'Data Network Name',
-    type: 'Identifier',
-    layer: 'NAS',
-    definition: 'An APN-equivalent identifier included by the UE in PDU Session Establishment Requests to select the target Data Network and the corresponding SMF/UPF path. Common examples: "internet", "ims". Configured on the USIM or provisioned via OTA.',
-    related: ['PDU Session', 'SMF', 'DN', 'NAS'],
-    spec: '3GPP TS 23.003',
-  },
-  {
-    id: 'drb',
-    term: 'DRB',
-    fullName: 'Data Radio Bearer',
-    type: 'Concept',
-    layer: 'RRC / PDCP',
-    definition: 'A radio bearer carrying user-plane data. Each DRB is associated with one or more QoS flows via SDAP mapping. DRB configuration (PDCP, RLC, MAC parameters) is delivered by RRC in RRCSetup or RRCReconfiguration.',
-    related: ['SRB', 'QoS', 'QFI', 'PDCP', 'RLC', 'SDAP'],
-    spec: '3GPP TS 38.331',
-  },
-  {
-    id: 'drx',
-    term: 'DRX',
-    fullName: 'Discontinuous Reception',
-    type: 'Procedure',
-    layer: 'MAC',
-    definition: 'A UE power-saving mechanism configured by RRC. The UE alternates between an on-duration (monitoring PDCCH) and an off-duration (sleep). Long and Short DRX cycles are supported, balancing latency and power consumption.',
-    related: ['MAC', 'RRC', 'C-RNTI'],
-    spec: '3GPP TS 38.321',
-  },
-  // ── E ────────────────────────────────────────────────────────────
-  {
-    id: 'e1',
-    term: 'E1',
-    fullName: 'E1 Interface',
-    type: 'Interface',
-    layer: 'NG-RAN',
-    definition: 'The interface between gNB-CU-CP and gNB-CU-UP within a disaggregated gNB. Carries E1AP for bearer context setup, modification, and release — allowing independent scaling of control-plane and user-plane CU functions.',
-    related: ['gNB-CU-CP', 'gNB-CU-UP', 'E1AP', 'F1'],
-    spec: '3GPP TS 38.460',
-  },
-  {
-    id: 'e1ap',
-    term: 'E1AP',
-    fullName: 'E1 Application Protocol',
-    type: 'Protocol',
-    layer: 'NG-RAN',
-    definition: 'The application-layer protocol on the E1 interface. Supports gNB-CU-UP registration, bearer context setup/modification/release, and capability exchange between the gNB-CU-CP and gNB-CU-UP.',
-    related: ['E1', 'gNB-CU-CP', 'gNB-CU-UP'],
-    spec: '3GPP TS 38.463',
-  },
-  {
-    id: 'eap-aka',
-    term: "EAP-AKA'",
-    fullName: 'EAP Authentication and Key Agreement Prime',
-    type: 'Procedure',
-    layer: 'NAS',
-    definition: "An alternative 5G authentication method based on EAP (Extensible Authentication Protocol). Provides equivalent security to 5G-AKA and is selected when specified by the subscriber profile or AUSF configuration.",
-    related: ['5G-AKA', 'AUSF', 'AMF'],
-    spec: '3GPP TS 33.501',
-  },
-  // ── F ────────────────────────────────────────────────────────────
-  {
-    id: 'f1',
-    term: 'F1',
-    fullName: 'F1 Interface',
-    type: 'Interface',
-    layer: 'NG-RAN',
-    definition: 'The interface between the gNB-CU and one or more gNB-DUs in a disaggregated gNB. Split into F1-C (control plane, carrying F1AP) and F1-U (user plane, carrying GTP-U tunnels for DRB data).',
-    related: ['F1-C', 'F1-U', 'F1AP', 'gNB-CU', 'gNB-DU'],
-    spec: '3GPP TS 38.470',
-  },
-  {
-    id: 'f1-c',
-    term: 'F1-C',
-    fullName: 'F1 Control Plane Interface',
-    type: 'Interface',
-    layer: 'NG-RAN',
-    definition: 'The control-plane portion of the F1 interface. Carries F1AP signaling for F1 setup, gNB-DU/CU configuration updates, UE context management (setup/modification/release), and paging.',
-    related: ['F1', 'F1AP', 'gNB-CU', 'gNB-DU'],
-    spec: '3GPP TS 38.470',
-  },
-  {
-    id: 'f1-u',
-    term: 'F1-U',
-    fullName: 'F1 User Plane Interface',
-    type: 'Interface',
-    layer: 'NG-RAN',
-    definition: 'The user-plane portion of the F1 interface. Carries GTP-U tunnels between the gNB-CU-UP and gNB-DU for forwarding user-plane PDU session data.',
-    related: ['F1', 'GTP-U', 'gNB-CU-UP', 'gNB-DU'],
-    spec: '3GPP TS 38.474',
-  },
-  {
-    id: 'f1ap',
-    term: 'F1AP',
-    fullName: 'F1 Application Protocol',
-    type: 'Protocol',
-    layer: 'NG-RAN',
-    definition: 'The application-layer protocol on the F1-C interface. Manages the F1 Setup procedure, configuration updates between gNB-CU and gNB-DU, UE context management, and paging message distribution.',
-    related: ['F1', 'F1-C', 'gNB-CU', 'gNB-DU'],
-    spec: '3GPP TS 38.473',
-  },
-  // ── G ────────────────────────────────────────────────────────────
-  {
-    id: 'gnb',
-    term: 'gNB',
-    fullName: 'Next Generation Node B',
-    type: 'Component',
-    layer: 'NG-RAN',
-    definition: 'The base station providing 5G NR radio access. Connects to UEs via the Uu air interface and to the 5G Core via NG (N2 control, N3 user). May be deployed as a monolithic unit or disaggregated into CU and DU functional blocks.',
-    related: ['gNB-CU', 'gNB-DU', 'Uu', 'N2', 'N3', 'NG-RAN'],
-    spec: '3GPP TS 38.300',
-  },
-  {
-    id: 'gnb-cu',
-    term: 'gNB-CU',
-    fullName: 'gNB Central Unit',
-    type: 'Component',
-    layer: 'NG-RAN',
-    definition: 'The centralized functional unit of a disaggregated gNB. Hosts RRC (CP) and PDCP (CP+UP), and optionally SDAP (UP). Connects to one or more gNB-DUs via F1 and to the 5GC via the NG interface.',
-    related: ['gNB-DU', 'gNB-CU-CP', 'gNB-CU-UP', 'F1', 'RRC', 'PDCP'],
-    spec: '3GPP TS 38.401',
-  },
-  {
-    id: 'gnb-cu-cp',
-    term: 'gNB-CU-CP',
-    fullName: 'gNB Central Unit – Control Plane',
-    type: 'Component',
-    layer: 'NG-RAN',
-    definition: 'The control-plane portion of a gNB-CU. Terminates F1-C (F1AP) toward gNB-DU and the E1 (E1AP) toward gNB-CU-UP. Hosts RRC and the control-plane side of PDCP (integrity protection and ciphering for SRBs).',
-    related: ['gNB-CU-UP', 'E1', 'F1-C', 'RRC', 'PDCP'],
-    spec: '3GPP TS 38.401',
-  },
-  {
-    id: 'gnb-cu-up',
-    term: 'gNB-CU-UP',
-    fullName: 'gNB Central Unit – User Plane',
-    type: 'Component',
-    layer: 'NG-RAN',
-    definition: 'The user-plane portion of a gNB-CU. Terminates F1-U toward gNB-DU and N3 (GTP-U) toward UPF. Hosts SDAP and the user-plane portion of PDCP (ciphering and header compression for DRBs).',
-    related: ['gNB-CU-CP', 'E1', 'F1-U', 'SDAP', 'PDCP', 'N3'],
-    spec: '3GPP TS 38.401',
-  },
-  {
-    id: 'gnb-du',
-    term: 'gNB-DU',
-    fullName: 'gNB Distributed Unit',
-    type: 'Component',
-    layer: 'NG-RAN',
-    definition: 'The distributed (radio-proximate) functional unit of a disaggregated gNB. Hosts RLC, MAC, and PHY layers. Connects to gNB-CU via F1 and serves UEs via the Uu radio interface. Typically co-located with radio hardware.',
-    related: ['gNB-CU', 'F1', 'MAC', 'RLC', 'PHY', 'Uu'],
-    spec: '3GPP TS 38.401',
-  },
-  {
-    id: 'gtp-u',
-    term: 'GTP-U',
-    fullName: 'GPRS Tunnelling Protocol – User Plane',
-    type: 'Protocol',
-    layer: 'Transport',
-    definition: 'A UDP-based tunneling protocol used to carry user-plane PDU session data between 5G nodes. In 5G NR, GTP-U tunnels are established on N3 (gNB-CU-UP ↔ UPF), N9 (UPF ↔ UPF), and F1-U (gNB-CU-UP ↔ gNB-DU).',
-    related: ['N3', 'F1-U', 'UPF', 'gNB-CU-UP'],
-    spec: '3GPP TS 29.281',
-  },
-  // ── H ────────────────────────────────────────────────────────────
-  {
-    id: 'handover',
-    term: 'Handover',
-    fullName: 'Handover (HO)',
-    type: 'Procedure',
-    layer: 'RRC',
-    definition: 'The process of transferring an active UE connection from a source cell/gNB to a target cell/gNB while maintaining service continuity. Can be Xn-based (direct source-to-target coordination) or N2-based (via AMF). Involves measurement, preparation, execution, and completion phases.',
-    related: ['RRC', 'Xn', 'N2', 'PDCP', 'AMF'],
-    spec: '3GPP TS 38.300',
-  },
-  {
-    id: 'harq',
-    term: 'HARQ',
-    fullName: 'Hybrid Automatic Repeat Request',
-    type: 'Procedure',
-    layer: 'PHY / MAC',
-    definition: 'A PHY/MAC-layer retransmission mechanism that combines Forward Error Correction (FEC) with ARQ. On a failed CRC check, the receiver requests retransmission; the new attempt is chase-combined or incremental-redundancy-combined with prior attempts before decoding.',
-    related: ['ARQ', 'CRC', 'PDSCH', 'PUSCH', 'PUCCH'],
-    spec: '3GPP TS 38.321',
-  },
-  // ── I ────────────────────────────────────────────────────────────
-  {
-    id: 'ip',
-    term: 'IP',
-    fullName: 'Internet Protocol',
-    type: 'Protocol',
-    layer: 'Application',
-    definition: 'The network-layer protocol for packet addressing and routing. In 5G NR, the UE receives an IPv4, IPv6, or dual-stack address via PDU Session Establishment. The 5G network is transparent to IP-level operations.',
-    related: ['TCP', 'UDP', 'SMF', 'N6', 'DN'],
-    spec: 'IETF RFC 791 / RFC 8200',
-  },
-  // ── L ────────────────────────────────────────────────────────────
-  {
-    id: 'lcp',
-    term: 'LCP',
-    fullName: 'Logical Channel Prioritization',
-    type: 'Procedure',
-    layer: 'MAC',
-    definition: 'The MAC procedure that governs how UL grant bytes are distributed across logical channels within a MAC PDU. Channels are served in decreasing priority order with configured Prioritized Bit Rate (PBR) and Bucket Size Duration (BSD) parameters.',
-    related: ['MAC', 'BSR', 'DRB', 'SRB'],
-    spec: '3GPP TS 38.321',
-  },
-  // ── M ────────────────────────────────────────────────────────────
-  {
-    id: 'mac',
-    term: 'MAC',
-    fullName: 'Medium Access Control',
-    type: 'Protocol',
-    layer: 'MAC',
-    definition: 'A Layer-2 sublayer in 5G NR responsible for scheduling (via DCI), HARQ operation, random access (RACH), logical channel multiplexing/demultiplexing, and DRX. Runs between UE and gNB-DU over the Uu interface.',
-    related: ['RLC', 'PHY', 'HARQ', 'RACH', 'DRX', 'BSR', 'SR'],
-    spec: '3GPP TS 38.321',
-  },
-  {
-    id: 'me',
-    term: 'ME',
-    fullName: 'Mobile Equipment',
-    type: 'Component',
-    layer: 'UE',
-    definition: 'The physical terminal portion of a UE — the hardware and software platform including radio chipset, protocol stack, and application processor. Distinguished from the USIM, which holds subscriber credentials and is removable.',
-    related: ['UE', 'USIM'],
-    spec: '3GPP TS 23.003',
-  },
-  {
-    id: 'mib',
-    term: 'MIB',
-    fullName: 'Master Information Block',
-    type: 'Concept',
-    layer: 'RRC',
-    definition: 'The first system information block decoded by a UE during cell search. Transmitted on the PBCH within the SSB. Contains the SFN (System Frame Number), subcarrier spacing common, and the offset for SIB1 scheduling on PDSCH.',
-    related: ['SSB', 'PBCH', 'SIB1', 'Cell Search'],
-    spec: '3GPP TS 38.331',
-  },
-  // ── N ────────────────────────────────────────────────────────────
-  {
-    id: 'n1',
-    term: 'N1',
-    fullName: 'N1 Interface',
-    type: 'Interface',
-    layer: 'UE ↔ 5GC',
-    definition: 'The reference point between the UE and the AMF for NAS signaling. Carries 5GMM (mobility management) and 5GSM (session management) messages. Physically transported transparently through the Uu and N2 interfaces.',
-    related: ['AMF', 'NAS', 'Uu', 'N2'],
-    spec: '3GPP TS 23.501',
-  },
-  {
-    id: 'n2',
-    term: 'N2',
-    fullName: 'N2 Interface',
-    type: 'Interface',
-    layer: 'NG-RAN ↔ 5GC',
-    definition: 'The control-plane interface between the gNB-CU and the AMF. Carries NGAP messages for UE registration context, NAS transport, initial context setup, PDU session resource management, handover, and paging.',
-    related: ['AMF', 'NGAP', 'gNB-CU', 'N1'],
-    spec: '3GPP TS 23.501',
-  },
-  {
-    id: 'n3',
-    term: 'N3',
-    fullName: 'N3 Interface',
-    type: 'Interface',
-    layer: 'NG-RAN ↔ 5GC',
-    definition: 'The user-plane interface between the gNB-CU-UP and the UPF. Carries GTP-U tunnels for PDU session user data. One GTP-U tunnel per PDU session (or per QoS flow in multi-tunnel configurations).',
-    related: ['UPF', 'GTP-U', 'gNB-CU-UP', 'N4'],
-    spec: '3GPP TS 23.501',
-  },
-  {
-    id: 'n4',
-    term: 'N4',
-    fullName: 'N4 Interface',
-    type: 'Interface',
-    layer: '5GC',
-    definition: 'The interface between the SMF and UPF. Carries PFCP (Packet Forwarding Control Protocol) messages for PDU session establishment, GTP-U tunnel configuration, QoS rule enforcement, and usage reporting.',
-    related: ['SMF', 'UPF', 'N3'],
-    spec: '3GPP TS 23.501',
-  },
-  {
-    id: 'n6',
-    term: 'N6',
-    fullName: 'N6 Interface',
-    type: 'Interface',
-    layer: '5GC ↔ DN',
-    definition: 'The interface between the UPF and the external Data Network. Traffic on N6 is plain IP — no GTP-U tunneling. The UPF performs packet routing, NAT, and any required traffic steering toward the DN.',
-    related: ['UPF', 'DN', 'DNN', 'N3'],
-    spec: '3GPP TS 23.501',
-  },
-  {
-    id: 'nas',
-    term: 'NAS',
-    fullName: 'Non-Access Stratum',
-    type: 'Protocol',
-    layer: 'NAS',
-    definition: 'The protocol layer between the UE and the 5GC (AMF/SMF) that is transparent to the RAN. Encompasses 5GMM (mobility management) and 5GSM (session management) procedures. NAS messages are carried over the N1 reference point, encapsulated in RRC/NGAP at lower layers.',
-    related: ['AMF', 'SMF', 'N1', 'RRC', '5GMM'],
-    spec: '3GPP TS 24.501',
-  },
-  {
-    id: 'ng-ran',
-    term: 'NG-RAN',
-    fullName: 'Next Generation Radio Access Network',
-    type: 'Component',
-    layer: 'RAN',
-    definition: 'The radio access network in a 5G system, consisting of gNBs (5G NR) and ng-eNBs (LTE with 5GC connectivity). NG-RAN nodes connect to the 5GC via the NG interface (N2 control, N3 user) and to each other via Xn.',
-    related: ['gNB', 'N2', 'N3', 'AMF', 'UPF', 'Xn'],
-    spec: '3GPP TS 38.300',
-  },
-  {
-    id: 'ngap',
-    term: 'NGAP',
-    fullName: 'Next Generation Application Protocol',
-    type: 'Protocol',
-    layer: 'NG-RAN ↔ 5GC',
-    definition: 'The control-plane application protocol on the N2 interface between gNB-CU and AMF. Handles NG Setup, initial UE message forwarding, NAS transport, UE context management (initial context setup, modification, release), paging, and handover signaling.',
-    related: ['N2', 'AMF', 'gNB-CU', 'F1AP', 'XnAP'],
-    spec: '3GPP TS 38.413',
-  },
-  // ── P ────────────────────────────────────────────────────────────
-  {
-    id: 'pbch',
-    term: 'PBCH',
-    fullName: 'Physical Broadcast Channel',
-    type: 'Channel',
-    layer: 'PHY',
-    definition: 'A physical channel within the SSB that carries the encoded MIB. Uses DMRS-based channel estimation and fixed modulation/coding for robustness at cell edge. Repeated across multiple SSB beams for beam sweep coverage.',
-    related: ['SSB', 'MIB', 'PSS', 'SSS'],
-    spec: '3GPP TS 38.211',
-  },
-  {
-    id: 'pdcp',
-    term: 'PDCP',
-    fullName: 'Packet Data Convergence Protocol',
-    type: 'Protocol',
-    layer: 'PDCP',
-    definition: 'A Layer-2 sublayer above RLC that provides header compression (ROHC), ciphering, integrity protection, PDCP SN management, in-order delivery, and duplication handling. The CP portion (SRBs) terminates on gNB-CU-CP; the UP portion (DRBs) on gNB-CU-UP.',
-    related: ['RLC', 'RRC', 'ROHC', 'DRB', 'SRB', 'SDAP'],
-    spec: '3GPP TS 38.323',
-  },
-  {
-    id: 'pdsch',
-    term: 'PDSCH',
-    fullName: 'Physical Downlink Shared Channel',
-    type: 'Channel',
-    layer: 'PHY',
-    definition: 'The primary downlink data channel, used to carry DRB user data, SIBs, RRC messages (via DCCH), and paging messages. Scheduled dynamically per slot by the gNB scheduler, addressed to a UE via DCI on PDCCH.',
-    related: ['DCI', 'HARQ', 'CQI', 'gNB-DU'],
-    spec: '3GPP TS 38.211',
-  },
-  {
-    id: 'phy',
-    term: 'PHY',
-    fullName: 'Physical Layer',
-    type: 'Protocol',
-    layer: 'PHY',
-    definition: 'The lowest 5G NR protocol layer. Handles modulation, channel coding, resource mapping, OFDM waveform generation, beamforming, and frame/slot timing. Communicates with MAC via transport channels and with the RF hardware via physical channels.',
-    related: ['MAC', 'SSB', 'PRACH', 'PDSCH', 'PUSCH', 'PUCCH', 'Uu'],
-    spec: '3GPP TS 38.211–38.213',
-  },
-  {
-    id: 'plmn',
-    term: 'PLMN',
-    fullName: 'Public Land Mobile Network',
-    type: 'Identifier',
-    layer: 'NAS',
-    definition: 'A mobile network uniquely identified by a Mobile Country Code (MCC) and Mobile Network Code (MNC). UEs read the PLMN list from SIB1 during cell selection and include the selected PLMN in NAS Registration Requests.',
-    related: ['AMF', 'NAS', 'SIB1', '5G-GUTI'],
-    spec: '3GPP TS 23.003',
-  },
-  {
-    id: 'pmi',
-    term: 'PMI',
-    fullName: 'Precoding Matrix Indicator',
-    type: 'Concept',
-    layer: 'PHY',
-    definition: 'A CSI report value that recommends the precoding matrix the gNB should apply for PDSCH MIMO transmission. Drawn from a codebook defined by the transmission mode and antenna configuration.',
-    related: ['CQI', 'RI', 'CSI', 'CSI-RS'],
-    spec: '3GPP TS 38.214',
-  },
-  {
-    id: 'prach',
-    term: 'PRACH',
-    fullName: 'Physical Random Access Channel',
-    type: 'Channel',
-    layer: 'PHY',
-    definition: 'The uplink physical channel on which UEs transmit random access preambles (Msg1). Time-frequency resources and preamble sequences are configured via SIB1 (for initial access) or RRCReconfiguration (for handover/dedicated RACH). Supports Zadoff-Chu based sequences.',
-    related: ['RACH', 'SIB1', 'RAR', 'MAC', 'SSB'],
-    spec: '3GPP TS 38.211',
-  },
-  {
-    id: 'pss',
-    term: 'PSS',
-    fullName: 'Primary Synchronization Signal',
-    type: 'Signal',
-    layer: 'PHY',
-    definition: 'One of three synchronization components within the SSB. The UE detects PSS to find the half-frame boundary and derive NID2 (one of three values), giving a coarse Physical Cell ID. PSS always occupies the first symbol of the SSB.',
-    related: ['SSS', 'SSB', 'PBCH', 'Cell Search'],
-    spec: '3GPP TS 38.211',
-  },
-  {
-    id: 'pucch',
-    term: 'PUCCH',
-    fullName: 'Physical Uplink Control Channel',
-    type: 'Channel',
-    layer: 'PHY',
-    definition: 'The uplink physical channel carrying UCI — HARQ ACK/NACK feedback, CSI reports (CQI/PMI/RI), and Scheduling Requests (SR). Multiple PUCCH formats (0–4) cover different payload sizes and time durations.',
-    related: ['PUSCH', 'SR', 'HARQ', 'CQI', 'DCI'],
-    spec: '3GPP TS 38.211',
-  },
-  {
-    id: 'pusch',
-    term: 'PUSCH',
-    fullName: 'Physical Uplink Shared Channel',
-    type: 'Channel',
-    layer: 'PHY',
-    definition: 'The primary uplink data channel carrying DRB user data and, when scheduled, multiplexed CSI reports and SR. Allocated by the gNB scheduler via UL DCI grants. Supports HARQ retransmissions.',
-    related: ['PUCCH', 'HARQ', 'DCI', 'CQI', 'MAC'],
-    spec: '3GPP TS 38.211',
-  },
-  // ── Q ────────────────────────────────────────────────────────────
-  {
-    id: 'qfi',
-    term: 'QFI',
-    fullName: 'QoS Flow Identifier',
-    type: 'Identifier',
-    layer: 'SDAP',
-    definition: 'A 6-bit value uniquely identifying a QoS flow within a PDU session. Carried in the SDAP header for uplink and downlink data. The QFI is assigned by the SMF and preserved end-to-end between UPF and UE via the SDAP layer.',
-    related: ['QoS', 'DRB', 'SDAP', 'SMF'],
-    spec: '3GPP TS 23.501',
-  },
-  {
-    id: 'qos',
-    term: 'QoS',
-    fullName: 'Quality of Service',
-    type: 'Concept',
-    layer: 'End-to-End',
-    definition: 'The framework for differentiating data flows by 5QI, GBR/non-GBR class, priority, and packet delay budget. The SMF provisions QoS rules on the UPF (via N4) and delivers QoS configuration to the gNB and UE (via NGAP and RRC) for DRB setup.',
-    related: ['QFI', 'DRB', 'SMF', 'UPF', 'SDAP'],
-    spec: '3GPP TS 23.501',
-  },
-  // ── R ────────────────────────────────────────────────────────────
-  {
-    id: 'rach',
-    term: 'RACH',
-    fullName: 'Random Access Channel',
-    type: 'Channel',
-    layer: 'MAC',
-    definition: 'The logical/transport channel supporting the random access procedure. The UE transmits a PRACH preamble; the gNB responds with a RAR containing timing advance, UL grant, and Temp C-RNTI. Used for initial access, handover target access, SR failure recovery, and re-establishment.',
-    related: ['PRACH', 'RAR', 'MAC', 'SR', 'C-RNTI'],
-    spec: '3GPP TS 38.321',
-  },
-  {
-    id: 'rar',
-    term: 'RAR',
-    fullName: 'Random Access Response',
-    type: 'Concept',
-    layer: 'MAC',
-    definition: 'The network response to a PRACH preamble (Msg1 in the 4-step RACH procedure). Delivered on PDSCH, addressed by RA-RNTI. Contains: Timing Advance command, UL grant for Msg3, and Temporary C-RNTI assignment.',
-    related: ['PRACH', 'RACH', 'MAC', 'PDSCH', 'C-RNTI'],
-    spec: '3GPP TS 38.321',
-  },
-  {
-    id: 'ri',
-    term: 'RI',
-    fullName: 'Rank Indicator',
-    type: 'Concept',
-    layer: 'PHY',
-    definition: 'A CSI report value indicating the number of independent data streams (transmission rank) that the channel can support. RI=1 for single-layer, RI>1 for spatial multiplexing. The gNB scheduler uses RI for MIMO rank adaptation.',
-    related: ['CQI', 'PMI', 'CSI', 'CSI-RS'],
-    spec: '3GPP TS 38.214',
-  },
-  {
-    id: 'rlc',
-    term: 'RLC',
-    fullName: 'Radio Link Control',
-    type: 'Protocol',
-    layer: 'RLC',
-    definition: 'A Layer-2 sublayer between MAC and PDCP. Supports three modes: TM (Transparent Mode, for BCCH/CCCH), UM (Unacknowledged Mode, for low-latency streams), and AM (Acknowledged Mode, with ARQ for reliable delivery). Runs between UE and gNB-DU.',
-    related: ['MAC', 'PDCP', 'ARQ', 'DRB', 'SRB'],
-    spec: '3GPP TS 38.322',
-  },
-  {
-    id: 'rnti',
-    term: 'RNTI',
-    fullName: 'Radio Network Temporary Identifier',
-    type: 'Identifier',
-    layer: 'MAC',
-    definition: 'A 16-bit identifier used to address UEs or broadcast channels on the air interface. Key types: C-RNTI (UE-specific scheduling), RA-RNTI (random access response window), P-RNTI (paging), SI-RNTI (system information broadcast).',
-    related: ['C-RNTI', 'MAC', 'DCI'],
-    spec: '3GPP TS 38.321',
-  },
-  {
-    id: 'rohc',
-    term: 'ROHC',
-    fullName: 'Robust Header Compression',
-    type: 'Protocol',
-    layer: 'PDCP',
-    definition: 'A header compression protocol used within PDCP to reduce IP/UDP/RTP overhead on the radio interface. Particularly beneficial for VoIP traffic, compressing 40-byte IP/UDP/RTP headers down to 1–4 bytes in steady state.',
-    related: ['PDCP', 'IP', 'UDP'],
-    spec: 'IETF RFC 3095 / 3GPP TS 38.323',
-  },
-  {
-    id: 'rrc',
-    term: 'RRC',
-    fullName: 'Radio Resource Control',
-    type: 'Protocol',
-    layer: 'RRC',
-    definition: 'The control-plane protocol between UE and gNB-CU-CP. Manages connection establishment/release, RRCReconfiguration (bearer setup, handover), measurement control and reporting, SIB broadcast, and paging. Terminates on the gNB-CU-CP.',
-    related: ['NAS', 'PDCP', 'RRC_IDLE', 'RRC_CONNECTED', 'RRC_INACTIVE', 'DRB', 'SRB'],
-    spec: '3GPP TS 38.331',
-  },
-  {
-    id: 'rrc-connected',
-    term: 'RRC_CONNECTED',
-    fullName: 'RRC Connected State',
-    type: 'Concept',
-    layer: 'RRC',
-    definition: 'The UE state in which an RRC connection is active. The UE has an AS context in the gNB and an MM context in the AMF. Active DRBs and SRBs are configured; the UE performs configured measurements and can send/receive data.',
-    related: ['RRC_IDLE', 'RRC_INACTIVE', 'RRC', 'SRB', 'DRB'],
-    spec: '3GPP TS 38.331',
-  },
-  {
-    id: 'rrc-idle',
-    term: 'RRC_IDLE',
-    fullName: 'RRC Idle State',
-    type: 'Concept',
-    layer: 'RRC',
-    definition: 'The UE state with no active RRC connection and no RAN-stored AS context. The UE performs cell reselection autonomously and monitors paging occasions. Data transmission requires a new RACH procedure and full RRC establishment.',
-    related: ['RRC_CONNECTED', 'RRC_INACTIVE', 'RRC', 'Cell Search', 'RACH'],
-    spec: '3GPP TS 38.331',
-  },
-  {
-    id: 'rrc-inactive',
-    term: 'RRC_INACTIVE',
-    fullName: 'RRC Inactive State',
-    type: 'Concept',
-    layer: 'RRC',
-    definition: 'A 5G NR state (not present in LTE) in which the UE AS context is suspended and stored in both the UE and the last serving gNB. The UE performs cell reselection and can rapidly resume without full RRC re-establishment, saving both UE battery and network signaling.',
-    related: ['RRC_IDLE', 'RRC_CONNECTED', 'RRC'],
-    spec: '3GPP TS 38.331',
-  },
-  // ── S ────────────────────────────────────────────────────────────
-  {
-    id: 'sdap',
-    term: 'SDAP',
-    fullName: 'Service Data Adaptation Protocol',
-    type: 'Protocol',
-    layer: 'SDAP',
-    definition: 'A 5G NR-specific layer above PDCP on the user plane (absent in LTE). Maps QoS flows to DRBs and adds a 1-byte header containing the QFI and RDI/RQI bits. Terminates on the gNB-CU-UP and provides reflective QoS mapping capability.',
-    related: ['PDCP', 'DRB', 'QFI', 'QoS', 'gNB-CU-UP'],
-    spec: '3GPP TS 37.324',
-  },
-  {
-    id: 'sib1',
-    term: 'SIB1',
-    fullName: 'System Information Block 1',
-    type: 'Concept',
-    layer: 'RRC',
-    definition: 'The first system information block decoded after the MIB. Carries the PLMN identity list, cell barring and access restriction status, Tracking Area Code, RACH configuration, and scheduling information for other SIBs. Transmitted on PDSCH, scheduled per the offset in MIB.',
-    related: ['MIB', 'PBCH', 'SSB', 'PRACH', 'PLMN', 'RACH'],
-    spec: '3GPP TS 38.331',
-  },
-  {
-    id: 'smf',
-    term: 'SMF',
-    fullName: 'Session Management Function',
-    type: 'Component',
-    layer: '5GC',
-    definition: 'The 5G Core function responsible for PDU session lifecycle management. Selects and controls the UPF via N4/PFCP, allocates UE IP addresses, enforces QoS policy, and interfaces with AMF (N11) and PCF for policy. Handles PDU session establishment, modification, and release.',
-    related: ['AMF', 'UPF', 'N4', 'DNN', 'QoS', 'DRB'],
-    spec: '3GPP TS 23.501',
-  },
-  {
-    id: 'sr',
-    term: 'SR',
-    fullName: 'Scheduling Request',
-    type: 'Procedure',
-    layer: 'MAC',
-    definition: 'A 1-bit uplink request sent by the UE on PUCCH when it has data to transmit but holds no active UL grant. The gNB responds with a UL grant via DCI. After exhausting configured SR transmissions, the UE falls back to RACH.',
-    related: ['MAC', 'PUCCH', 'DCI', 'BSR', 'RACH'],
-    spec: '3GPP TS 38.321',
-  },
-  {
-    id: 'srb',
-    term: 'SRB',
-    fullName: 'Signalling Radio Bearer',
-    type: 'Concept',
-    layer: 'RRC',
-    definition: 'A radio bearer used exclusively for RRC and NAS control messages. Three SRBs are defined: SRB0 (CCCH — carries RRCSetupRequest before security), SRB1 (DCCH — RRC/NAS after setup, before security activation), SRB2 (DCCH — NAS after AS security).',
-    related: ['DRB', 'RRC', 'NAS', 'PDCP'],
-    spec: '3GPP TS 38.331',
-  },
-  {
-    id: 'ssb',
-    term: 'SSB',
-    fullName: 'Synchronization Signal Block',
-    type: 'Signal',
-    layer: 'PHY',
-    definition: 'A periodically transmitted downlink structure consisting of PSS (symbol 0), SSS (symbol 2), and PBCH with DMRS (symbols 1 and 3). Carries MIB and provides cell timing/identity. UEs detect SSBs during initial cell search and use them for RRM measurements and beam management.',
-    related: ['PSS', 'SSS', 'PBCH', 'MIB', 'CSI-RS', 'Cell Search'],
-    spec: '3GPP TS 38.211',
-  },
-  {
-    id: 'sss',
-    term: 'SSS',
-    fullName: 'Secondary Synchronization Signal',
-    type: 'Signal',
-    layer: 'PHY',
-    definition: 'The second synchronization signal in the SSB (symbol 2). Together with PSS (which provides NID2), SSS provides NID1, completing the Physical Cell ID (PCI = 3 × NID1 + NID2). UEs use PSS+SSS to derive full PCI and confirm cell timing.',
-    related: ['PSS', 'SSB', 'PBCH', 'Cell Search'],
-    spec: '3GPP TS 38.211',
-  },
-  {
-    id: 'suci',
-    term: 'SUCI',
-    fullName: 'Subscription Concealed Identifier',
-    type: 'Identifier',
-    layer: 'NAS',
-    definition: "A privacy-preserving one-time-use identifier that conceals the subscriber's permanent SUPI using the home network's public key (ECIES). Sent in the initial Registration Request instead of the SUPI/IMSI to prevent IMSI-catching attacks.",
-    related: ['5G-GUTI', 'AUSF', 'AMF', 'NAS'],
-    spec: '3GPP TS 23.003',
-  },
-  // ── T ────────────────────────────────────────────────────────────
-  {
-    id: 'tcp',
-    term: 'TCP',
-    fullName: 'Transmission Control Protocol',
-    type: 'Protocol',
-    layer: 'Application',
-    definition: 'A reliable, connection-oriented transport protocol providing ordered delivery and congestion control. Operates transparently over the 5G PDU session. TCP retransmissions are independent of HARQ/ARQ — the network does not intercept TCP.',
-    related: ['UDP', 'IP', 'DN', 'N6'],
-    spec: 'IETF RFC 793',
-  },
-  {
-    id: 'tpc',
-    term: 'TPC',
-    fullName: 'Transmit Power Control',
-    type: 'Concept',
-    layer: 'PHY',
-    definition: 'A mechanism to adjust UE uplink transmit power on a per-slot basis. TPC commands (delta values) are carried in UL DCI (DCI 0_0/0_1). Combined with open-loop path-loss compensation to maintain target received power at the gNB.',
-    related: ['DCI', 'PUSCH', 'PUCCH', 'PHY'],
-    spec: '3GPP TS 38.213',
-  },
-  // ── U ────────────────────────────────────────────────────────────
-  {
-    id: 'udp',
-    term: 'UDP',
-    fullName: 'User Datagram Protocol',
-    type: 'Protocol',
-    layer: 'Application',
-    definition: 'A connectionless, minimal-overhead transport protocol. Used for latency-sensitive applications such as VoIP, DNS, video streaming, and gaming. Loss recovery is handled at the application layer; ROHC in PDCP can compress UDP headers.',
-    related: ['TCP', 'IP', 'DN', 'ROHC'],
-    spec: 'IETF RFC 768',
-  },
-  {
-    id: 'ue',
-    term: 'UE',
-    fullName: 'User Equipment',
-    type: 'Component',
-    layer: 'UE',
-    definition: 'The end-user terminal in a 5G NR network, consisting of the ME (mobile equipment hardware/software) and a USIM (subscriber credentials). Connects to NG-RAN over the Uu air interface and communicates with the 5GC via NAS signaling on the N1 reference point.',
-    related: ['ME', 'USIM', 'gNB', 'Uu', 'NAS'],
-    spec: '3GPP TS 23.501',
-  },
-  {
-    id: 'upf',
-    term: 'UPF',
-    fullName: 'User Plane Function',
-    type: 'Component',
-    layer: '5GC',
-    definition: 'The 5G Core user-plane anchor. Terminates N3 (GTP-U from gNB-CU-UP) and N6 (IP toward DN). Performs PDU session anchoring, packet routing and forwarding, QoS enforcement (marking, policing), usage measurement, and downlink buffering for paging triggers. Controlled by SMF via N4/PFCP.',
-    related: ['SMF', 'N3', 'N6', 'N4', 'GTP-U', 'QoS'],
-    spec: '3GPP TS 23.501',
-  },
-  {
-    id: 'usim',
-    term: 'USIM',
-    fullName: 'Universal Subscriber Identity Module',
-    type: 'Component',
-    layer: 'UE',
-    definition: 'The application running on a UICC (the SIM card) that stores the subscriber permanent identity (SUPI/IMSI), long-term secret key K, and authentication algorithms. Used for 5G-AKA derivation and SIM-based cryptographic operations.',
-    related: ['UE', 'ME', 'SUCI', '5G-AKA'],
-    spec: '3GPP TS 31.102',
-  },
-  {
-    id: 'uu',
-    term: 'Uu',
-    fullName: 'Uu Interface (NR Air Interface)',
-    type: 'Interface',
-    layer: 'UE ↔ NG-RAN',
-    definition: 'The 5G NR air interface between a UE and its serving gNB. Carries all protocol layers of the radio stack — PHY, MAC, RLC, PDCP, SDAP (UP), and RRC (CP). Uses OFDM waveforms with flexible numerology (subcarrier spacing 15–240 kHz).',
-    related: ['gNB', 'UE', 'PHY', 'MAC', 'RLC', 'PDCP', 'RRC'],
-    spec: '3GPP TS 38.300',
-  },
-  // ── X ────────────────────────────────────────────────────────────
-  {
-    id: 'xn',
-    term: 'Xn',
-    fullName: 'Xn Interface',
-    type: 'Interface',
-    layer: 'NG-RAN',
-    definition: 'The interface between two gNBs (or between a gNB and an ng-eNB). Carries XnAP for Xn Setup, UE context retrieval, Xn-based handover preparation and execution, SN Status Transfer, and dual connectivity (MR-DC) procedures.',
-    related: ['XnAP', 'gNB', 'Handover', 'F1'],
-    spec: '3GPP TS 38.420',
-  },
-  {
-    id: 'xnap',
-    term: 'XnAP',
-    fullName: 'Xn Application Protocol',
-    type: 'Protocol',
-    layer: 'NG-RAN',
-    definition: 'The application-layer protocol on the Xn interface between gNBs. Supports Xn Setup and configuration exchange, handover preparation (Handover Request/Acknowledge), SN Status Transfer, UE Context Release, and dual connectivity management (SgNB Addition/Modification/Release).',
-    related: ['Xn', 'gNB', 'NGAP', 'F1AP'],
-    spec: '3GPP TS 38.423',
-  },
-
-  // ── Numbers (additional) ─────────────────────────────────────────
+  // ── Numbers ───────────────────────────────────────────────
   {
     id: '5g-cm',
     term: '5G CM',
@@ -917,6 +53,82 @@ const terms = [
     spec: '3GPP TS 33.501',
   },
   {
+    id: '5g-aka',
+    term: '5G-AKA',
+    fullName: '5G Authentication and Key Agreement',
+    type: 'Procedure',
+    layer: 'NAS',
+    definition: 'The primary 5G authentication mechanism. The network delivers RAND and AUTN to the UE; the UE computes RES*, which the AUSF verifies against HRES*. Successful completion derives KAUSF and KAMF for subsequent NAS and AS security.',
+    related: ['AUSF', 'AMF', 'SUCI', '5G-GUTI', 'EAP-AKA'],
+    spec: '3GPP TS 33.501',
+    logReference: `# OCUDU
+    `,
+  },
+  {
+    id: '5g-guti',
+    term: '5G-GUTI',
+    fullName: '5G Globally Unique Temporary Identifier',
+    type: 'Identifier',
+    layer: 'NAS',
+    definition: 'A temporary identifier assigned to a UE by the AMF after successful registration. Replaces the SUPI on the air interface to prevent subscriber tracking. Composed of GUAMI (identifying the AMF) and 5G-TMSI.',
+    related: ['SUCI', 'AMF', 'PLMN', 'NAS'],
+    spec: '3GPP TS 23.003',
+    logReference: `# TEMS
+    5GS Mobile Identity
+    Type of identity: (2) 5G-GUTI
+    Mobile Country Code (MCC): 310
+    Mobile Network Code (MNC): 260
+    AMF Region ID: 90
+    AMF Set ID: 256
+    AMF Pointer: 13
+    5G-TMSI: 3434204115
+    `,
+  },
+  {
+    id: '5g-s-tmsi',
+    term: '5G-s-TMSI',
+    fullName: '5G Short Temporary Mobile Subscriber Identity',
+    type: 'Identifier',
+    layer: 'NAS',
+    definition: 'A shortened form of the 5G-GUTI used in paging messages and RRC signaling to reduce overhead. Composed of AMF Set ID (10 bits) + AMF Pointer (6 bits) + 5G-TMSI (32 bits). Allows the UE to identify itself during paging response and RRC Resume without sending the full GUTI.',
+    related: ['5G-TMSI', '5G-GUTI', 'S-TMSI', 'AMF', 'Paging'],
+    spec: '3GPP TS 23.003',
+    logReference: `# LOG
+    `,
+  },
+  {
+    id: '5g-tmsi',
+    term: '5G-TMSI',
+    fullName: '5G Temporary Mobile Subscriber Identity',
+    type: 'Identifier',
+    layer: 'NAS',
+    definition: 'A 32-bit temporary identifier assigned to the UE by the AMF as part of the 5G-GUTI. Combined with the GUAMI, it forms the full 5G-GUTI. Used to identify the UE within the AMF without exposing the SUPI.',
+    related: ['5G-GUTI', 'GUAMI', 'AMF', 'SUPI', '5G-s-TMSI'],
+    spec: '3GPP TS 23.003',
+    logReference: `# LOG
+    `,
+  },
+  {
+    id: '5gmm',
+    term: '5GMM',
+    fullName: '5G Mobility Management',
+    type: 'Concept',
+    layer: 'NAS',
+    definition: 'The NAS sublayer responsible for mobility management in 5G, including registration, deregistration, authentication, and security mode command procedures. All 5GMM procedures terminate at the AMF.',
+    related: ['NAS', 'AMF', 'RRC'],
+    spec: '3GPP TS 24.501',
+    logReference: `# TEMS
+    MM5G State: DEREGISTERED
+    MM5G Deregistered Substate: PLMN_SEARCH
+
+    MM5G State: REGISTERED_INITIATED
+    Substate: 1
+
+    MM5G State: REGISTERED
+    MM5G Registered Substate: NORMAL_SERVICE
+    `,
+  },
+  {
     id: '5gs',
     term: '5GS',
     fullName: '5G System',
@@ -935,6 +147,8 @@ const terms = [
     definition: 'The NAS sublayer responsible for PDU session management in 5G, including PDU Session Establishment, Modification, and Release procedures. 5GSM messages are transported within NAS PDUs and terminate at the SMF via the AMF.',
     related: ['5GMM', 'NAS', 'SMF', 'PDU Session', 'PDU Session Establishment'],
     spec: '3GPP TS 24.501',
+    logReference: `# LOG
+    `,
   },
   {
     id: '5qi',
@@ -945,28 +159,11 @@ const terms = [
     definition: 'A scalar value that maps to a standardized set of QoS characteristics (packet delay budget, packet error rate, priority, resource type). Pre-defined 5QI values cover GBR flows (e.g., 1=voice, 2=video) and non-GBR flows (e.g., 9=best-effort). Configured by the SMF and enforced end-to-end.',
     related: ['QoS', 'QFI', 'GBR', 'GFBR', 'SMF', 'QoS Flow'],
     spec: '3GPP TS 23.501',
+    logReference: `# LOG
+    `,
   },
-  {
-    id: '5g-tmsi',
-    term: '5G-TMSI',
-    fullName: '5G Temporary Mobile Subscriber Identity',
-    type: 'Identifier',
-    layer: 'NAS',
-    definition: 'A 32-bit temporary identifier assigned to the UE by the AMF as part of the 5G-GUTI. Combined with the GUAMI, it forms the full 5G-GUTI. Used to identify the UE within the AMF without exposing the SUPI.',
-    related: ['5G-GUTI', 'GUAMI', 'AMF', 'SUPI', '5G-s-TMSI'],
-    spec: '3GPP TS 23.003',
-  },
-  {
-    id: '5g-s-tmsi',
-    term: '5G-s-TMSI',
-    fullName: '5G Short Temporary Mobile Subscriber Identity',
-    type: 'Identifier',
-    layer: 'NAS',
-    definition: 'A shortened form of the 5G-GUTI used in paging messages and RRC signaling to reduce overhead. Composed of AMF Set ID (10 bits) + AMF Pointer (6 bits) + 5G-TMSI (32 bits). Allows the UE to identify itself during paging response and RRC Resume without sending the full GUTI.',
-    related: ['5G-TMSI', '5G-GUTI', 'S-TMSI', 'AMF', 'Paging'],
-    spec: '3GPP TS 23.003',
-  },
-  // ── A (additional) ───────────────────────────────────────────────
+
+  // ── A ─────────────────────────────────────────────────────
   {
     id: 'abba',
     term: 'ABBA',
@@ -986,6 +183,10 @@ const terms = [
     definition: 'A positive acknowledgement indicating successful receipt of data. In HARQ, ACK indicates correct CRC on PDSCH/PUSCH decoding. In RLC AM, ACK bitmasks in STATUS PDUs confirm delivery. In TCP, ACK confirms receipt of segments.',
     related: ['NACK', 'HARQ', 'RLC AM', 'ARQ'],
     spec: '3GPP TS 38.321',
+    logReference: `# OCUDU DU
+    [SCHED   ] [D] [   505.6] Processed slot events pci=1:
+      - HARQ-ACK: ue=0 rnti=0x4601 pci=1 slot_rx=504.17 h_id=0 ack=1 tbs=317
+    `,
   },
   {
     id: 'aes',
@@ -1008,6 +209,19 @@ const terms = [
     spec: '3GPP TS 33.501',
   },
   {
+    id: 'amf',
+    term: 'AMF',
+    fullName: 'Access and Mobility Management Function',
+    type: 'Component',
+    layer: '5GC',
+    definition: 'The 5G Core network function responsible for UE access and mobility management. Terminates N1 (NAS toward UE), N2 (NGAP toward gNB), and interfaces with SMF (N11) and AUSF. Handles registration, authentication coordination, paging, and handover signaling.',
+    related: ['SMF', 'UPF', 'AUSF', 'NGAP', 'N1', 'N2'],
+    spec: '3GPP TS 23.501',
+    configParams: '# OCUDU gNB & CU CP\n amf:\n  addrs: 127.0.1.100\n    bind_addrs: 127.0.10.2\n     supported_tracking_areas:\n      - tac: 7',
+    logReference: '#Open5gs\n[AMF][Info] UE Registration Request received\n[AMF][Debug] NAS container decoded: 5GMM Registration Request',
+    packetCapture: 'ngap.procedureCode == 21  // InitialUEMessage\nngap.procedureCode == 14  // DownlinkNASTransport',
+  },
+  {
     id: 'apn',
     term: 'APN',
     fullName: 'Access Point Name',
@@ -1016,6 +230,8 @@ const terms = [
     definition: 'The LTE/EPC equivalent of the 5G DNN (Data Network Name). Identifies the packet data network and gateway to connect to. In 5G NR, the DNN is used instead, though APNs are interworked for EPC compatibility.',
     related: ['DNN', 'PDU Session', 'SMF'],
     spec: '3GPP TS 23.003',
+    logReference: `# LOG
+    `,
   },
   {
     id: 'arpf',
@@ -1026,6 +242,28 @@ const terms = [
     definition: 'A 5GC function co-located with the UDM that stores subscriber long-term credentials (key K) and computes authentication vectors (5G HE AV). The ARPF generates RAND, AUTN, XRES*, and KAUSF for each authentication request from the AUSF.',
     related: ['UDM', 'AUSF', '5G HE AV', 'AK', 'SQN', 'Authentication'],
     spec: '3GPP TS 33.501',
+  },
+  {
+    id: 'arq',
+    term: 'ARQ',
+    fullName: 'Automatic Repeat Request',
+    type: 'Procedure',
+    layer: 'RLC',
+    definition: 'A link-layer error correction mechanism in RLC AM mode. The receiver sends STATUS PDUs containing ACK/NACK bitmasks; the transmitter retransmits NACKed PDUs. ARQ operates above HARQ, handling residual errors that HARQ chase-combining fails to correct.',
+    related: ['HARQ', 'RLC', 'PDCP'],
+    spec: '3GPP TS 38.322',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'ausf',
+    term: 'AUSF',
+    fullName: 'Authentication Server Function',
+    type: 'Component',
+    layer: '5GC',
+    definition: 'A 5G Core network function that executes UE authentication on behalf of the AMF. Retrieves credentials from the UDM and verifies the UE response in 5G-AKA or EAP-AKA\' procedures. Derives and stores KAUSF.',
+    related: ['AMF', '5G-AKA', 'SUCI'],
+    spec: '3GPP TS 33.501',
+    logReference: `# OPEN5GS`,
   },
   {
     id: 'authentication',
@@ -1046,6 +284,8 @@ const terms = [
     definition: 'A 128-bit token generated by the ARPF/UDM and included in the authentication challenge sent to the UE. Contains SQN XOR AK, AMF field, and MAC. The UE verifies AUTN to authenticate the network before computing its response.',
     related: ['AK', 'SQN', 'RAND', 'AV', 'Authentication', '5G-AKA'],
     spec: '3GPP TS 33.501',
+    logReference: `# LOG
+    `,
   },
   {
     id: 'av',
@@ -1057,7 +297,8 @@ const terms = [
     related: ['5G HE AV', '5G SE AV', 'RAND', 'AUTN', 'Authentication'],
     spec: '3GPP TS 33.501',
   },
-  // ── B (additional) ───────────────────────────────────────────────
+
+  // ── B ─────────────────────────────────────────────────────
   {
     id: 'backhaul',
     term: 'Backhaul',
@@ -1099,6 +340,43 @@ const terms = [
     spec: '3GPP TS 38.321',
   },
   {
+    id: 'bearer-context',
+    term: 'Bearer Context',
+    fullName: 'Bearer Context',
+    type: 'Concept',
+    layer: 'NG-RAN',
+    definition: 'The set of information representing one or more DRBs associated with a PDU session, maintained in the gNB-CU-UP and managed via the E1 interface. Includes PDCP and SDAP configuration, QoS parameters, security keys, and F1-U tunnel identifiers.',
+    related: ['E1AP', 'gNB-CU-UP', 'DRB', 'PDU Session', 'UE Context'],
+    spec: '3GPP TS 38.463',
+    logReference: `# OCUDU
+[NGAP    ] [D] ue=3 ran_ue=3 amf_ue=4: ""PDU Session Resource Setup Procedure"" started...
+[CU-CP   ] [D] ue=3: ""PDU Session Resource Setup Routine"" started...
+[CU-CP   ] [D] Allocated QFI=1 to DRB1 with 5QI=0x9
+[CU-CP-E1] [I] ue=3 cu_cp_ue=1: Created new E1AP UE context
+[CU-CP-E1] [D] ue=3 cu_cp_ue=1: ""Bearer Context Setup Procedure"" initialized
+[CU-CP-E1] [I] Tx PDU ue=3 cu_cp_ue=1: BearerContextSetupRequest
+[CU-CP-E1] [I] Rx PDU ue=3 cu_cp_ue=1 cu_up_ue=1: BearerContextSetupResponse
+[CU-CP-E1] [D] ue=3 cu_cp_ue=1 cu_up_ue=1: Updated CU-UP-E1AP-ID
+[CU-CP-E1] [D] ue=3 cu_cp_ue=1 cu_up_ue=1: ""Bearer Context Setup Procedure"" finalized
+[CU-CP-E1] [D] ue=3 cu_cp_ue=1 cu_up_ue=1: ""Bearer Context Modification Procedure"" initialized
+[CU-CP-E1] [I] Tx PDU ue=3 cu_cp_ue=1 cu_up_ue=1: BearerContextModificationRequest
+[CU-CP-E1] [I] Rx PDU ue=3 cu_cp_ue=1 cu_up_ue=1: BearerContextModificationResponse
+[CU-CP-E1] [D] ue=3 cu_cp_ue=1 cu_up_ue=1: ""Bearer Context Modification Procedure"" finalized`,
+  },
+  {
+    id: 'bsr',
+    term: 'BSR',
+    fullName: 'Buffer Status Report',
+    type: 'Procedure',
+    layer: 'MAC',
+    definition: 'A MAC control element sent by the UE to inform the gNB scheduler of the volume of uplink data waiting in its logical channel buffers. Triggers the gNB to allocate appropriate UL resources. Three types: Short BSR, Long BSR, and Truncated BSR.',
+    related: ['MAC', 'SR', 'LCP', 'DRB'],
+    spec: '3GPP TS 38.321',
+    logReference: `# OCUDU
+[SCHED   ] [D] [  539.16] Processed slot events pci=1:
+- BSR: ue=1 rnti=0x4602 type=""Short BSR"" report={0, 0, 0, 0, 0, 0, 0, 0} pending_bytes=0`,
+  },
+  {
     id: 'bw',
     term: 'BW',
     fullName: 'Bandwidth',
@@ -1107,6 +385,12 @@ const terms = [
     definition: 'The frequency range allocated for transmission or reception. In 5G NR, channel bandwidth is defined in MHz (e.g., 5–100 MHz for FR1; up to 400 MHz for FR2). UEs may operate on a Bandwidth Part (BWP) smaller than the full channel BW.',
     related: ['BWP', 'FR1', 'FR2', 'PRB', 'numerology'],
     spec: '3GPP TS 38.101-1',
+    logReference: `# OCUDU DU
+    channel_bandwidth_MHz: 20
+
+    ## SIB1
+    "carrierBandwidth": 51,
+    `,
   },
   {
     id: 'bwp',
@@ -1117,8 +401,31 @@ const terms = [
     definition: 'A contiguous set of PRBs configured by the gNB within the channel bandwidth, using a specific numerology. UEs can be configured with up to four DL BWPs and four UL BWPs, with one active at a time. BWP adaptation supports power saving and flexible numerology coexistence.',
     related: ['BW', 'PRB', 'numerology', 'PointA', 'CRB'],
     spec: '3GPP TS 38.211',
+    logReference: `# OCUDU DU
+    # SIB 1
+    "initialDownlinkBWP": {
+        "genericParameters": {
+          "locationAndBandwidth": 13750,
+          "subcarrierSpacing": "kHz30"
+
+    ## PDSCH Transmission
+    [PHY     ] [D] [  503.10] PDSCH: rnti=0x010b prb=[0, 3) symb=[2, 14) mod=QPSK rv=0 tbs=9 t=25.5us
+      rnti=0x010b
+      bwp=[0, 24)
+      prb=[0, 3)
+      symb=[2, 14)
+
+    ### PUSCH Reception
+  [PHY     ] [D] [  503.17] PUSCH: rnti=0x4601 h_id=0 prb=[8, 11) symb=[0, 14) mod=QPSK rv=0 tbs=11 crc=OK iter=1.0 sinr=26.6dB t=82.0us uci_t=0.0us ret_t=5.5us
+    rnti=0x4601
+    h_id=0
+    bwp=[0, 51)
+    prb=[8, 11)
+    symb=[0, 14)
+    `,
   },
-  // ── C (additional) ───────────────────────────────────────────────
+
+  // ── C ─────────────────────────────────────────────────────
   {
     id: 'c-ran',
     term: 'C-RAN',
@@ -1128,6 +435,37 @@ const terms = [
     definition: 'A RAN architecture in which BBU processing is centralized (pooled) and connected to distributed radio units (RRH/RRU) via a fronthaul link. Enables BBU pooling for resource sharing, coordination, and cost reduction. A key enabler of O-RAN and disaggregated gNB deployments.',
     related: ['BBU', 'RRH', 'RRU', 'Fronthaul', 'O-RAN', 'Split 7.2'],
     spec: '',
+  },
+  {
+    id: 'c-rnti',
+    term: 'C-RNTI',
+    fullName: 'Cell Radio Network Temporary Identifier',
+    type: 'Identifier',
+    layer: 'MAC',
+    definition: 'A cell-specific 16-bit identifier assigned to a UE upon successful contention resolution in the random access procedure. Used to address the UE in PDCCH DCI for scheduling, HARQ feedback, and MAC control signaling.',
+    related: ['RNTI', 'MAC', 'DCI', 'RACH'],
+    spec: '3GPP TS 38.321',
+    logReference: `# OCUDU DU 
+    [PHY     ] [D] [  503.17] PUSCH: rnti=0x4601 h_id=0 prb=[8, 11) symb=[0, 14) mod=QPSK rv=0 tbs=11 crc=OK iter=1.0 sinr=26.6dB t=82.0us uci_t=0.0us ret_t=5.5us
+    [MAC     ] [I] [   504.5] UL rnti=0x4601 subPDUs: [CCCH48: len=6, SE_PHR: ph=[15..16)dB p_cmax=[20..21)dBm, PAD: len=0]
+    [MAC     ] [D] [   504.5] UL rnti=0x4601 lcid=52 CE: Discarding remaining subPDUs
+    [DU-MNG  ] [I] ue=0 rnti=0x4601 proc="UE Create": Procedure started....
+    [DU-F1   ] [I] ue=0 c-rnti=0x4601 du_ue=0: F1 UE context created successfully.
+    [MAC     ] [D] [   504.6] ue=0 crnti=0x4601 proc="MAC UE Creation": started...
+    [MAC     ] [D] [   504.6] ue=0 crnti=0x4601 proc="MAC UE Creation": UE UL context created successfully
+    [MAC     ] [D] [   504.6] ue=0 crnti=0x4601 proc="MAC UE Creation": UE DL context created successfully
+      - UE creation: ue=0 rnti=0x4601 pci=1
+      - PUCCH: c-rnti=0x4601 format=1 prb=[4..5) symb=[0..14) cs=0 occ=0 uci: harq_bits=0 sr=1
+    [MAC     ] [I] [   504.7] ue=0 crnti=0x4601 proc="MAC UE Creation": finished successfully
+    [DU-MNG  ] [I] ue=0 rnti=0x4601 proc="UE Create": Procedure finished successfully.
+    [MAC     ] [D] [   504.7] UL subPDU rnti=0x4601 ue=0 lcid=0 CE: Forwarding UL SDU of 6 bytes
+    [SCHED   ] [D] [   504.8] ue=0 rnti=0x4601: ConRes procedure started
+      - PUCCH: c-rnti=0x4601 format=2 prb=[7..8) symb=[4..6) uci: harq_bits=0 sr=0 csi-1_bits=4
+      - DL PDCCH: rnti=0x4601 type=tc-rnti cs_id=0 ss_id=1 format=1_0 cce=0 al=4 dci: h_id=0 ndi=1 rv=0 mcs=7 res_ind=0
+      - UE PDSCH: ue=0 c-rnti=0x4601 h_id=0 rb=[0..23) symb=[2..14) tbs=317 mcs=7 rv=0 nrtx=0 k1=7 dl_bo=0 olla=0 grants: lcid=62: size=6, lcid=0: size=301
+    
+    ## OCUDU CU CP
+    [RRC     ] [D] ue=1 c-rnti=0x4602: Received RRC Security Mode Complete`,
   },
   {
     id: 'ca',
@@ -1158,6 +496,8 @@ const terms = [
     definition: 'A group of code blocks within a transport block, used for CBG-based HARQ retransmission. Instead of retransmitting the full TB on a NACK, only the failed CBGs are retransmitted, improving efficiency for large TBs with partial errors.',
     related: ['CB', 'TB', 'HARQ', 'DCI', 'PDSCH'],
     spec: '3GPP TS 38.214',
+    logReference: `# LOG
+    `,
   },
   {
     id: 'cbra',
@@ -1208,6 +548,8 @@ const terms = [
     definition: 'The procedure by which a UE identifies and synchronizes to a 5G NR cell. The UE scans GSCN candidate frequencies for PSS (yielding NID2 and half-frame timing), then SSS (yielding NID1 and full PCI), and decodes PBCH/MIB for SFN and SIB1 scheduling.',
     related: ['PSS', 'SSS', 'SSB', 'GSCN', 'MIB', 'PCI', 'Cell Selection'],
     spec: '3GPP TS 38.304',
+    logReference: `# LOG
+    `,
   },
   {
     id: 'cell-selection',
@@ -1218,6 +560,8 @@ const terms = [
     definition: 'The process by which a UE chooses a suitable cell to camp on, based on the S-criterion (Srxlev > 0 and Squal > 0). Performed at power-on, after RRC connection release, or when leaving coverage. The UE reads SIB1 to determine if the cell is suitable and not barred.',
     related: ['Cell Search', 'Reselection', 'SIB1', 'RSRP', 'RSRQ', 'PLMN'],
     spec: '3GPP TS 38.304',
+    logReference: `# LOG
+    `,
   },
   {
     id: 'cfra',
@@ -1268,16 +612,24 @@ const terms = [
     definition: 'A configured time-frequency resource region within which PDCCH candidates are monitored. Defined by a bitmap of 6-PRB groups in frequency and 1–3 symbols in time. Up to 3 CORESETs per BWP can be configured. CORESET 0 is configured via MIB for initial access.',
     related: ['SearchSpace', 'PDCCH', 'CCE', 'REG', 'MIB', 'BWP'],
     spec: '3GPP TS 38.211',
-  },
-  {
-    id: 'cp-cyclic-prefix',
-    term: 'CP (Cyclic Prefix)',
-    fullName: 'Cyclic Prefix',
-    type: 'Concept',
-    layer: 'PHY',
-    definition: 'A guard interval prepended to each OFDM symbol, consisting of a copy of the symbol\'s tail. Eliminates inter-symbol interference (ISI) caused by multipath propagation, provided the channel delay spread is shorter than the CP duration. Normal CP (14 symbols/slot) and Extended CP (12 symbols/slot, FR2) are defined.',
-    related: ['CP-OFDM', 'OFDM', 'numerology', 'Slot', 'Symbol'],
-    spec: '3GPP TS 38.211',
+    logReference: `# OCUDU DU
+    [PHY     ] [D] [   591.0] PDCCH: rnti=0x4602 ss_id=1 format=1_0 cce=0 al=4 t=37.4us
+      rnti=0x4602
+      ss_id=1
+      format=1_0
+      slot=591.0
+      cp=normal
+      bwp=[0, 24)
+      symb=[0, 2)
+      f_re=111100000000000000000000000000000000000000000
+      cce_to_reg_map=coreset0
+      shift_idx=1
+      cce=0
+      al=4
+      size=37
+      n_id_dmrs=1
+      n_id_data=1
+      n_rnti=0`,
   },
   {
     id: 'cp-control-plane',
@@ -1288,6 +640,16 @@ const terms = [
     definition: 'The set of protocols and interfaces responsible for signaling, configuration, and control across the 5G stack. Includes NAS (UE–AMF), RRC (UE–gNB-CU-CP), F1-C (gNB-CU-CP–gNB-DU), and NGAP (gNB-CU-CP–AMF). Distinct from the User Plane (UP) which carries data.',
     related: ['UP', 'NAS', 'RRC', 'NGAP', 'F1AP', 'gNB-CU-CP'],
     spec: '3GPP TS 38.300',
+  },
+  {
+    id: 'cp-cyclic-prefix',
+    term: 'CP (Cyclic Prefix)',
+    fullName: 'Cyclic Prefix',
+    type: 'Concept',
+    layer: 'PHY',
+    definition: 'A guard interval prepended to each OFDM symbol, consisting of a copy of the symbol\'s tail. Eliminates inter-symbol interference (ISI) caused by multipath propagation, provided the channel delay spread is shorter than the CP duration. Normal CP (14 symbols/slot) and Extended CP (12 symbols/slot, FR2) are defined.',
+    related: ['CP-OFDM', 'OFDM', 'numerology', 'Slot', 'Symbol'],
+    spec: '3GPP TS 38.211',
   },
   {
     id: 'cp-ofdm',
@@ -1318,6 +680,19 @@ const terms = [
     definition: 'A field in the RLC control PDU header identifying the type of control PDU. In 5G NR RLC AM, the only defined control PDU type is the STATUS PDU (CPT = 0), which carries ACK/NACK bitmasks for ARQ.',
     related: ['RLC AM', 'ARQ', 'NACK', 'ACK'],
     spec: '3GPP TS 38.322',
+    logReference: `# LOG
+    `,
+  },
+  {
+    id: 'cqi',
+    term: 'CQI',
+    fullName: 'Channel Quality Indicator',
+    type: 'Concept',
+    layer: 'PHY',
+    definition: 'A 4-bit value reported by the UE indicating the downlink channel quality observed during a measurement interval. The gNB scheduler uses CQI to select a Modulation and Coding Scheme (MCS) for PDSCH that the UE can receive with at most 10% BLER.',
+    related: ['PMI', 'RI', 'CSI', 'CSI-RS', 'PUCCH'],
+    spec: '3GPP TS 38.214',
+    logReference: `# OCUDU`,
   },
   {
     id: 'cr',
@@ -1328,6 +703,21 @@ const terms = [
     definition: 'Step 4 of the 4-step contention-based RACH procedure (Msg4). The gNB transmits a Contention Resolution MAC CE containing the UE identity from Msg3. The UE that recognizes its identity considers the RACH successful and the temporary C-RNTI becomes permanent.',
     related: ['CBRA', 'RACH', 'C-RNTI', 'MAC', 'RAR'],
     spec: '3GPP TS 38.321',
+    logReference: `# OCUDU DU
+    [SCHED   ] [D] [   881.8] ue=0 rnti=0x4603: ConRes procedure started
+    [SCHED   ] [D] [   881.8] Processed slot events pci=1:
+      - MAC CE: ue=0 lcid=62
+    [SCHED   ] [D] [  881.10] Slot decisions pci=1 t=19us (1 PDSCH, 0 PUSCHs, 0 PUCCHs, 0 attempted PDCCHs, 0 attempted UCIs):
+      - DL PDCCH: rnti=0x4603 type=tc-rnti cs_id=0 ss_id=1 format=1_0 cce=0 al=4 dci: h_id=0 ndi=1 rv=0 mcs=0 res_ind=0
+      - UE PDSCH: ue=0 c-rnti=0x4603 h_id=0 rb=[0..3) symb=[2..14) tbs=9 mcs=0 rv=0 nrtx=0 k1=7 dl_bo=0 olla=0 grants: lcid=62: size=6
+    [MAC     ] [I] [  881.10] DL PDU: ue=0 rnti=0x4603 size=9: CON_RES: id=81800afd0
+    [PHY     ] [D] [  881.10] PDSCH: rnti=0x4603 h_id=0 k1=7 prb=[0, 3) symb=[2, 14) mod=QPSK rv=0 tbs=9 t=23.4us
+    [PHY     ] [D] [  881.10] PDCCH: rnti=0x4603 ss_id=1 format=1_0 cce=0 al=4 t=31.9us
+    [SCHED   ] [D] [  881.17] Slot decisions pci=1 t=3us (0 PDSCHs, 0 PUSCHs, 1 PUCCH, 0 attempted PDCCHs, 0 attempted UCIs):
+      - PUCCH: c-rnti=0x4603 format=1 prb=[0..1) second_prbs=[50..51) symb=[0..14) cs=0 occ=0 uci: harq_bits=1 sr=0
+    [PHY     ] [D] [  881.17] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=50 symb=[0, 14) cs=0 occ=0 ack=1 metric=418.0 sinr=14.4dB t=29.7us
+    [SCHED   ] [D] [   882.6] ue=0 rnti=0x4603: ConRes procedure completed
+    `,
   },
   {
     id: 'crb',
@@ -1340,6 +730,21 @@ const terms = [
     spec: '3GPP TS 38.211',
   },
   {
+    id: 'crc',
+    term: 'CRC',
+    fullName: 'Cyclic Redundancy Check',
+    type: 'Concept',
+    layer: 'PHY',
+    definition: 'An error detection code appended to transport blocks at the physical layer. After channel decoding, the receiver verifies the CRC; a failed check triggers a HARQ NACK and retransmission request.',
+    related: ['HARQ', 'PHY', 'MAC'],
+    spec: '3GPP TS 38.212',
+    logReference: `# OCUDU
+[PHY     ] [D] [   539.7] PUSCH: rnti=0x4602 h_id=0 prb=[8, 32) symb=[0, 14) mod=QPSK rv=0 tbs=528 crc=OK iter=2.0 sinr=25.4dB t=175.2us uci_t=0.0us ret_t=4.8us
+
+[SCHED   ] [D] [  539.16] Processed slot events pci=1:
+- CRC: ue=1 rnti=0x4602 pci=1 rx_slot=539.7 h_id=0 crc=true sinr=25.4dB`,
+  },
+  {
     id: 'cri',
     term: 'CRI',
     fullName: 'CSI-RS Resource Indicator',
@@ -1350,14 +755,26 @@ const terms = [
     spec: '3GPP TS 38.214',
   },
   {
-    id: 'crs',
-    term: 'CRS',
-    fullName: 'Cell-specific Reference Signal',
+    id: 'csi',
+    term: 'CSI',
+    fullName: 'Channel State Information',
+    type: 'Concept',
+    layer: 'PHY',
+    definition: 'The collection of measurements describing the current state of the radio channel between UE and gNB — including CQI, PMI, RI, L1-RSRP, and L1-SINR. The UE measures and reports CSI to enable adaptive modulation, rank selection, and beamforming.',
+    related: ['CQI', 'PMI', 'RI', 'CSI-RS'],
+    spec: '3GPP TS 38.214',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'csi-rs',
+    term: 'CSI-RS',
+    fullName: 'Channel State Information Reference Signal',
     type: 'Signal',
     layer: 'PHY',
-    definition: 'A reference signal defined in LTE (not used in 5G NR) that was transmitted from all antenna ports across the full bandwidth. Removed in 5G NR where CSI-RS and DMRS are used instead. Referenced in 5G NR contexts primarily for LTE/NR coexistence and interference management.',
-    related: ['CSI-RS', 'DMRS', 'SSB'],
-    spec: '3GPP TS 36.211 (LTE)',
+    definition: 'A configurable downlink reference signal transmitted by the gNB for channel measurement. The UE measures CSI-RS to derive and report CQI, PMI, and RI. Also used for beam management (L1 RSRP measurement) and RRM/mobility measurements.',
+    related: ['CSI', 'CQI', 'PMI', 'RI', 'SSB'],
+    spec: '3GPP TS 38.211',
+    logReference: `# OCUDU`,
   },
   {
     id: 'cu',
@@ -1399,7 +816,8 @@ const terms = [
     related: ['SMF', 'UPF', 'N4', 'PFCP', 'SDN'],
     spec: '3GPP TS 23.501',
   },
-  // ── D (additional) ───────────────────────────────────────────────
+
+  // ── D ─────────────────────────────────────────────────────
   {
     id: 'dcch',
     term: 'DCCH',
@@ -1409,6 +827,17 @@ const terms = [
     definition: 'A point-to-point logical channel carrying dedicated control information (RRC messages, NAS PDUs) between the UE and gNB. Carried by SRB1 (before AS security) and SRB2 (after AS security). Uses RLC AM mode.',
     related: ['CCCH', 'DTCH', 'SRB', 'RLC AM', 'Logical Channels'],
     spec: '3GPP TS 38.321',
+  },
+  {
+    id: 'dci',
+    term: 'DCI',
+    fullName: 'Downlink Control Information',
+    type: 'Concept',
+    layer: 'PHY',
+    definition: 'Control information carried on the PDCCH, used to schedule PDSCH (DL assignment) or PUSCH (UL grant) and to deliver TPC commands. Multiple DCI formats address different scenarios — DCI 0_0/0_1 for UL, DCI 1_0/1_1 for DL.',
+    related: ['PDCCH', 'PDSCH', 'PUSCH', 'TPC', 'C-RNTI'],
+    spec: '3GPP TS 38.212',
+    logReference: `# OCUDU`,
   },
   {
     id: 'dft-s-ofdm',
@@ -1439,6 +868,63 @@ const terms = [
     definition: 'A UE-specific reference signal used for channel estimation at the receiver for coherent demodulation of PDSCH, PUSCH, PDCCH, and PUCCH. Front-loaded by default (first symbol of allocation) with configurable additional DMRS positions for high-mobility. Orthogonal across layers for MIMO.',
     related: ['CSI-RS', 'SRS', 'PDSCH', 'PUSCH', 'Physical Signals'],
     spec: '3GPP TS 38.211',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'dn',
+    term: 'DN',
+    fullName: 'Data Network',
+    type: 'Component',
+    layer: 'External',
+    definition: 'An external IP network or service that UEs access via a PDU session. Examples include the public internet or an operator IMS/enterprise network. Connected to the 5GC via the UPF on the N6 interface.',
+    related: ['UPF', 'N6', 'DNN', 'SMF'],
+    spec: '3GPP TS 23.501',
+  },
+  {
+    id: 'dnn',
+    term: 'DNN',
+    fullName: 'Data Network Name',
+    type: 'Identifier',
+    layer: 'NAS',
+    definition: 'An APN-equivalent identifier included by the UE in PDU Session Establishment Requests to select the target Data Network and the corresponding SMF/UPF path. Common examples: "internet", "ims". Configured on the USIM or provisioned via OTA.',
+    related: ['PDU Session', 'SMF', 'DN', 'NAS'],
+    spec: '3GPP TS 23.003',
+  },
+  {
+    id: 'drb',
+    term: 'DRB',
+    fullName: 'Data Radio Bearer',
+    type: 'Concept',
+    layer: 'RRC / PDCP',
+    definition: 'A radio bearer carrying user-plane data. Each DRB is associated with one or more QoS flows via SDAP mapping. DRB configuration (PDCP, RLC, MAC parameters) is delivered by RRC in RRCSetup or RRCReconfiguration.',
+    related: ['SRB', 'QoS', 'QFI', 'PDCP', 'RLC', 'SDAP'],
+    spec: '3GPP TS 38.331',
+    logReference: `# OCUDU
+[SDAP    ] [I] ue=0 psi=13: Mapping QFI=1 DRB1 default_drb=true hdr_ul=absent hdr_dl=absent
+[PDCP    ] [I] ue=0 DRB1 DL: PDCP configured. rb_type=DRB rlc_mode=AM sn_size=18 discard_timer=infinity count_notify=3221225472 count_max=4294967294 warn_on_drop=false test_mode=false
+[PDCP    ] [I] ue=0 DRB1 DL: Security configured: NIA2 (off) NEA0 (on) domain=UP
+[SDAP    ] [D] ue=0 psi=14 QFI=1 DRB1 DL: TX PDU. QFI=1 pdu_len=60
+[PDCP    ] [D] ue=0 DRB1 DL: TX SDU. sdu_len=60
+[PDCP    ] [D] ue=0 DRB1 DL: Adding sn=0 to window.
+[PDCP    ] [D] ue=0 DRB1 DL: Added to tx window. count=0 discard_timer=infinity
+[PDCP    ] [D] ue=0 DRB1 DL: Using sec_engine with worker_idx=0. count=0 pdu_len=63
+[PDCP    ] [D] ue=0 DRB1 DL: Security applied. count=0
+[PDCP    ] [I] ue=0 DRB1 DL: TX PDU. type=data pdu_len=63 sn=0 count=0 is_retx=false
+[CU-F1-U ] [D] ue=0 DRB1 ul-teid=0x000003: F1-U bearer received SDU. size=63 is_retx=false
+[CU-F1-U ] [D] ue=0 DRB1 ul-teid=0x000003: F1-U bearer received PDU
+[CU-F1-U ] [D] ue=0 DRB1 ul-teid=0x000003: Notifying highest transmitted pdcp_sn=0
+[PDCP    ] [D] ue=0 DRB1 DL: Handling transmit notification for notif_sn=0 is_retx=false
+[PDCP    ] [D] ue=0 DRB1 DL: Updated tx_trans. tx_next_ack=0 tx_trans_crypto=1 tx_reord_crypto=0 tx_trans=1 tx_next=1`,
+  },
+  {
+    id: 'drx',
+    term: 'DRX',
+    fullName: 'Discontinuous Reception',
+    type: 'Procedure',
+    layer: 'MAC',
+    definition: 'A UE power-saving mechanism configured by RRC. The UE alternates between an on-duration (monitoring PDCCH) and an off-duration (sleep). Long and Short DRX cycles are supported, balancing latency and power consumption.',
+    related: ['MAC', 'RRC', 'C-RNTI'],
+    spec: '3GPP TS 38.321',
   },
   {
     id: 'dtch',
@@ -1460,7 +946,41 @@ const terms = [
     related: ['gNB-DU', 'CU', 'F1', 'RLC', 'MAC', 'PHY'],
     spec: '3GPP TS 38.401',
   },
-  // ── E (additional) ───────────────────────────────────────────────
+
+  // ── E ─────────────────────────────────────────────────────
+  {
+    id: 'e1',
+    term: 'E1',
+    fullName: 'E1 Interface',
+    type: 'Interface',
+    layer: 'NG-RAN',
+    definition: 'The interface between gNB-CU-CP and gNB-CU-UP within a disaggregated gNB. Carries E1AP for bearer context setup, modification, and release — allowing independent scaling of control-plane and user-plane CU functions.',
+    related: ['gNB-CU-CP', 'gNB-CU-UP', 'E1AP', 'F1'],
+    spec: '3GPP TS 38.460',
+    logReference: `# OCUDU CU UP
+[CU-UP-E1] [D] Trying to establish TNL connection to CU-CP (configured addrs 10.53.1.4, port 38462)...
+[CU-UP-E1] [I] E1: TNL connection to CU-CP accepted (configured addrs 10.53.1.4, port 38462)
+[CU-UP-E1] [D] "E1AP CU-UP Setup Procedure" initialized
+[CU-UP-E1] [I] Sending E1SetupRequest
+[CU-UP-E1] [I] Tx PDU tid=0: GNB-CU-UP-E1SetupRequest
+[CU-UP-E1] [I] Rx PDU tid=0: GNB-CU-UP-E1SetupResponse
+[CU-UP-E1] [I] "E1AP CU-UP Setup Procedure" finalized
+
+## OCUDU CU CP 
+[CU-CP-E1] [I] Rx PDU tid=0: GNB-CU-UP-E1SetupRequest
+[CU-CP-E1] [I] Tx PDU tid=0: GNB-CU-UP-E1SetupResponse`,
+  },
+  {
+    id: 'e1ap',
+    term: 'E1AP',
+    fullName: 'E1 Application Protocol',
+    type: 'Protocol',
+    layer: 'NG-RAN',
+    definition: 'The application-layer protocol on the E1 interface. Supports gNB-CU-UP registration, bearer context setup/modification/release, and capability exchange between the gNB-CU-CP and gNB-CU-UP.',
+    related: ['E1', 'gNB-CU-CP', 'gNB-CU-UP'],
+    spec: '3GPP TS 38.463',
+    logReference: `# OCUDU`,
+  },
   {
     id: 'e2',
     term: 'E2',
@@ -1480,6 +1000,16 @@ const terms = [
     definition: 'The application-layer protocol on the E2 interface. Defines procedures for E2 Setup, RIC Subscription (event triggers and report actions), RIC Indication (telemetry), RIC Control (xApp-initiated RAN modifications), and E2 Node Configuration Update.',
     related: ['E2', 'RIC', 'O-RAN'],
     spec: 'O-RAN WG3 E2AP',
+  },
+  {
+    id: 'eap-aka',
+    term: "EAP-AKA'",
+    fullName: 'EAP Authentication and Key Agreement Prime',
+    type: 'Procedure',
+    layer: 'NAS',
+    definition: "An alternative 5G authentication method based on EAP (Extensible Authentication Protocol). Provides equivalent security to 5G-AKA and is selected when specified by the subscriber profile or AUSF configuration.",
+    related: ['5G-AKA', 'AUSF', 'AMF'],
+    spec: '3GPP TS 33.501',
   },
   {
     id: 'ecies',
@@ -1521,7 +1051,52 @@ const terms = [
     related: ['PRB', 'SSB', 'CSI-RS', 'Power Control'],
     spec: '3GPP TS 38.213',
   },
-  // ── F (additional) ───────────────────────────────────────────────
+
+  // ── F ─────────────────────────────────────────────────────
+  {
+    id: 'f1',
+    term: 'F1',
+    fullName: 'F1 Interface',
+    type: 'Interface',
+    layer: 'NG-RAN',
+    definition: 'The interface between the gNB-CU and one or more gNB-DUs in a disaggregated gNB. Split into F1-C (control plane, carrying F1AP) and F1-U (user plane, carrying GTP-U tunnels for DRB data).',
+    related: ['F1-C', 'F1-U', 'F1AP', 'gNB-CU', 'gNB-DU'],
+    spec: '3GPP TS 38.470',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'f1-c',
+    term: 'F1-C',
+    fullName: 'F1 Control Plane Interface',
+    type: 'Interface',
+    layer: 'NG-RAN',
+    definition: 'The control-plane portion of the F1 interface. Carries F1AP signaling for F1 setup, gNB-DU/CU configuration updates, UE context management (setup/modification/release), and paging.',
+    related: ['F1', 'F1AP', 'gNB-CU', 'gNB-DU'],
+    spec: '3GPP TS 38.470',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'f1-u',
+    term: 'F1-U',
+    fullName: 'F1 User Plane Interface',
+    type: 'Interface',
+    layer: 'NG-RAN',
+    definition: 'The user-plane portion of the F1 interface. Carries GTP-U tunnels between the gNB-CU-UP and gNB-DU for forwarding user-plane PDU session data.',
+    related: ['F1', 'GTP-U', 'gNB-CU-UP', 'gNB-DU'],
+    spec: '3GPP TS 38.474',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'f1ap',
+    term: 'F1AP',
+    fullName: 'F1 Application Protocol',
+    type: 'Protocol',
+    layer: 'NG-RAN',
+    definition: 'The application-layer protocol on the F1-C interface. Manages the F1 Setup procedure, configuration updates between gNB-CU and gNB-DU, UE context management, and paging message distribution.',
+    related: ['F1', 'F1-C', 'gNB-CU', 'gNB-DU'],
+    spec: '3GPP TS 38.473',
+    logReference: `# OCUDU`,
+  },
   {
     id: 'fapi',
     term: 'FAPI',
@@ -1531,6 +1106,7 @@ const terms = [
     definition: 'A Small Cell Forum interface specification defining the API between the MAC scheduler and the PHY layer. Used in disaggregated and open RAN implementations to decouple the scheduler software from PHY hardware/firmware, enabling multi-vendor integration.',
     related: ['PHY', 'MAC', 'O-RAN', 'gNB-DU', 'Split 7.2'],
     spec: 'Small Cell Forum FAPI',
+    logReference: `# OCUDU`,
   },
   {
     id: 'fdd',
@@ -1571,6 +1147,7 @@ const terms = [
     definition: 'The fundamental 10 ms time unit in 5G NR. Each frame contains 10 subframes of 1 ms each. Slots per subframe depend on numerology μ: 1 (15 kHz), 2 (30 kHz), 4 (60 kHz), 8 (120 kHz). The SFN repeats every 1024 frames (~10.24 s).',
     related: ['Slot', 'Symbol', 'numerology', 'SFN', 'HRF', 'TDD'],
     spec: '3GPP TS 38.211',
+    logReference: `# OCUDU`,
   },
   {
     id: 'fronthaul',
@@ -1582,7 +1159,8 @@ const terms = [
     related: ['Backhaul', 'Midhaul', 'CPRI', 'eCPRI', 'Open Fronthaul', 'C-RAN', 'BBU'],
     spec: '',
   },
-  // ── G (additional) ───────────────────────────────────────────────
+
+  // ── G ─────────────────────────────────────────────────────
   {
     id: 'gbr',
     term: 'GBR',
@@ -1604,6 +1182,16 @@ const terms = [
     spec: '3GPP TS 23.501',
   },
   {
+    id: 'gnb',
+    term: 'gNB',
+    fullName: 'Next Generation Node B',
+    type: 'Component',
+    layer: 'NG-RAN',
+    definition: 'The base station providing 5G NR radio access. Connects to UEs via the Uu air interface and to the 5G Core via NG (N2 control, N3 user). May be deployed as a monolithic unit or disaggregated into CU and DU functional blocks.',
+    related: ['gNB-CU', 'gNB-DU', 'Uu', 'N2', 'N3', 'NG-RAN'],
+    spec: '3GPP TS 38.300',
+  },
+  {
     id: 'gnb-id',
     term: 'gNB ID',
     fullName: 'gNB Identifier',
@@ -1612,6 +1200,52 @@ const terms = [
     definition: 'A variable-length (22–32 bit) identifier uniquely identifying a gNB within a PLMN. Together with the PLMN ID, forms the Global gNB ID used in NGAP and Xn messages. Allocated by the operator and configured at deployment.',
     related: ['NCI', 'PLMN', 'GUAMI', 'gNB', 'NGAP'],
     spec: '3GPP TS 38.413',
+    logReference: `# OCUDU
+gnb_id: 411 
+gnb_id_bit_length: 22`,
+  },
+  {
+    id: 'gnb-cu',
+    term: 'gNB-CU',
+    fullName: 'gNB Central Unit',
+    type: 'Component',
+    layer: 'NG-RAN',
+    definition: 'The centralized functional unit of a disaggregated gNB. Hosts RRC (CP) and PDCP (CP+UP), and optionally SDAP (UP). Connects to one or more gNB-DUs via F1 and to the 5GC via the NG interface.',
+    related: ['gNB-DU', 'gNB-CU-CP', 'gNB-CU-UP', 'F1', 'RRC', 'PDCP'],
+    spec: '3GPP TS 38.401',
+  },
+  {
+    id: 'gnb-cu-cp',
+    term: 'gNB-CU-CP',
+    fullName: 'gNB Central Unit – Control Plane',
+    type: 'Component',
+    layer: 'NG-RAN',
+    definition: 'The control-plane portion of a gNB-CU. Terminates F1-C (F1AP) toward gNB-DU and the E1 (E1AP) toward gNB-CU-UP. Hosts RRC and the control-plane side of PDCP (integrity protection and ciphering for SRBs).',
+    related: ['gNB-CU-UP', 'E1', 'F1-C', 'RRC', 'PDCP'],
+    spec: '3GPP TS 38.401',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'gnb-cu-up',
+    term: 'gNB-CU-UP',
+    fullName: 'gNB Central Unit – User Plane',
+    type: 'Component',
+    layer: 'NG-RAN',
+    definition: 'The user-plane portion of a gNB-CU. Terminates F1-U toward gNB-DU and N3 (GTP-U) toward UPF. Hosts SDAP and the user-plane portion of PDCP (ciphering and header compression for DRBs).',
+    related: ['gNB-CU-CP', 'E1', 'F1-U', 'SDAP', 'PDCP', 'N3'],
+    spec: '3GPP TS 38.401',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'gnb-du',
+    term: 'gNB-DU',
+    fullName: 'gNB Distributed Unit',
+    type: 'Component',
+    layer: 'NG-RAN',
+    definition: 'The distributed (radio-proximate) functional unit of a disaggregated gNB. Hosts RLC, MAC, and PHY layers. Connects to gNB-CU via F1 and serves UEs via the Uu radio interface. Typically co-located with radio hardware.',
+    related: ['gNB-CU', 'F1', 'MAC', 'RLC', 'PHY', 'Uu'],
+    spec: '3GPP TS 38.401',
+    logReference: `# OCUDU`,
   },
   {
     id: 'gp',
@@ -1632,6 +1266,31 @@ const terms = [
     definition: 'A channel raster defined for SSB transmission, coarser than the NR-ARFCN channel raster. UEs scan GSCN positions rather than all possible NR-ARFCN frequencies during cell search, reducing search time. GSCN values map to specific carrier frequencies per band.',
     related: ['NR-ARFCN', 'SSB', 'Cell Search', 'FR1', 'FR2'],
     spec: '3GPP TS 38.104',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'gtp-u',
+    term: 'GTP-U',
+    fullName: 'GPRS Tunnelling Protocol – User Plane',
+    type: 'Protocol',
+    layer: 'Transport',
+    definition: 'A UDP-based tunneling protocol used to carry user-plane PDU session data between 5G nodes. In 5G NR, GTP-U tunnels are established on N3 (gNB-CU-UP ↔ UPF), N9 (UPF ↔ UPF), and F1-U (gNB-CU-UP ↔ gNB-DU).',
+    related: ['N3', 'F1-U', 'UPF', 'gNB-CU-UP'],
+    spec: '3GPP TS 29.281',
+    logReference: `# OCUDU
+[GTPU    ] [I] ue=0 DL teid=0x000003: GTPU NGU Rx configured. node=ngu local_teid=0x000003 t_reordering=0ms warn_on_drop=false ignore_ue_ambr=true
+[GTPU    ] [I] ue=0 UL teid=0x0006d6: GTPU NGU Tx configured. peer_teid=0x0006d6 peer_addr=10.53.1.2 peer_port=2152
+[GTPU    ] [I] Tunnel added. teid=0x000003
+[GTPU    ] [I] ue=0 RX teid=0x000003: GTPU NR-U Rx configured. node=cu_up local_teid=0x000003
+[GTPU    ] [D] Forwarding PDU. pdu_len=20 teid=0x000003
+[GTPU    ] [D] ue=0 RX teid=0x000003: RX PDU. pdu_len=20
+[GTPU    ] [I] ue=0 RX teid=0x000003: RX DL data delivery status
+[GTPU    ] [I] ue=0 TX teid=0x000003: GTPU NR-U Tx configured. peer_teid=0x000003 peer_addr=172.18.10.3 peer_port=2152
+[GTPU    ] [D] Forwarding PDU. pdu_len=323 teid=0x000003
+[GTPU    ] [D] ue=0 RX teid=0x000003: RX PDU. pdu_len=323
+[GTPU    ] [I] ue=0 RX teid=0x000003: RX DL data delivery status. t_pdu_len=303
+[GTPU    ] [I] ue=0 UL teid=0x0006d6: TX PDU. pdu_len=316 teid=0x0006d6 qfi=QFI=1
+[GTPU    ] [D] Forwarding PDU. pdu_len=1251 teid=0x000003`,
   },
   {
     id: 'guami',
@@ -1643,7 +1302,39 @@ const terms = [
     related: ['AMF', '5G-GUTI', '5G-TMSI', 'PLMN', 'NGAP'],
     spec: '3GPP TS 23.003',
   },
-  // ── H (additional) ───────────────────────────────────────────────
+
+  // ── H ─────────────────────────────────────────────────────
+  {
+    id: 'handover',
+    term: 'Handover',
+    fullName: 'Handover (HO)',
+    type: 'Procedure',
+    layer: 'RRC',
+    definition: 'The process of transferring an active UE connection from a source cell/gNB to a target cell/gNB while maintaining service continuity. Can be Xn-based (direct source-to-target coordination) or N2-based (via AMF). Involves measurement, preparation, execution, and completion phases.',
+    related: ['RRC', 'Xn', 'N2', 'PDCP', 'AMF'],
+    spec: '3GPP TS 38.300',
+  },
+  {
+    id: 'harq',
+    term: 'HARQ',
+    fullName: 'Hybrid Automatic Repeat Request',
+    type: 'Procedure',
+    layer: 'PHY / MAC',
+    definition: 'A PHY/MAC-layer retransmission mechanism that combines Forward Error Correction (FEC) with ARQ. On a failed CRC check, the receiver requests retransmission; the new attempt is chase-combined or incremental-redundancy-combined with prior attempts before decoding.',
+    related: ['ARQ', 'CRC', 'PDSCH', 'PUSCH', 'PUCCH'],
+    spec: '3GPP TS 38.321',
+    logReference: `# OCUDU
+[SCHED   ] [D] [   540.7] Slot decisions pci=1 t=1us (0 PDSCHs, 0 PUSCHs, 1 PUCCH, 0 attempted PDCCHs, 0 attempted UCIs):
+- PUCCH: c-rnti=0x4602 format=1 prb=[2..3) symb=[0..14) cs=0 occ=0 uci: harq_bits=2 sr=0
+
+[PHY     ] [D] [   540.7] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=11 metric=940.1 sinr=15.4dB t=25.0us
+  status=valid
+  ack=11
+
+[SCHED   ] [D] [  540.16] Processed slot events pci=1:
+- HARQ-ACK: ue=1 rnti=0x4602 pci=1 slot_rx=540.7 h_id=0 ack=1 tbs=5
+- HARQ-ACK: ue=1 rnti=0x4602 pci=1 slot_rx=540.7 h_id=1 ack=1 tbs=11`,
+  },
   {
     id: 'hres',
     term: 'HRES*',
@@ -1684,7 +1375,8 @@ const terms = [
     related: ['HRES*', 'XRES*', 'RAND', '5G-AKA', 'AUSF', 'AMF', '5G SE AV'],
     spec: '3GPP TS 33.501',
   },
-  // ── I (additional) ───────────────────────────────────────────────
+
+  // ── I ─────────────────────────────────────────────────────
   {
     id: 'idle-mode',
     term: 'Idle Mode',
@@ -1714,6 +1406,7 @@ const terms = [
     definition: 'A 15-digit identifier uniquely identifying mobile equipment hardware, independent of the SIM/USIM. In 5G, replaced by PEI (Permanent Equipment Identifier), which can take the form of IMEI or IMEISV. Used for equipment blacklisting and lawful intercept.',
     related: ['PEI', 'ME', 'UE', 'USIM'],
     spec: '3GPP TS 23.003',
+    logReference: `# OCUDU`,
   },
   {
     id: 'ims',
@@ -1736,6 +1429,35 @@ const terms = [
     spec: '3GPP TS 38.300',
   },
   {
+    id: 'initial-context',
+    term: 'Initial Context',
+    fullName: 'Initial Context Setup',
+    type: 'Procedure',
+    layer: 'NG-RAN',
+    definition: 'An NGAP procedure in which the AMF sends an Initial Context Setup Request to the gNB-CU-CP to establish the UE AS context, including security keys (KgNB), UE capability, and PDU session resource configuration. The gNB establishes SRBs and DRBs and returns an Initial Context Setup Response.',
+    related: ['NGAP', 'UE Context', 'KgNB', 'AMF', 'gNB-CU-CP', 'PDU Session'],
+    spec: '3GPP TS 38.413',
+    logReference: `# OCUDU
+## INITIAL CONTEXT SETUP ##
+[NGAP    ] [D] ue=2 ran_ue=2 amf_ue=3: "Initial Context Setup Procedure" started...
+[CU-CP   ] [I] ue=2: "Initial Context Setup Routine" initialized
+[CU-CP-F1] [D] ue=2 proc="UE Context Setup Procedure": started...
+[CU-CP-F1] [D] ue=2 du_ue=2 cu_ue=2 proc="UE Context Setup Procedure": UE context found
+[CU-CP-F1] [I] Tx PDU du=0 ue=2 cu_ue=2 du_ue=2: UEContextSetupRequest
+[CU-CP-F1] [I] Rx PDU du=0 ue=2 cu_ue=2 du_ue=2: UEContextSetupResponse
+[CU-CP-F1] [D] ue=2 proc="UE Context Setup Procedure": finished successfully`,
+  },
+  {
+    id: 'ip',
+    term: 'IP',
+    fullName: 'Internet Protocol',
+    type: 'Protocol',
+    layer: 'Application',
+    definition: 'The network-layer protocol for packet addressing and routing. In 5G NR, the UE receives an IPv4, IPv6, or dual-stack address via PDU Session Establishment. The 5G network is transparent to IP-level operations.',
+    related: ['TCP', 'UDP', 'SMF', 'N6', 'DN'],
+    spec: 'IETF RFC 791 / RFC 8200',
+  },
+  {
     id: 'ipsec',
     term: 'IPSec',
     fullName: 'Internet Protocol Security',
@@ -1745,7 +1467,18 @@ const terms = [
     related: ['TLS', 'N2', 'N3', 'SEPP', 'Security'],
     spec: '3GPP TS 33.501',
   },
-  // ── K ────────────────────────────────────────────────────────────
+
+  // ── K ─────────────────────────────────────────────────────
+  {
+    id: 'kssb',
+    term: 'K_SSB',
+    fullName: 'SSB Subcarrier Offset',
+    type: 'Concept',
+    layer: 'PHY',
+    definition: 'A parameter in the MIB (as ssb-SubcarrierOffset) specifying the frequency offset in subcarriers between Point A and the lowest subcarrier of the SSB. Allows fine-grained positioning of the SSB within the channel bandwidth.',
+    related: ['SSB', 'PointA', 'MIB', 'GSCN', 'CRB'],
+    spec: '3GPP TS 38.331',
+  },
   {
     id: 'kamf',
     term: 'KAMF',
@@ -1755,6 +1488,7 @@ const terms = [
     definition: 'A 256-bit key derived from KSEAF and the SUPI at the AMF (and UE). KAMF is the root key for NAS and AS security in 5G. Used to derive KNASint, KNASenc (for NAS), and KgNB (for RRC/UP AS security).',
     related: ['KSEAF', 'KgNB', 'KDF', 'Authentication', 'AMF', 'Security'],
     spec: '3GPP TS 33.501',
+    logReference: `# OCUDU`,
   },
   {
     id: 'kdf',
@@ -1775,6 +1509,10 @@ const terms = [
     definition: 'A 256-bit key derived from KAMF, passed to the gNB-CU-CP via NGAP Initial Context Setup or Handover. Used by the gNB to derive KRRCint, KRRCenc (RRC message protection) and KUPint, KUPenc (PDCP user-plane protection).',
     related: ['KAMF', 'KDF', 'Security', 'RRC', 'PDCP', 'gNB-CU-CP'],
     spec: '3GPP TS 33.501',
+    logReference: `# OCUDU
+  [SEC     ] [I] K_gNB: 
+	e6 ed 92 5b 3e f0 95 88 02 a3 93 25 17 4d da 96
+	3a 87 e9 2b 6a 9d 68 e3 a5 e7 b6 92 7a 0b 71 d4`,
   },
   {
     id: 'kseaf',
@@ -1785,6 +1523,7 @@ const terms = [
     definition: 'A 256-bit key derived from KAUSF after successful authentication. Passed to the SEAF (co-located with AMF). Used as input to derive KAMF. Acts as the anchor key between the home network (AUSF) and serving network (AMF).',
     related: ['KAMF', 'KDF', 'AUSF', 'SEAF', 'Authentication'],
     spec: '3GPP TS 33.501',
+    logReference: `# OCUDU`,
   },
   {
     id: 'ksi',
@@ -1796,17 +1535,8 @@ const terms = [
     related: ['KAMF', 'NAS', 'Authentication', 'Security', 'AMF'],
     spec: '3GPP TS 24.501',
   },
-  {
-    id: 'kssb',
-    term: 'K_SSB',
-    fullName: 'SSB Subcarrier Offset',
-    type: 'Concept',
-    layer: 'PHY',
-    definition: 'A parameter in the MIB (as ssb-SubcarrierOffset) specifying the frequency offset in subcarriers between Point A and the lowest subcarrier of the SSB. Allows fine-grained positioning of the SSB within the channel bandwidth.',
-    related: ['SSB', 'PointA', 'MIB', 'GSCN', 'CRB'],
-    spec: '3GPP TS 38.331',
-  },
-  // ── L (additional) ───────────────────────────────────────────────
+
+  // ── L ─────────────────────────────────────────────────────
   {
     id: 'lcid',
     term: 'LCID',
@@ -1815,6 +1545,18 @@ const terms = [
     layer: 'MAC',
     definition: 'A 5 or 6-bit field in the MAC subheader identifying the logical channel or MAC CE type within a MAC PDU. Values 1–4 are reserved for SRBs; values 5–32 are for DRBs. Special values identify MAC CEs (BSR, PHR, Timing Advance, etc.).',
     related: ['MAC', 'Logical Channels', 'DRB', 'SRB', 'BSR'],
+    spec: '3GPP TS 38.321',
+    logReference: `# OCUDU
+  [MAC     ] [I] [  539.15] UL rnti=0x4602 ue=1 subPDUs: [lcid=1: len=35, SBSR: lcg=0 bs=0, SE_PHR: ph=[4..5)dB p_cmax=[20..21)dBm, PAD: len=485]`,
+  },
+  {
+    id: 'lcp',
+    term: 'LCP',
+    fullName: 'Logical Channel Prioritization',
+    type: 'Procedure',
+    layer: 'MAC',
+    definition: 'The MAC procedure that governs how UL grant bytes are distributed across logical channels within a MAC PDU. Channels are served in decreasing priority order with configured Prioritized Bit Rate (PBR) and Bucket Size Duration (BSD) parameters.',
+    related: ['MAC', 'BSR', 'DRB', 'SRB'],
     spec: '3GPP TS 38.321',
   },
   {
@@ -1847,7 +1589,19 @@ const terms = [
     related: ['MSB', 'SFN', 'MIB'],
     spec: '',
   },
-  // ── M (additional) ───────────────────────────────────────────────
+
+  // ── M ─────────────────────────────────────────────────────
+  {
+    id: 'mac',
+    term: 'MAC',
+    fullName: 'Medium Access Control',
+    type: 'Protocol',
+    layer: 'MAC',
+    definition: 'A Layer-2 sublayer in 5G NR responsible for scheduling (via DCI), HARQ operation, random access (RACH), logical channel multiplexing/demultiplexing, and DRX. Runs between UE and gNB-DU over the Uu interface.',
+    related: ['RLC', 'PHY', 'HARQ', 'RACH', 'DRX', 'BSR', 'SR'],
+    spec: '3GPP TS 38.321',
+    logReference: `# OCUDU`,
+  },
   {
     id: 'mac-i',
     term: 'MAC-I',
@@ -1857,6 +1611,17 @@ const terms = [
     definition: 'A 32-bit integrity check value appended to NAS and RRC messages. Computed using the active integrity algorithm (e.g., NIA1/NIA2) over the message content, COUNT, BEARER, and DIRECTION. The receiver verifies MAC-I against XMAC to detect tampering.',
     related: ['XMAC', 'NIA', 'PDCP', 'RRC', 'NAS', 'Security'],
     spec: '3GPP TS 33.501',
+    logReference: `# OCUDU
+[RRC     ] [D] ue=1 c-rnti=0x4602: Rx SRB1 PDCP PDU
+[PDCP    ] [D] ue=1 SRB1 UL: RX PDU. pdu_len=8
+[PDCP    ] [D] ue=1 SRB1 UL: RX entity state. rx_next=3 rx_deliv=3 rx_reord=0
+[PDCP    ] [I] ue=1 SRB1 UL: RX PDU. type=data pdu_len=8 sn=3 count=3
+[PDCP    ] [D] ue=1 SRB1 UL: Using sec_engine with worker_idx=1. count=3 pdu_len=8
+[SEC     ] [D] Integrity check passed. count=3
+[SEC     ] [D] K_int: 
+[SEC     ] [D] MAC:
+[SEC     ] [D] Message input:
+[PDCP    ] [D] ue=1 SRB1 UL: Security passed. count=3`,
   },
   {
     id: 'mcs',
@@ -1867,6 +1632,17 @@ const terms = [
     definition: 'A combined index specifying the modulation order (QPSK, 16QAM, 64QAM, 256QAM) and channel coding rate for PDSCH/PUSCH. Selected by the gNB based on reported CQI. The TBS is computed from MCS, PRB count, and number of layers.',
     related: ['CQI', 'TBS', 'PDSCH', 'PUSCH', 'QAM', 'QPSK'],
     spec: '3GPP TS 38.214',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'me',
+    term: 'ME',
+    fullName: 'Mobile Equipment',
+    type: 'Component',
+    layer: 'UE',
+    definition: 'The physical terminal portion of a UE — the hardware and software platform including radio chipset, protocol stack, and application processor. Distinguished from the USIM, which holds subscriber credentials and is removable.',
+    related: ['UE', 'USIM'],
+    spec: '3GPP TS 23.003',
   },
   {
     id: 'measurement-report',
@@ -1887,6 +1663,17 @@ const terms = [
     definition: 'A network architecture placing compute and storage at the edge of the network (near the RAN) to reduce latency. In 5G NR, MEC is enabled by local UPF breakouts (N6 to local data networks) steered by the SMF, routing traffic to edge application servers.',
     related: ['UPF', 'SMF', 'N6', 'PDU Session', 'URLLC'],
     spec: 'ETSI GS MEC 003',
+  },
+  {
+    id: 'mib',
+    term: 'MIB',
+    fullName: 'Master Information Block',
+    type: 'Concept',
+    layer: 'RRC',
+    definition: 'The first system information block decoded by a UE during cell search. Transmitted on the PBCH within the SSB. Contains the SFN (System Frame Number), subcarrier spacing common, and the offset for SIB1 scheduling on PDSCH.',
+    related: ['SSB', 'PBCH', 'SIB1', 'Cell Search'],
+    spec: '3GPP TS 38.331',
+    logReference: `# OCUDU`,
   },
   {
     id: 'midhaul',
@@ -1917,6 +1704,7 @@ const terms = [
     definition: 'Refers to signaling or data flows initiated by the UE in the uplink direction (e.g., MO call, MO data session, MO Registration Request). Contrasted with MT (Mobile Terminated).',
     related: ['MT', 'NAS', 'PDU Session', 'Registration'],
     spec: '3GPP TS 24.501',
+    logReference: `# OCUDU`,
   },
   {
     id: 'msb',
@@ -1948,35 +1736,16 @@ const terms = [
     related: ['MO', 'Paging', 'NAS', 'AMF'],
     spec: '3GPP TS 24.501',
   },
-  // ── N (additional) ───────────────────────────────────────────────
+
+  // ── N ─────────────────────────────────────────────────────
   {
-    id: 'n7',
-    term: 'N7',
-    fullName: 'N7 Interface',
+    id: 'n1',
+    term: 'N1',
+    fullName: 'N1 Interface',
     type: 'Interface',
-    layer: '5GC',
-    definition: 'The SBI interface between the SMF and the PCF. Carries policy requests and responses for session-level QoS policy. The SMF requests PCC rules for PDU sessions; the PCF delivers QoS rules and charging parameters.',
-    related: ['SMF', 'PCF', 'N15', 'QoS', 'SBA'],
-    spec: '3GPP TS 23.501',
-  },
-  {
-    id: 'n8',
-    term: 'N8',
-    fullName: 'N8 Interface',
-    type: 'Interface',
-    layer: '5GC',
-    definition: 'The SBI interface between the AMF and the UDM. Used by the AMF to retrieve subscriber access and mobility subscription data and to subscribe to UDM data change notifications.',
-    related: ['AMF', 'UDM', 'N10', 'SBA'],
-    spec: '3GPP TS 23.501',
-  },
-  {
-    id: 'n9',
-    term: 'N9',
-    fullName: 'N9 Interface',
-    type: 'Interface',
-    layer: '5GC',
-    definition: 'The user-plane interface between two UPF instances (UPF–UPF). Used with multiple UPFs (e.g., I-UPF and PSA-UPF) to carry GTP-U tunnels for PDU session data and for inter-UPF handover scenarios.',
-    related: ['UPF', 'N3', 'N4', 'SMF', 'GTP-U'],
+    layer: 'UE ↔ 5GC',
+    definition: 'The reference point between the UE and the AMF for NAS signaling. Carries 5GMM (mobility management) and 5GSM (session management) messages. Physically transported transparently through the Uu and N2 interfaces.',
+    related: ['AMF', 'NAS', 'Uu', 'N2'],
     spec: '3GPP TS 23.501',
   },
   {
@@ -2030,6 +1799,115 @@ const terms = [
     spec: '3GPP TS 23.501',
   },
   {
+    id: 'n2',
+    term: 'N2',
+    fullName: 'N2 Interface',
+    type: 'Interface',
+    layer: 'NG-RAN ↔ 5GC',
+    definition: 'The control-plane interface between the gNB-CU and the AMF. Carries NGAP messages for UE registration context, NAS transport, initial context setup, PDU session resource management, handover, and paging.',
+    related: ['AMF', 'NGAP', 'gNB-CU', 'N1'],
+    spec: '3GPP TS 23.501',
+    logReference: `# OCUDU CU CP
+[CU-CP   ] [D] Establishing TNL connection to AMF (10.53.1.2:38412)...
+[CU-CP   ] [I] N2: Connection to AMF on 10.53.1.2:38412 was established
+[NGAP    ] [D] "NG Setup Procedure" started...
+[NGAP    ] [I] Tx PDU: NGSetupRequest
+
+## OPEN5GS AMF
+[amf] INFO: gNB-N2 accepted[10.53.1.4]:37571 in ng-path module (../src/amf/ngap-sctp.c:113)
+[amf] DEBUG: amf_state_operational(): AMF_EVENT_NGAP_LO_ACCEPT (../src/amf/amf-sm.c:78)
+[amf] INFO: gNB-N2 accepted[10.53.1.4] in master_sm module (../src/amf/amf-sm.c:741)
+[amf] DEBUG: ngap_state_initial(): ENTRY (../src/amf/ngap-sm.c:28)
+[amf] DEBUG: ngap_state_operational(): ENTRY (../src/amf/ngap-sm.c:55)
+[amf] INFO: [Added] Number of gNBs is now 1 (../src/amf/context.c:1185)
+[amf] DEBUG: SCTP_ASSOC_CHANGE:[T:32769, F:0x0, S:0, I/O:10/30] (../src/amf/ngap-sctp.c:152)
+[amf] DEBUG: SCTP_COMM_UP (../src/amf/ngap-sctp.c:161)
+[amf] DEBUG: amf_state_operational(): AMF_EVENT_NGAP_LO_SCTP_COMM_UP (../src/amf/amf-sm.c:78)
+[amf] INFO: gNB-N2[10.53.1.4] max_num_of_ostreams : 30 (../src/amf/amf-sm.c:780)
+[amf] DEBUG: amf_state_operational(): AMF_EVENT_NGAP_MESSAGE (../src/amf/amf-sm.c:78)
+[amf] DEBUG: ngap_state_operational(): AMF_EVENT_NGAP_MESSAGE (../src/amf/ngap-sm.c:55)
+[amf] DEBUG: NGSetupRequest (../src/amf/ngap-handler.c:144)
+[amf] DEBUG:     IP[10.53.1.4] GNB_ID[0x19b] (../src/amf/ngap-handler.c:195)
+[amf] DEBUG:     PLMN_ID[MCC:1 MNC:1] (../src/amf/ngap-handler.c:199)
+[amf] DEBUG:     PagingDRX[3] (../src/amf/ngap-handler.c:203)
+[amf] DEBUG:     TAC[77] (../src/amf/ngap-handler.c:227)
+[amf] DEBUG:     PLMN_ID[MCC:1 MNC:1] (../src/amf/ngap-handler.c:256)
+[amf] DEBUG:     S_NSSAI[SST:1 SD:0xffffff] (../src/amf/ngap-handler.c:296)
+[amf] DEBUG:     TAC[77] (../src/amf/ngap-handler.c:70)
+[amf] DEBUG:     PLMN_ID[MCC:1 MNC:1] (../src/amf/ngap-handler.c:71)
+[amf] DEBUG:     SERVED_TAI_INDEX[0] (../src/amf/ngap-handler.c:76)
+[amf] DEBUG:     PLMN_ID[MCC:1 MNC:1] (../src/amf/ngap-handler.c:98)
+[amf] DEBUG:     S_NSSAI[SST:1 SD:0xffffff] (../src/amf/ngap-handler.c:103)
+[amf] DEBUG: NG-Setup response (../src/amf/ngap-path.c:260)
+[amf] DEBUG: NGSetupResponse (../src/amf/ngap-build.c:36)
+[amf] DEBUG:     IP[10.53.1.4] RAN_ID[411] (../src/amf/ngap-path.c:69)
+
+### OCUDU CU CP
+[NGAP    ] [I] Rx PDU: NGSetupResponse
+[NGAP    ] [D] "NG Setup Procedure" finished successfully
+[CU-CP   ] [I] Connected to AMF. Supported PLMNs: 00101 `,
+  },
+  {
+    id: 'n3',
+    term: 'N3',
+    fullName: 'N3 Interface',
+    type: 'Interface',
+    layer: 'NG-RAN ↔ 5GC',
+    definition: 'The user-plane interface between the gNB-CU-UP and the UPF. Carries GTP-U tunnels for PDU session user data. One GTP-U tunnel per PDU session (or per QoS flow in multi-tunnel configurations).',
+    related: ['UPF', 'GTP-U', 'gNB-CU-UP', 'N4'],
+    spec: '3GPP TS 23.501',
+  },
+  {
+    id: 'n4',
+    term: 'N4',
+    fullName: 'N4 Interface',
+    type: 'Interface',
+    layer: '5GC',
+    definition: 'The interface between the SMF and UPF. Carries PFCP (Packet Forwarding Control Protocol) messages for PDU session establishment, GTP-U tunnel configuration, QoS rule enforcement, and usage reporting.',
+    related: ['SMF', 'UPF', 'N3'],
+    spec: '3GPP TS 23.501',
+  },
+  {
+    id: 'n6',
+    term: 'N6',
+    fullName: 'N6 Interface',
+    type: 'Interface',
+    layer: '5GC ↔ DN',
+    definition: 'The interface between the UPF and the external Data Network. Traffic on N6 is plain IP — no GTP-U tunneling. The UPF performs packet routing, NAT, and any required traffic steering toward the DN.',
+    related: ['UPF', 'DN', 'DNN', 'N3'],
+    spec: '3GPP TS 23.501',
+  },
+  {
+    id: 'n7',
+    term: 'N7',
+    fullName: 'N7 Interface',
+    type: 'Interface',
+    layer: '5GC',
+    definition: 'The SBI interface between the SMF and the PCF. Carries policy requests and responses for session-level QoS policy. The SMF requests PCC rules for PDU sessions; the PCF delivers QoS rules and charging parameters.',
+    related: ['SMF', 'PCF', 'N15', 'QoS', 'SBA'],
+    spec: '3GPP TS 23.501',
+  },
+  {
+    id: 'n8',
+    term: 'N8',
+    fullName: 'N8 Interface',
+    type: 'Interface',
+    layer: '5GC',
+    definition: 'The SBI interface between the AMF and the UDM. Used by the AMF to retrieve subscriber access and mobility subscription data and to subscribe to UDM data change notifications.',
+    related: ['AMF', 'UDM', 'N10', 'SBA'],
+    spec: '3GPP TS 23.501',
+  },
+  {
+    id: 'n9',
+    term: 'N9',
+    fullName: 'N9 Interface',
+    type: 'Interface',
+    layer: '5GC',
+    definition: 'The user-plane interface between two UPF instances (UPF–UPF). Used with multiple UPFs (e.g., I-UPF and PSA-UPF) to carry GTP-U tunnels for PDU session data and for inter-UPF handover scenarios.',
+    related: ['UPF', 'N3', 'N4', 'SMF', 'GTP-U'],
+    spec: '3GPP TS 23.501',
+  },
+  {
     id: 'nack',
     term: 'NACK',
     fullName: 'Negative Acknowledgement',
@@ -2038,6 +1916,7 @@ const terms = [
     definition: 'A signal indicating unsuccessful receipt of data, requesting retransmission. In HARQ, a NACK is sent on PUCCH when PDSCH/PUSCH decoding fails (CRC error). In RLC AM, NACK fields in STATUS PDUs identify missing PDUs for ARQ retransmission.',
     related: ['ACK', 'HARQ', 'RLC AM', 'ARQ', 'PUCCH'],
     spec: '3GPP TS 38.321',
+    logReference: `# OCUDU`,
   },
   {
     id: 'nai',
@@ -2048,6 +1927,17 @@ const terms = [
     definition: 'A string identifier in "user@realm" format used to route authentication requests to the home network. In 5G, the SUCI may be formatted as an NAI for EAP-based authentication. The realm identifies the home PLMN.',
     related: ['SUCI', 'SUPI', 'Authentication', 'EAP-AKA'],
     spec: '3GPP TS 23.003',
+  },
+  {
+    id: 'nas',
+    term: 'NAS',
+    fullName: 'Non-Access Stratum',
+    type: 'Protocol',
+    layer: 'NAS',
+    definition: 'The protocol layer between the UE and the 5GC (AMF/SMF) that is transparent to the RAN. Encompasses 5GMM (mobility management) and 5GSM (session management) procedures. NAS messages are carried over the N1 reference point, encapsulated in RRC/NGAP at lower layers.',
+    related: ['AMF', 'SMF', 'N1', 'RRC', '5GMM'],
+    spec: '3GPP TS 24.501',
+    logReference: `# OCUDU`,
   },
   {
     id: 'nci',
@@ -2068,6 +1958,7 @@ const terms = [
     definition: 'A 1-bit field in DCI that toggles to indicate a new transport block (NDI toggled) vs. a retransmission of a previous one (NDI unchanged). Allows the UE/gNB to distinguish initial transmissions from retransmissions for HARQ soft-buffer management.',
     related: ['HARQ', 'DCI', 'TB', 'MAC'],
     spec: '3GPP TS 38.212',
+    logReference: `# OCUDU`,
   },
   {
     id: 'nea',
@@ -2078,6 +1969,12 @@ const terms = [
     definition: 'The ciphering algorithms for 5G NR: NEA0 (null/no ciphering), NEA1 (SNOW 3G), NEA2 (AES-CTR), NEA3 (ZUC). Applied at the PDCP layer for both RRC (SRBs) and user-plane (DRBs) ciphering.',
     related: ['NIA', 'AES', 'PDCP', 'Security'],
     spec: '3GPP TS 33.501',
+    logReference: `# OCUDU
+[CU-CP   ] [D] Ciphering algorithms preference list: NEA0, NEA2, NEA1, NEA3
+[CU-CP   ] [D] Selected security algorithms integrity=NIA2 ciphering=NEA0
+[PDCP    ] [I] ue=1 SRB1 UL: Security configured: NIA2 (on) NEA0 (off) domain=RRC
+[PDCP    ] [I] ue=1 SRB1 DL: Security configured: NIA2 (on) NEA0 (off) domain=RRC
+"cipheringAlgorithm"": ""nea0",`,
   },
   {
     id: 'nef',
@@ -2120,6 +2017,16 @@ const terms = [
     spec: '3GPP TS 23.501',
   },
   {
+    id: 'ng-ran',
+    term: 'NG-RAN',
+    fullName: 'Next Generation Radio Access Network',
+    type: 'Component',
+    layer: 'RAN',
+    definition: 'The radio access network in a 5G system, consisting of gNBs (5G NR) and ng-eNBs (LTE with 5GC connectivity). NG-RAN nodes connect to the 5GC via the NG interface (N2 control, N3 user) and to each other via Xn.',
+    related: ['gNB', 'N2', 'N3', 'AMF', 'UPF', 'Xn'],
+    spec: '3GPP TS 38.300',
+  },
+  {
     id: 'ng-u',
     term: 'NG-U',
     fullName: 'NG User Plane Interface',
@@ -2130,6 +2037,21 @@ const terms = [
     spec: '3GPP TS 23.501',
   },
   {
+    id: 'ngap',
+    term: 'NGAP',
+    fullName: 'Next Generation Application Protocol',
+    type: 'Protocol',
+    layer: 'NG-RAN ↔ 5GC',
+    definition: 'The control-plane application protocol on the N2 interface between gNB-CU and AMF. Handles NG Setup, initial UE message forwarding, NAS transport, UE context management (initial context setup, modification, release), paging, and handover signaling.',
+    related: ['N2', 'AMF', 'gNB-CU', 'F1AP', 'XnAP'],
+    spec: '3GPP TS 38.413',
+    logReference: `# OCUDU CU CP
+[NGAP    ] [D] ""NG Setup Procedure"" started...
+[NGAP    ] [I] Tx PDU: NGSetupRequest
+[NGAP    ] [I] Rx PDU: NGSetupResponse
+[NGAP    ] [D] ""NG Setup Procedure"" finished successfully`,
+  },
+  {
     id: 'nia',
     term: 'NIA',
     fullName: 'NR Integrity Algorithm',
@@ -2138,6 +2060,7 @@ const terms = [
     definition: 'The integrity protection algorithms for 5G NR: NIA0 (null), NIA1 (SNOW 3G), NIA2 (AES-CMAC), NIA3 (ZUC). Applied at PDCP for RRC integrity (mandatory) and user-plane integrity (optional). Used to compute and verify MAC-I.',
     related: ['NEA', 'AES', 'MAC-I', 'PDCP', 'Security'],
     spec: '3GPP TS 33.501',
+    logReference: `# OCUDU`,
   },
   {
     id: 'nr',
@@ -2158,6 +2081,8 @@ const terms = [
     definition: 'A channel numbering scheme mapping a carrier frequency to an integer value, covering the full 5G NR frequency range in increments of 5 kHz. Used in SIB/RRC configuration for cell and neighbor frequencies.',
     related: ['GSCN', 'FR1', 'FR2', 'Cell Search', 'SIB1'],
     spec: '3GPP TS 38.104',
+    logReference: `# OCUDU
+  dl_arfcn: 650000`,
   },
   {
     id: 'nrf',
@@ -2199,7 +2124,8 @@ const terms = [
     related: ['BWP', 'Slot', 'Symbol', 'Frame', 'FR1', 'FR2', 'OFDM'],
     spec: '3GPP TS 38.211',
   },
-  // ── O ────────────────────────────────────────────────────────────
+
+  // ── O ─────────────────────────────────────────────────────
   {
     id: 'o-ran',
     term: 'O-RAN',
@@ -2260,7 +2186,8 @@ const terms = [
     related: ['MSI', 'SIB', 'SIB1', 'SIB2', 'SIB3', 'BCCH'],
     spec: '3GPP TS 38.331',
   },
-  // ── P (additional) ───────────────────────────────────────────────
+
+  // ── P ─────────────────────────────────────────────────────
   {
     id: 'p-polling',
     term: 'P (Polling)',
@@ -2270,6 +2197,8 @@ const terms = [
     definition: 'A 1-bit field in the RLC AM data PDU header. When set (P=1), it requests the receiver to send a STATUS PDU (ACK/NACK) for outstanding AM PDUs. Triggered by polling timer expiry, configured PDU/byte count thresholds, or an empty transmission buffer.',
     related: ['RLC AM', 'ARQ', 'ACK', 'NACK', 'CPT'],
     spec: '3GPP TS 38.322',
+    logReference: `# OCUDU
+  [RLC     ] [I] du=0 ue=1 SRB1 UL: RX PDU. pdu_len=35 dc=data p=1 si=full sn=0`,
   },
   {
     id: 'paging',
@@ -2280,6 +2209,20 @@ const terms = [
     definition: 'A network-initiated procedure to alert a UE in CM-IDLE or RRC_INACTIVE of an incoming MT call or data. The AMF triggers paging toward the last known gNB, which broadcasts a Paging message at the UE\'s Paging Occasion. The UE responds with a Service Request.',
     related: ['PCCH', 'PCH', 'PO', 'PF', 'CM Idle', 'RRC_IDLE', 'AMF', 'MT'],
     spec: '3GPP TS 38.304',
+  },
+  {
+    id: 'pbch',
+    term: 'PBCH',
+    fullName: 'Physical Broadcast Channel',
+    type: 'Channel',
+    layer: 'PHY',
+    definition: 'A physical channel within the SSB that carries the encoded MIB. Uses DMRS-based channel estimation and fixed modulation/coding for robustness at cell edge. Repeated across multiple SSB beams for beam sweep coverage.',
+    related: ['SSB', 'MIB', 'PSS', 'SSS'],
+    spec: '3GPP TS 38.211',
+    logReference: `# srsUE
+[PHY_LIB] [D] [    0]  PBCH-NR Rx: crc=OK
+[PHY_LIB] [D] [    0]  PBCH-NR Rx: crc=OK
+[PHY2-NR] [D] [ 6390] PBCH-MIB: sfn=639 ssb_idx=0 hrf=n scs=15 ssb_offset=6 dmrs_typeA_pos=pos2 coreset0=12 ss0=0 barred=n intra_freq_reselection=n spare=0`,
   },
   {
     id: 'pcch',
@@ -2320,6 +2263,7 @@ const terms = [
     definition: 'A numeric identifier (0–1007) for a 5G NR cell derived from PSS (NID2: 0, 1, or 2) and SSS (NID1: 0–335). PCI = 3 × NID1 + NID2. Used for cell detection, DMRS sequence generation, and neighbor cell differentiation.',
     related: ['PSS', 'SSS', 'NCI', 'Cell Search', 'Cell ID'],
     spec: '3GPP TS 38.211',
+    logReference: `# OCUDU`,
   },
   {
     id: 'pdcch',
@@ -2332,6 +2276,17 @@ const terms = [
     spec: '3GPP TS 38.211',
   },
   {
+    id: 'pdcp',
+    term: 'PDCP',
+    fullName: 'Packet Data Convergence Protocol',
+    type: 'Protocol',
+    layer: 'PDCP',
+    definition: 'A Layer-2 sublayer above RLC that provides header compression (ROHC), ciphering, integrity protection, PDCP SN management, in-order delivery, and duplication handling. The CP portion (SRBs) terminates on gNB-CU-CP; the UP portion (DRBs) on gNB-CU-UP.',
+    related: ['RLC', 'RRC', 'ROHC', 'DRB', 'SRB', 'SDAP'],
+    spec: '3GPP TS 38.323',
+    logReference: `# OCUDU`,
+  },
+  {
     id: 'pdr',
     term: 'PDR',
     fullName: 'Packet Detection Rule',
@@ -2340,6 +2295,17 @@ const terms = [
     definition: 'A rule provisioned by the SMF to the UPF via PFCP defining how to match incoming/outgoing packets to a PDU session QoS flow. Specifies match criteria (SDF filter, QFI), precedence, and associated Forwarding Action Rules (FAR) and QoS Enforcement Rules (QER).',
     related: ['PFCP', 'UPF', 'SMF', 'SDF', 'QoS Flow'],
     spec: '3GPP TS 29.244',
+  },
+  {
+    id: 'pdsch',
+    term: 'PDSCH',
+    fullName: 'Physical Downlink Shared Channel',
+    type: 'Channel',
+    layer: 'PHY',
+    definition: 'The primary downlink data channel, used to carry DRB user data, SIBs, RRC messages (via DCCH), and paging messages. Scheduled dynamically per slot by the gNB scheduler, addressed to a UE via DCI on PDCCH.',
+    related: ['DCI', 'HARQ', 'CQI', 'gNB-DU'],
+    spec: '3GPP TS 38.211',
+    logReference: `# OCUDU`,
   },
   {
     id: 'pdu',
@@ -2360,6 +2326,7 @@ const terms = [
     definition: 'An end-to-end association between the UE and a Data Network (identified by DNN). Provides IP connectivity and may contain one or more QoS flows mapped to DRBs. Established, modified, and released via NAS 5GSM procedures. The SMF manages the session; UPF anchors the user plane.',
     related: ['PDU Session Establishment', 'DNN', 'QoS Flow', 'DRB', 'SMF', 'UPF', '5GSM'],
     spec: '3GPP TS 23.501',
+    logReference: `# OCUDU`,
   },
   {
     id: 'pdu-session-establishment',
@@ -2370,6 +2337,46 @@ const terms = [
     definition: 'The procedure by which a UE requests and the network establishes a new PDU session. The UE sends a PDU Session Establishment Request (NAS SM) via the AMF to the SMF. The SMF selects a UPF, allocates a UE IP address, provisions QoS rules, and returns N2 SM information to set up the data path.',
     related: ['PDU Session', 'SMF', 'UPF', 'AMF', '5GSM', 'QoS Flow', 'DRB'],
     spec: '3GPP TS 23.502',
+    logReference: `# OCUDU - CU CP\n[NGAP    ] [I] Rx PDU ue=3 ran_ue=3 amf_ue=4: PDUSessionResourceSetupRequest
+[NGAP    ] [D] ue=3 ran_ue=3 amf_ue=4: "PDU Session Resource Setup Procedure" started...
+[CU-CP   ] [D] ue=3: "PDU Session Resource Setup Routine" started...
+[CU-CP   ] [D] Allocated QFI=1 to DRB1 with 5QI=0x9
+[CU-CP-E1] [I] ue=3 cu_cp_ue=1: Created new E1AP UE context
+[CU-CP-E1] [D] ue=3 cu_cp_ue=1: "Bearer Context Setup Procedure" initialized
+[CU-CP-E1] [I] Tx PDU ue=3 cu_cp_ue=1: BearerContextSetupRequest
+[CU-CP-E1] [I] Rx PDU ue=3 cu_cp_ue=1 cu_up_ue=1: BearerContextSetupResponse
+[CU-CP-E1] [D] ue=3 cu_cp_ue=1 cu_up_ue=1: Updated CU-UP-E1AP-ID
+[CU-CP-E1] [D] ue=3 cu_cp_ue=1 cu_up_ue=1: "Bearer Context Setup Procedure" finalized
+[CU-CP   ] [D] ue=3: No neighbor cells configured and periodic serving cell reports disabled for nci=0x66c000
+[CU-CP   ] [D] ue=3: No neighbor cells configured and periodic serving cell reports disabled for nci=0x66c000
+[CU-CP-F1] [D] ue=3 du_ue=3 cu_ue=3 proc="UE Context Modification Procedure": Procedure started...
+[CU-CP-F1] [I] Tx PDU du=0 ue=3 cu_ue=3 du_ue=3: UEContextModificationRequest
+[CU-CP-F1] [I] Rx PDU du=0 ue=3 cu_ue=3 du_ue=3: UEContextModificationResponse
+[CU-CP-F1] [I] ue=3 du_ue=3 cu_ue=3 proc="UE Context Modification Procedure": Procedure finished successfully
+[CU-CP-E1] [D] ue=3 cu_cp_ue=1 cu_up_ue=1: "Bearer Context Modification Procedure" initialized
+[CU-CP-E1] [I] Tx PDU ue=3 cu_cp_ue=1 cu_up_ue=1: BearerContextModificationRequest
+[CU-CP-E1] [I] Rx PDU ue=3 cu_cp_ue=1 cu_up_ue=1: BearerContextModificationResponse
+[CU-CP-E1] [D] ue=3 cu_cp_ue=1 cu_up_ue=1: "Bearer Context Modification Procedure" finalized
+[CU-CP   ] [D] ue=3: No neighbor cells configured and periodic serving cell reports disabled for nci=0x66c000
+[CU-CP   ] [D] Containerized cellGroupCfg: {
+[RRC     ] [D] ue=3 c-rnti=0x4604: "RRC Reconfiguration Procedure" initialized
+[RRC     ] [D] ue=3 c-rnti=0x4604: Creating SRB2
+[PDCP    ] [I] ue=3 SRB2 DL: PDCP configured. rb_type=SRB rlc_mode=AM sn_size=12 discard_timer=infinity count_notify=3221225472 count_max=4294967294 warn_on_drop=false test_mode=false
+[PDCP    ] [I] ue=3 SRB2 UL: PDCP configured. rb_type=SRB rlc_mode=AM sn_size=12 t_reordering=infinity count_notify=3221225472 count_max=4294967294
+[PDCP    ] [I] ue=3 SRB2 DL: Security configured: NIA2 (on) NEA0 (on) domain=RRC
+[PDCP    ] [I] ue=3 SRB2 DL: 128 K_int: 
+[PDCP    ] [I] ue=3 SRB2 DL: 128 K_enc: 
+[PDCP    ] [I] ue=3 SRB2 UL: Security configured: NIA2 (on) NEA0 (on) domain=RRC
+[PDCP    ] [I] ue=3 SRB2 UL: 128 K_int: 
+[PDCP    ] [I] ue=3 SRB2 UL: 128 K_enc: 
+[RRC     ] [D] ue=3 c-rnti=0x4604: Tx SRB1 DCCH DL rrcReconfiguration (177 B)
+[RRC     ] [D] ue=3 c-rnti=0x4604: Containerized rrcReconfiguration: [
+[RRC     ] [D] ue=3 c-rnti=0x4604: Rx SRB1 DCCH UL rrcReconfigurationComplete (2 B)
+[RRC     ] [D] ue=3 c-rnti=0x4604: Containerized rrcReconfigurationComplete: [
+[RRC     ] [D] ue=3 c-rnti=0x4604: "RRC Reconfiguration Procedure" finished successfully
+[CU-CP   ] [D] ue=3: "PDU Session Resource Setup Routine" finished successfully
+[NGAP    ] [I] Tx PDU ue=3 ran_ue=3 amf_ue=4: PDUSessionResourceSetupResponse
+[NGAP    ] [D] ue=3 ran_ue=3 amf_ue=4: "PDU Session Resource Setup Procedure" finished successfully`,
   },
   {
     id: 'pei',
@@ -2420,6 +2427,20 @@ const terms = [
     definition: 'A MAC control element sent by the UE reporting the difference between its maximum transmit power and the estimated power required for the current PUSCH transmission. Enables the gNB scheduler to optimize UL resource allocation and MCS selection.',
     related: ['Power Headroom', 'Power Control', 'PUSCH', 'MAC', 'BSR'],
     spec: '3GPP TS 38.321',
+    logReference: `# OCUDU
+"[SCHED   ] [D] [  539.16] Processed slot events pci=1:
+- PHR: ue=1 rnti=0x4602 pci=1 ph=[4..5)dB p_cmax=[20..21)dBm"`,
+  },
+  {
+    id: 'phy',
+    term: 'PHY',
+    fullName: 'Physical Layer',
+    type: 'Protocol',
+    layer: 'PHY',
+    definition: 'The lowest 5G NR protocol layer. Handles modulation, channel coding, resource mapping, OFDM waveform generation, beamforming, and frame/slot timing. Communicates with MAC via transport channels and with the RF hardware via physical channels.',
+    related: ['MAC', 'SSB', 'PRACH', 'PDSCH', 'PUSCH', 'PUCCH', 'Uu'],
+    spec: '3GPP TS 38.211–38.213',
+    logReference: `# OCUDU DU`,
   },
   {
     id: 'physical-channels',
@@ -2442,6 +2463,26 @@ const terms = [
     spec: '3GPP TS 38.211',
   },
   {
+    id: 'plmn',
+    term: 'PLMN',
+    fullName: 'Public Land Mobile Network',
+    type: 'Identifier',
+    layer: 'NAS',
+    definition: 'A mobile network uniquely identified by a Mobile Country Code (MCC) and Mobile Network Code (MNC). UEs read the PLMN list from SIB1 during cell selection and include the selected PLMN in NAS Registration Requests.',
+    related: ['AMF', 'NAS', 'SIB1', '5G-GUTI'],
+    spec: '3GPP TS 23.003',
+  },
+  {
+    id: 'pmi',
+    term: 'PMI',
+    fullName: 'Precoding Matrix Indicator',
+    type: 'Concept',
+    layer: 'PHY',
+    definition: 'A CSI report value that recommends the precoding matrix the gNB should apply for PDSCH MIMO transmission. Drawn from a codebook defined by the transmission mode and antenna configuration.',
+    related: ['CQI', 'RI', 'CSI', 'CSI-RS'],
+    spec: '3GPP TS 38.214',
+  },
+  {
     id: 'po',
     term: 'PO',
     fullName: 'Paging Occasion',
@@ -2460,6 +2501,7 @@ const terms = [
     definition: 'A carrier-level frequency reference point from which CRBs and SSB subcarrier offset (K_SSB) are defined. Point A is the lowest subcarrier of CRB 0 for a given numerology, broadcast in SIB1 as absoluteFrequencyPointA (NR-ARFCN).',
     related: ['CRB', 'PRB', 'BWP', 'NR-ARFCN', 'Resource Grid', 'K_SSB'],
     spec: '3GPP TS 38.211',
+    logReference: `# OCUDU`,
   },
   {
     id: 'power-control',
@@ -2480,6 +2522,30 @@ const terms = [
     definition: 'The margin between a UE\'s maximum transmit power (P_CMAX) and the power it currently requires for PUSCH. Reported via PHR MAC CE. Positive headroom indicates spare capacity; negative indicates the UE cannot achieve the desired power level.',
     related: ['PHR', 'Power Control', 'TPC', 'PUSCH', 'MAC'],
     spec: '3GPP TS 38.321',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'prach',
+    term: 'PRACH',
+    fullName: 'Physical Random Access Channel',
+    type: 'Channel',
+    layer: 'PHY',
+    definition: 'The uplink physical channel on which UEs transmit random access preambles (Msg1). Time-frequency resources and preamble sequences are configured via SIB1 (for initial access) or RRCReconfiguration (for handover/dedicated RACH). Supports Zadoff-Chu based sequences.',
+    related: ['RACH', 'SIB1', 'RAR', 'MAC', 'SSB'],
+    spec: '3GPP TS 38.211',
+    logReference: `# OCUDU DU
+  [PHY     ] [D] [  502.19] PRACH: rsi=1 rssi=-59.1dB detected_preambles=[{idx=24 ta=7.42us detection_metric=10.8 power_dB=-64.80}] t=218.9us
+  rsi=1
+  preambles=[0, 64)
+  format=B4
+  set=unrestricted
+  zcz=0
+  scs=30kHz
+  nof_rx_ports=1
+  rssi=-59.1dB
+  res=0.1us
+  max_ta=12.08us
+  detected_preambles=[{idx=24 ta=7.42us detection_metric=10.8 power_dB=-64.80}]`,
   },
   {
     id: 'prb',
@@ -2490,8 +2556,42 @@ const terms = [
     definition: 'The basic frequency-domain resource allocation unit: 12 consecutive subcarriers. Time-domain resources are allocated in slots. PRB count per BWP depends on channel bandwidth and numerology (e.g., 52 PRBs for 20 MHz at 15 kHz SCS).',
     related: ['RB', 'CRB', 'VRB', 'BWP', 'Resource Grid', 'numerology'],
     spec: '3GPP TS 38.211',
+    logReference: `# OCUDU
+  [PHY     ] [D] [   536.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.5 sinr=-14.7dB t=25.2us`,
   },
-  // ── Q (additional) ───────────────────────────────────────────────
+  {
+    id: 'pss',
+    term: 'PSS',
+    fullName: 'Primary Synchronization Signal',
+    type: 'Signal',
+    layer: 'PHY',
+    definition: 'One of three synchronization components within the SSB. The UE detects PSS to find the half-frame boundary and derive NID2 (one of three values), giving a coarse Physical Cell ID. PSS always occupies the first symbol of the SSB.',
+    related: ['SSS', 'SSB', 'PBCH', 'Cell Search'],
+    spec: '3GPP TS 38.211',
+  },
+  {
+    id: 'pucch',
+    term: 'PUCCH',
+    fullName: 'Physical Uplink Control Channel',
+    type: 'Channel',
+    layer: 'PHY',
+    definition: 'The uplink physical channel carrying UCI — HARQ ACK/NACK feedback, CSI reports (CQI/PMI/RI), and Scheduling Requests (SR). Multiple PUCCH formats (0–4) cover different payload sizes and time durations.',
+    related: ['PUSCH', 'SR', 'HARQ', 'CQI', 'DCI'],
+    spec: '3GPP TS 38.211',
+  },
+  {
+    id: 'pusch',
+    term: 'PUSCH',
+    fullName: 'Physical Uplink Shared Channel',
+    type: 'Channel',
+    layer: 'PHY',
+    definition: 'The primary uplink data channel carrying DRB user data and, when scheduled, multiplexed CSI reports and SR. Allocated by the gNB scheduler via UL DCI grants. Supports HARQ retransmissions.',
+    related: ['PUCCH', 'HARQ', 'DCI', 'CQI', 'MAC'],
+    spec: '3GPP TS 38.211',
+    logReference: `# OCUDU`,
+  },
+
+  // ── Q ─────────────────────────────────────────────────────
   {
     id: 'qam',
     term: 'QAM',
@@ -2501,6 +2601,36 @@ const terms = [
     definition: 'A modulation scheme combining amplitude and phase modulation. 5G NR supports 16-QAM (4 bits/symbol), 64-QAM (6 bits/symbol), and 256-QAM (8 bits/symbol) for PDSCH/PUSCH. Higher-order QAM gives higher spectral efficiency but requires better channel conditions (higher SNR).',
     related: ['QPSK', 'MCS', 'CQI', 'PDSCH', 'PUSCH'],
     spec: '3GPP TS 38.211',
+  },
+  {
+    id: 'qfi',
+    term: 'QFI',
+    fullName: 'QoS Flow Identifier',
+    type: 'Identifier',
+    layer: 'SDAP',
+    definition: 'A 6-bit value uniquely identifying a QoS flow within a PDU session. Carried in the SDAP header for uplink and downlink data. The QFI is assigned by the SMF and preserved end-to-end between UPF and UE via the SDAP layer.',
+    related: ['QoS', 'DRB', 'SDAP', 'SMF'],
+    spec: '3GPP TS 23.501',
+    logReference: `# OCUDU CU CP
+[CU-CP   ] [D] ue=2: "PDU Session Resource Setup Routine" started...
+[CU-CP   ] [D] Allocated QFI=1 to DRB1 with 5QI=0x9
+
+## OCUDU CU UP
+[CU-UP   ] [D] ue=0: Created QoS flow with QFI=1 and 5QI=0x9
+[SDAP    ] [I] ue=0 psi=12: Mapping QFI=1 DRB1 default_drb=true hdr_ul=absent hdr_dl=absent
+[SDAP    ] [D] ue=0 psi=12 QFI=1 DRB1 UL: RX SDU. QFI=1 sdu_len=300
+[GTPU    ] [I] ue=0 UL teid=0x007c9e: TX PDU. pdu_len=316 teid=0x007c9e qfi=QFI=1
+`,
+  },
+  {
+    id: 'qos',
+    term: 'QoS',
+    fullName: 'Quality of Service',
+    type: 'Concept',
+    layer: 'End-to-End',
+    definition: 'The framework for differentiating data flows by 5QI, GBR/non-GBR class, priority, and packet delay budget. The SMF provisions QoS rules on the UPF (via N4) and delivers QoS configuration to the gNB and UE (via NGAP and RRC) for DRB setup.',
+    related: ['QFI', 'DRB', 'SMF', 'UPF', 'SDAP'],
+    spec: '3GPP TS 23.501',
   },
   {
     id: 'qos-flow',
@@ -2522,7 +2652,8 @@ const terms = [
     related: ['QAM', 'MCS', 'CQI', 'PDCCH'],
     spec: '3GPP TS 38.211',
   },
-  // ── R (additional) ───────────────────────────────────────────────
+
+  // ── R ─────────────────────────────────────────────────────
   {
     id: 'ra',
     term: 'RA',
@@ -2544,6 +2675,16 @@ const terms = [
     spec: '3GPP TS 23.003',
   },
   {
+    id: 'rach',
+    term: 'RACH',
+    fullName: 'Random Access Channel',
+    type: 'Channel',
+    layer: 'MAC',
+    definition: 'The logical/transport channel supporting the random access procedure. The UE transmits a PRACH preamble; the gNB responds with a RAR containing timing advance, UL grant, and Temp C-RNTI. Used for initial access, handover target access, SR failure recovery, and re-establishment.',
+    related: ['PRACH', 'RAR', 'MAC', 'SR', 'C-RNTI'],
+    spec: '3GPP TS 38.321',
+  },
+  {
     id: 'rand',
     term: 'RAND',
     fullName: 'Random Challenge',
@@ -2552,6 +2693,7 @@ const terms = [
     definition: 'A 128-bit random number generated by the ARPF/UDM as the challenge value in the AKA authentication procedure. Sent to the UE along with AUTN. The UE uses RAND with secret key K to compute RES*, CK, IK, and AK via the MILENAGE or TUAK algorithms.',
     related: ['AUTN', 'AV', 'AK', 'Authentication', 'USIM'],
     spec: '3GPP TS 33.501',
+    logReference: `# OCUDU`,
   },
   {
     id: 'random-access',
@@ -2572,6 +2714,21 @@ const terms = [
     definition: 'A 6-bit identifier in the RAR MAC subheader matching the preamble index transmitted by the UE in Msg1. A UE identifies its RAR response by finding the RAPID matching the preamble it transmitted.',
     related: ['RAR', 'RACH', 'PRACH', 'CBRA'],
     spec: '3GPP TS 38.321',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'rar',
+    term: 'RAR',
+    fullName: 'Random Access Response',
+    type: 'Concept',
+    layer: 'MAC',
+    definition: 'The network response to a PRACH preamble (Msg1 in the 4-step RACH procedure). Delivered on PDSCH, addressed by RA-RNTI. Contains: Timing Advance command, UL grant for Msg3, and Temporary C-RNTI assignment.',
+    related: ['PRACH', 'RACH', 'MAC', 'PDSCH', 'C-RNTI'],
+    spec: '3GPP TS 38.321',
+    logReference: `# OCUDU
+[SCHED   ] [D] [  503.10] Slot decisions pci=1 t=1us (1 PDSCH, 0 PUSCHs, 0 PUCCHs, 0 attempted PDCCHs, 0 attempted UCIs):
+- DL PDCCH: rnti=0x10b type=ra-rnti cs_id=0 ss_id=1 format=1_0 cce=0 al=4 
+- RAR PDSCH: ra-rnti=0x10b rb=[0..3) symb=[2..14) tbs=9 mcs=0 rv=0 grants (1): tc-rnti=0x4601: rapid=24 ta=29 time_res=0`,
   },
   {
     id: 'rb',
@@ -2654,6 +2811,16 @@ const terms = [
     spec: '3GPP TS 38.211',
   },
   {
+    id: 'ri',
+    term: 'RI',
+    fullName: 'Rank Indicator',
+    type: 'Concept',
+    layer: 'PHY',
+    definition: 'A CSI report value indicating the number of independent data streams (transmission rank) that the channel can support. RI=1 for single-layer, RI>1 for spatial multiplexing. The gNB scheduler uses RI for MIMO rank adaptation.',
+    related: ['CQI', 'PMI', 'CSI', 'CSI-RS'],
+    spec: '3GPP TS 38.214',
+  },
+  {
     id: 'ric',
     term: 'RIC',
     fullName: 'RAN Intelligent Controller',
@@ -2672,6 +2839,17 @@ const terms = [
     definition: 'A compact encoding of the starting PRB (RBstart) and contiguous length (LRBs) for Type 1 resource allocation in DCI. If (LRBs−1) ≤ ⌊N_BWP/2⌋: RIV = N_BWP × (LRBs−1) + RBstart; otherwise: RIV = N_BWP × (N_BWP−LRBs+1) + (N_BWP−1−RBstart).',
     related: ['Resource Allocation', 'SLIV', 'DCI', 'PRB', 'BWP'],
     spec: '3GPP TS 38.214',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'rlc',
+    term: 'RLC',
+    fullName: 'Radio Link Control',
+    type: 'Protocol',
+    layer: 'RLC',
+    definition: 'A Layer-2 sublayer between MAC and PDCP. Supports three modes: TM (Transparent Mode, for BCCH/CCCH), UM (Unacknowledged Mode, for low-latency streams), and AM (Acknowledged Mode, with ARQ for reliable delivery). Runs between UE and gNB-DU.',
+    related: ['MAC', 'PDCP', 'ARQ', 'DRB', 'SRB'],
+    spec: '3GPP TS 38.322',
   },
   {
     id: 'rlc-am',
@@ -2682,6 +2860,7 @@ const terms = [
     definition: 'The RLC mode providing reliable delivery via ARQ. The transmitter retransmits NACKed PDUs identified by STATUS PDUs from the receiver. Used for SRBs (always) and DRBs requiring guaranteed delivery.',
     related: ['RLC', 'RLC UM', 'RLC TM', 'ARQ', 'NACK'],
     spec: '3GPP TS 38.322',
+    logReference: `# OCUDU`,
   },
   {
     id: 'rlc-tm',
@@ -2692,6 +2871,7 @@ const terms = [
     definition: 'The simplest RLC mode with no headers, no segmentation, and no retransmission. PDUs are passed through without modification. Used for BCCH (system information) and CCCH (initial RRC signaling before C-RNTI assignment).',
     related: ['RLC', 'RLC AM', 'RLC UM', 'BCCH', 'CCCH'],
     spec: '3GPP TS 38.322',
+    logReference: `# OCUDU`,
   },
   {
     id: 'rlc-um',
@@ -2702,6 +2882,26 @@ const terms = [
     definition: 'An RLC mode providing in-sequence delivery and duplicate detection without ARQ retransmission. Used for delay-sensitive DRBs (e.g., voice/streaming) where retransmission would add unacceptable latency.',
     related: ['RLC', 'RLC AM', 'RLC TM', 'DRB', 'DTCH'],
     spec: '3GPP TS 38.322',
+  },
+  {
+    id: 'rm-deregistered',
+    term: 'RM Deregistered',
+    fullName: 'Registration Management Deregistered State',
+    type: 'Concept',
+    layer: 'NAS',
+    definition: 'The 5G RM state in which the UE is not registered with the 5GC. The AMF does not hold a valid UE MM context. The UE must perform an Initial Registration to obtain a 5G-GUTI and access network services.',
+    related: ['RM Registered', '5G RM', 'Registration', 'AMF'],
+    spec: '3GPP TS 24.501',
+  },
+  {
+    id: 'rm-registered',
+    term: 'RM Registered',
+    fullName: 'Registration Management Registered State',
+    type: 'Concept',
+    layer: 'NAS',
+    definition: 'The 5G RM state in which the UE has successfully registered with the 5GC and holds a valid 5G-GUTI and Registration Area. The AMF maintains a UE MM context. The UE can initiate PDU sessions and receive MT paging.',
+    related: ['RM Deregistered', '5G RM', 'Registration', 'AMF', '5G-GUTI'],
+    spec: '3GPP TS 24.501',
   },
   {
     id: 'rmsi',
@@ -2724,6 +2924,26 @@ const terms = [
     spec: '3GPP TS 38.331',
   },
   {
+    id: 'rnti',
+    term: 'RNTI',
+    fullName: 'Radio Network Temporary Identifier',
+    type: 'Identifier',
+    layer: 'MAC',
+    definition: 'A 16-bit identifier used to address UEs or broadcast channels on the air interface. Key types: C-RNTI (UE-specific scheduling), RA-RNTI (random access response window), P-RNTI (paging), SI-RNTI (system information broadcast).',
+    related: ['C-RNTI', 'MAC', 'DCI'],
+    spec: '3GPP TS 38.321',
+  },
+  {
+    id: 'rohc',
+    term: 'ROHC',
+    fullName: 'Robust Header Compression',
+    type: 'Protocol',
+    layer: 'PDCP',
+    definition: 'A header compression protocol used within PDCP to reduce IP/UDP/RTP overhead on the radio interface. Particularly beneficial for VoIP traffic, compressing 40-byte IP/UDP/RTP headers down to 1–4 bytes in steady state.',
+    related: ['PDCP', 'IP', 'UDP'],
+    spec: 'IETF RFC 3095 / 3GPP TS 38.323',
+  },
+  {
     id: 'rqi',
     term: 'RQI',
     fullName: 'Reflective QoS Indication',
@@ -2732,6 +2952,47 @@ const terms = [
     definition: 'A 1-bit flag in the SDAP DL data PDU header. When set by the gNB, it instructs the UE to derive its UL QoS flow-to-DRB mapping by reflecting (mirroring) the DL QFI for packets with the same 5-tuple, simplifying UL QoS rule provisioning.',
     related: ['SDAP', 'QFI', 'QoS Flow', 'RRC'],
     spec: '3GPP TS 37.324',
+  },
+  {
+    id: 'rrc',
+    term: 'RRC',
+    fullName: 'Radio Resource Control',
+    type: 'Protocol',
+    layer: 'RRC',
+    definition: 'The control-plane protocol between UE and gNB-CU-CP. Manages connection establishment/release, RRCReconfiguration (bearer setup, handover), measurement control and reporting, SIB broadcast, and paging. Terminates on the gNB-CU-CP.',
+    related: ['NAS', 'PDCP', 'RRC_IDLE', 'RRC_CONNECTED', 'RRC_INACTIVE', 'DRB', 'SRB'],
+    spec: '3GPP TS 38.331',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'rrc-connected',
+    term: 'RRC_CONNECTED',
+    fullName: 'RRC Connected State',
+    type: 'Concept',
+    layer: 'RRC',
+    definition: 'The UE state in which an RRC connection is active. The UE has an AS context in the gNB and an MM context in the AMF. Active DRBs and SRBs are configured; the UE performs configured measurements and can send/receive data.',
+    related: ['RRC_IDLE', 'RRC_INACTIVE', 'RRC', 'SRB', 'DRB'],
+    spec: '3GPP TS 38.331',
+  },
+  {
+    id: 'rrc-idle',
+    term: 'RRC_IDLE',
+    fullName: 'RRC Idle State',
+    type: 'Concept',
+    layer: 'RRC',
+    definition: 'The UE state with no active RRC connection and no RAN-stored AS context. The UE performs cell reselection autonomously and monitors paging occasions. Data transmission requires a new RACH procedure and full RRC establishment.',
+    related: ['RRC_CONNECTED', 'RRC_INACTIVE', 'RRC', 'Cell Search', 'RACH'],
+    spec: '3GPP TS 38.331',
+  },
+  {
+    id: 'rrc-inactive',
+    term: 'RRC_INACTIVE',
+    fullName: 'RRC Inactive State',
+    type: 'Concept',
+    layer: 'RRC',
+    definition: 'A 5G NR state (not present in LTE) in which the UE AS context is suspended and stored in both the UE and the last serving gNB. The UE performs cell reselection and can rapidly resume without full RRC re-establishment, saving both UE battery and network signaling.',
+    related: ['RRC_IDLE', 'RRC_CONNECTED', 'RRC'],
+    spec: '3GPP TS 38.331',
   },
   {
     id: 'rrh',
@@ -2772,8 +3033,42 @@ const terms = [
     definition: 'A measure of signal quality defined as N × RSRP / RSSI (N = number of RBs, RSSI = total received power). Reported in dB. Accounts for interference and noise, providing a fuller picture than RSRP alone for cell reselection and handover decisions.',
     related: ['RSRP', 'SINR', 'Measurement Report', 'Cell Selection'],
     spec: '3GPP TS 38.215',
+    logReference: `# OCUDU`,
   },
-  // ── S (additional) ───────────────────────────────────────────────
+
+  // ── S ─────────────────────────────────────────────────────
+  {
+    id: 's-criteria',
+    term: 'S-Criteria',
+    fullName: 'Cell Suitability Criteria',
+    type: 'Procedure',
+    layer: 'RRC',
+    definition: 'A 5G NR-specific layer above PDCP on the user plane (absent in LTE). Maps QoS flows to DRBs and adds a 1-byte header containing the QFI and RDI/RQI bits. Terminates on the gNB-CU-UP and provides reflective QoS mapping capability.',
+    related: ['Srxlev', 'Qrxlevmeas', 'q-RxLevMin', 'Pcompensation', 'Cell Selection'],
+    spec: '3GPP TS 38.304',
+    logReference: `# TEMS
+NR 5G ML1 Searcher Idle S Criteria
+
+System Time
+  Slot Number: 0
+  SubFrame Number: 7
+  System Frame Number: 908
+  SCS : 30 kHz
+NR ARFCN: 501390
+Phy Cell ID: 862
+Serving SSB Index: 0
+Q Rx Level Min: -117 dBm
+Q Rx Level Min Offset: 0
+P Max: 30 dBm
+Max UE TX Power: 26 dBm
+Q Offset Temp: 0
+Cell Quality RSRP: -112.29 dBm
+S Rx Level: 2
+Q Qual Min Present: False
+S Qual: 0
+Cell Quality RSRQ: -13.68 dBm
+Result: Success`,
+  },
   {
     id: 's-tmsi',
     term: 'S-TMSI',
@@ -2835,6 +3130,19 @@ const terms = [
     spec: 'IETF RFC 4960',
   },
   {
+    id: 'sdap',
+    term: 'SDAP',
+    fullName: 'Service Data Adaptation Protocol',
+    type: 'Protocol',
+    layer: 'SDAP',
+    definition: 'A 5G NR-specific layer above PDCP on the user plane (absent in LTE). Maps QoS flows to DRBs and adds a 1-byte header containing the QFI and RDI/RQI bits. Terminates on the gNB-CU-UP and provides reflective QoS mapping capability.',
+    related: ['PDCP', 'DRB', 'QFI', 'QoS', 'gNB-CU-UP'],
+    spec: '3GPP TS 37.324',
+    logReference: `# OCUDU CU UP
+[SDAP    ] [I] ue=0 psi=12: Mapping QFI=1 DRB1 default_drb=true hdr_ul=absent hdr_dl=absent
+[SDAP    ] [D] ue=0 psi=12 QFI=1 DRB1 UL: RX SDU. QFI=1 sdu_len=300`,
+  },
+  {
     id: 'sdf',
     term: 'SDF',
     fullName: 'Service Data Flow',
@@ -2863,6 +3171,14 @@ const terms = [
     definition: 'A unit of data received from a higher protocol layer. An SDU at one layer becomes the payload of a PDU at the layer below after header encapsulation. For example, a PDCP SDU is an IP packet; the PDCP PDU = PDCP header + PDCP SDU.',
     related: ['PDU', 'MAC', 'RLC', 'PDCP', 'SDAP'],
     spec: '',
+    logReference: `# OCUDU
+[RLC     ] [I] du=0 ue=1 SRB0 DL: TX SDU. sdu_len=301 queued_sdus=1 queued_bytes=301
+[RLC     ] [D] du=0 ue=1 SRB0 DL: Triggering buffer state update to lower layer
+[RLC     ] [D] du=0 ue=1 SRB0 DL: Sending buffer state update to lower layer. bs=pending_bytes=301 hol_toa=3627634703µs
+[RLC     ] [D] du=0 ue=1 SRB0 DL: MAC opportunity. grant_len=301
+[RLC     ] [D] du=0 ue=1 SRB0 DL: Read SDU. pdcp_sn={na} sdu_len=301
+[RLC     ] [I] du=0 ue=1 SRB0 DL: TX PDU. pdu_len=301 grant_len=301
+[MAC     ] [I] [  536.10] DL PDU: ue=1 rnti=0x4602 size=317: CON_RES: id=1776b29c6770, SDU: lcid=0 nof_sdus=1 total_size=304`,
   },
   {
     id: 'seaf',
@@ -2883,6 +3199,7 @@ const terms = [
     definition: 'A set of time-frequency occasions within a CORESET at which the UE monitors PDCCH candidates. Up to 10 Search Spaces can be configured per BWP. Each specifies a CORESET, aggregation levels, number of candidates, periodicity, and DCI formats to blindly decode.',
     related: ['CORESET', 'PDCCH', 'CCE', 'DCI', 'BWP'],
     spec: '3GPP TS 38.213',
+    logReference: `# OCUDU`,
   },
   {
     id: 'security',
@@ -2913,6 +3230,7 @@ const terms = [
     definition: 'A DCI (format 2_0) mechanism allowing the gNB to dynamically indicate TDD slot formats (DL, UL, flexible symbol allocation) to a group of UEs. Enables fast UL/DL switching within a TDD pattern for dynamic traffic.',
     related: ['TDD', 'Slot', 'DCI', 'GP', 'Frame'],
     spec: '3GPP TS 38.213',
+    logReference: `# OCUDU`,
   },
   {
     id: 'sfn',
@@ -2923,6 +3241,7 @@ const terms = [
     definition: 'A 10-bit counter (0–1023) identifying the radio frame. Increments every 10 ms, cycling every 10.24 s. The 6 MSBs are broadcast in the MIB via PBCH; the 4 LSBs are derived from the PBCH DMRS sequence index. Used for timing reference and paging offset calculation.',
     related: ['Frame', 'MIB', 'PBCH', 'HRF', 'PF'],
     spec: '3GPP TS 38.331',
+    logReference: `# OCUDU`,
   },
   {
     id: 'si',
@@ -2933,6 +3252,8 @@ const terms = [
     definition: 'A 2-bit field in the RLC AM and UM data PDU header indicating the segmentation status of the PDU: 00 = complete SDU (no segmentation), 01 = first segment, 10 = last segment, 11 = middle segment. Allows the receiver to identify and reassemble segmented RLC SDUs.',
     related: ['SO', 'SN', 'RLC AM', 'RLC UM', 'PDU'],
     spec: '3GPP TS 38.322',
+    logReference: `# OCUDU
+  [RLC     ] [I] du=0 ue=1 SRB1 UL: RX PDU. pdu_len=35 dc=data p=1 si=full sn=0`,
   },
   {
     id: 'sib',
@@ -2943,6 +3264,247 @@ const terms = [
     definition: 'A container within System Information carrying specific categories of configuration data. SIB1 is always broadcast; SIB2–SIBn contain idle mode parameters, cell reselection configuration, neighbor lists, and other optional parameters.',
     related: ['SI', 'SIB1', 'SIB2', 'SIB3', 'SIB4', 'SIB5', 'MSI', 'OSI', 'MIB'],
     spec: '3GPP TS 38.331',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'sib1',
+    term: 'SIB1',
+    fullName: 'System Information Block 1',
+    type: 'Concept',
+    layer: 'RRC',
+    definition: 'The first system information block decoded after the MIB. Carries the PLMN identity list, cell barring and access restriction status, Tracking Area Code, RACH configuration, and scheduling information for other SIBs. Transmitted on PDSCH, scheduled per the offset in MIB.',
+    related: ['MIB', 'PBCH', 'SSB', 'PRACH', 'PLMN', 'RACH'],
+    spec: '3GPP TS 38.331',
+    logReference: `# TEMS T-MOBILE 5G NR
+SIB1 (BCCH-DL-SCH)
+MessageDirection: DL
+MessageProtocol: NR-RRC
+MessageChannel: BCCH-SCH Channel
+  RRC OTA Packet Header
+    Version: 26 (v0.26)
+    RRC Release Version: 17.8.0
+    RB ID: 0
+    Physical Cell ID: 862
+    NR Global Cell Identity: 0
+    Frequency: 501390
+    SFN: 908
+    SubFrameNumber: 5
+    Slot: 0
+Cell Info
+  NR-ARFCN: 501390
+  PCI: 862
+cellSelectionInfo
+  Q-RxLevMin: -59
+cellAccessRelatedInfo
+  plmn-IdentityInfoList
+    PLMN-IdentityInfoList:
+      [0]:
+        plmn-IdentityList:
+          [0]:
+            MCC: 310
+            MNC: 260
+        trackingAreaCode
+          TAC: 8667136 (844000 hex)
+        cellIdentity: 110AE312E hex
+        cellReservedForOperatorUse: notReserved
+si-SchedulingInfo
+  schedulingInfoList:
+    [0]:
+      si-BroadcastStatus: broadcasting
+      si-Periodicity: rf64
+      sib-MappingInfo
+        SIB-Mapping:
+          [0]:
+            extensionMarker0: 0
+            type: sibType2
+            valueTag: 0
+          [1]:
+            extensionMarker0: 0
+            type: sibType4
+            valueTag: 0
+          [2]:
+            extensionMarker0: 0
+            type: sibType5
+            valueTag: 0
+  si-WindowLength: s20
+servingCellConfigCommon
+  downlinkConfigCommon
+    frequencyInfoDL
+      frequencyBandList
+        MultiFrequencyBandListNR-SIB:
+          [0]:
+            freqBandIndicatorNR: 41
+      offsetToPointA: 36
+      scs-SpecificCarrierList:
+        [0]:
+          offsetToCarrier: 0
+          subcarrierSpacing: kHz30
+          carrierBandwidth: 273
+    initialDownlinkBWP
+      genericParameters
+        locationAndBandwidth: 1099
+        subcarrierSpacing: kHz30
+      pdcch-ConfigCommon
+        SetupRelease: setup
+        Setup
+          commonSearchSpaceList
+            commonSearchSpaceList:
+              [0]:
+                searchSpaceId: 1
+                controlResourceSetId: 0
+                monitoringSlotPeriodicityAndOffset
+                  monitoringSlotPeriodicityAndOffset: sl1
+                monitoringSymbolsWithinSlot
+                  monitoringSymbolsWithinSlot: 10000000000000
+                nrofCandidates
+                  aggregationLevel1: n0
+                  aggregationLevel2: n0
+                  aggregationLevel4: n0
+                  aggregationLevel8: n1
+                  aggregationLevel16: n0
+                searchSpaceType
+                  searchSpaceType: common
+                  dci-Format0-0-AndFormat1-0
+          searchSpaceSIB1: 0
+          searchSpaceOtherSystemInformation: 1
+          pagingSearchSpace: 1
+          ra-SearchSpace: 1
+      pdsch-ConfigCommon
+        SetupRelease: setup
+        Setup
+          pdsch-TimeDomainAllocationList
+            PDSCH-TimeDomainResourceAllocationList:
+              [0]:
+                k0: 0
+                mappingType: typeA
+                startSymbolAndLength: 40
+              [1]:
+                k0: 0
+                mappingType: typeA
+                startSymbolAndLength: 53
+    bcch-Config
+      modificationPeriodCoeff: n2
+    pcch-Config
+      defaultPagingCycle: rf64
+      nAndPagingFrameOffset: oneT
+      ns: one
+      firstPDCCH-MonitoringOccasionOfPO
+        firstPDCCH-MonitoringOccasionOfPO: sCS30KHZoneT-SCS15KHZhalfT
+        sCS30KHZoneT-SCS15KHZhalfT:
+          [0]: 2
+  uplinkConfigCommon
+    frequencyInfoUL
+      scs-SpecificCarrierList:
+        [0]:
+          offsetToCarrier: 0
+          subcarrierSpacing: kHz30
+          carrierBandwidth: 273
+      p-Max: 30
+    initialUplinkBWP
+      genericParameters
+        locationAndBandwidth: 1099
+        subcarrierSpacing: kHz30
+      rach-ConfigCommon
+        SetupRelease: setup
+        Setup
+          rach-ConfigGeneric
+            prach-ConfigurationIndex: 9
+            msg1-FDM: one
+            msg1-FrequencyStart: 7
+            zeroCorrelationZoneConfig: 11
+            preambleReceivedTargetPower: -106
+            preambleTransMax: n10
+            powerRampingStep: dB4
+            ra-ResponseWindow: sl20
+          totalNumberOfRA-Preambles: 17
+          ssb-perRACH-OccasionAndCB-PreamblesPerSSB
+            ssb-perRACH-OccasionAndCB-PreamblesPerSSB: one
+            one: n16
+          ra-ContentionResolutionTimer: sf16
+          rsrp-ThresholdSSB: (0) < -156 dBm
+          prach-RootSequenceIndex: l839
+          l839: 341
+          restrictedSetConfig: unrestrictedSet
+          msg3-transformPrecoder: enabled
+      pusch-ConfigCommon
+        SetupRelease: setup
+        Setup
+          groupHoppingEnabledTransformPrecoding: enabled
+          pusch-TimeDomainAllocationList
+            PUSCH-TimeDomainResourceAllocationList:
+              [0]:
+                k2: 1
+                mappingType: typeA
+                startSymbolAndLength: 27
+              [1]:
+                k2: 2
+                mappingType: typeA
+                startSymbolAndLength: 27
+              [2]:
+                k2: 3
+                mappingType: typeA
+                startSymbolAndLength: 27
+              [3]:
+                k2: 4
+                mappingType: typeA
+                startSymbolAndLength: 27
+              [4]:
+                k2: 5
+                mappingType: typeA
+                startSymbolAndLength: 27
+              [5]:
+                k2: 6
+                mappingType: typeA
+                startSymbolAndLength: 27
+              [6]:
+                k2: 8
+                mappingType: typeA
+                startSymbolAndLength: 27
+              [7]:
+                k2: 9
+                mappingType: typeA
+                startSymbolAndLength: 27
+          msg3-DeltaPreamble: 6
+          p0-NominalWithGrant: -102
+      pucch-ConfigCommon
+        SetupRelease: setup
+        Setup
+          pucch-ResourceCommon: 12
+          pucch-GroupHopping: enable
+          hoppingId: 862
+          p0-nominal: -114
+    timeAlignmentTimerCommon: infinity
+  n-TimingAdvanceOffset
+    n-TimingAdvanceOffset: n39936
+  ssb-PositionsInBurst
+    inOneGroup: 10000000
+  ssb-PeriodicityServingCell: ms20
+  tdd-UL-DL-ConfigurationCommon
+    referenceSubcarrierSpacing: kHz30
+    pattern1
+      dl-UL-TransmissionPeriodicity: ms0p5
+      nrofDownlinkSlots: 3
+      nrofDownlinkSymbols: 3
+      nrofUplinkSlots: 2
+      nrofUplinkSymbols: 3
+      dl-UL-TransmissionPeriodicity-v1530
+        dl-UL-TransmissionPeriodicity-v1530: ms3
+    pattern2
+      dl-UL-TransmissionPeriodicity: ms2
+      nrofDownlinkSlots: 4
+      nrofDownlinkSymbols: 0
+      nrofUplinkSlots: 0
+      nrofUplinkSymbols: 0
+  ss-PBCH-BlockPower: 20
+ims-EmergencySupport: true
+ue-TimersAndConstants
+  t300: ms1000
+  t301: ms400
+  t310: ms2000
+  n310: n20
+  t311: ms3000
+  n311: n1
+  t319: ms400`,
   },
   {
     id: 'sib2',
@@ -2963,6 +3525,7 @@ const terms = [
     definition: 'Contains a list of intra-frequency NR neighbor cells with cell-specific reselection parameters (cell individual offset), allowing the gNB to bias reselection toward or away from specific cells.',
     related: ['SIB', 'SIB2', 'SIB4', 'Reselection', 'NR-ARFCN'],
     spec: '3GPP TS 38.331',
+    logReference: `# OCUDU`,
   },
   {
     id: 'sib4',
@@ -2973,6 +3536,7 @@ const terms = [
     definition: 'Contains inter-frequency NR neighbor cell configuration including carrier frequencies, reselection thresholds, and cell individual offsets for inter-frequency NR neighbors.',
     related: ['SIB', 'SIB3', 'SIB5', 'Reselection', 'NR-ARFCN'],
     spec: '3GPP TS 38.331',
+    logReference: `# OCUDU`,
   },
   {
     id: 'sib5',
@@ -2983,6 +3547,7 @@ const terms = [
     definition: 'Contains inter-RAT neighbor cell configuration for LTE E-UTRA cells, enabling idle mode reselection from NR to LTE. Includes EUTRA carrier frequencies, thresholds, and reselection priorities.',
     related: ['SIB', 'SIB4', 'Reselection'],
     spec: '3GPP TS 38.331',
+    logReference: `# OCUDU`,
   },
   {
     id: 'sidf',
@@ -3003,6 +3568,7 @@ const terms = [
     definition: 'A measure of signal quality: the ratio of received signal power to the sum of interference from other cells/users plus thermal noise. A key metric for link adaptation, scheduling, and mobility. Higher SINR allows higher MCS and more spatial layers.',
     related: ['RSRP', 'RSRQ', 'MCS', 'CQI', 'Measurement Report'],
     spec: '3GPP TS 38.215',
+    logReference: `# OCUDU`,
   },
   {
     id: 'sip',
@@ -3035,6 +3601,16 @@ const terms = [
     spec: '3GPP TS 38.211',
   },
   {
+    id: 'smf',
+    term: 'SMF',
+    fullName: 'Session Management Function',
+    type: 'Component',
+    layer: '5GC',
+    definition: 'The 5G Core function responsible for PDU session lifecycle management. Selects and controls the UPF via N4/PFCP, allocates UE IP addresses, enforces QoS policy, and interfaces with AMF (N11) and PCF for policy. Handles PDU session establishment, modification, and release.',
+    related: ['AMF', 'UPF', 'N4', 'DNN', 'QoS', 'DRB'],
+    spec: '3GPP TS 23.501',
+  },
+  {
     id: 'smtc',
     term: 'SMTC',
     fullName: 'SSB-based Measurement Timing Configuration',
@@ -3053,6 +3629,7 @@ const terms = [
     definition: 'A counter field in RLC and PDCP PDU headers enabling reordering, duplicate detection, and retransmission. RLC SN sizes: 6 or 12 bits (AM/UM). PDCP SN sizes: 12 or 18 bits. Also used as abbreviation for "Secondary Node" in Dual Connectivity.',
     related: ['RLC AM', 'RLC UM', 'PDCP', 'ARQ', 'SO'],
     spec: '3GPP TS 38.322',
+    logReference: `# OCUDU`,
   },
   {
     id: 'snn',
@@ -3063,6 +3640,7 @@ const terms = [
     definition: 'A text string identifying the serving network, used as KDF input during 5G authentication. Format: "5G:mnc<MNC>.mcc<MCC>.3gppnetwork.org". Prevents attacks where a compromised serving network reuses home-network authentication vectors.',
     related: ['Authentication', 'KDF', 'KAMF', 'KSEAF', 'PLMN'],
     spec: '3GPP TS 33.501',
+    logReference: `# OCUDU`,
   },
   {
     id: 'so',
@@ -3073,6 +3651,7 @@ const terms = [
     definition: 'A field in the RLC AM and UM PDU headers (when segmentation is applied) indicating the byte offset of the first byte of the current segment within the original SDU. Enables the receiver to reassemble segmented SDUs.',
     related: ['SN', 'RLC AM', 'RLC UM', 'PDU'],
     spec: '3GPP TS 38.322',
+    logReference: `# OCUDU`,
   },
   {
     id: 'split-7-2',
@@ -3103,6 +3682,104 @@ const terms = [
     definition: 'A 48-bit counter maintained in both the USIM and the ARPF/UDM, incremented with each AKA authentication. Concealed by AK within the AUTN token. The UE checks the received SQN is within an acceptable window to prevent replay attacks.',
     related: ['AK', 'AUTN', 'Authentication', 'USIM', 'ARPF'],
     spec: '3GPP TS 33.501',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'sr',
+    term: 'SR',
+    fullName: 'Scheduling Request',
+    type: 'Procedure',
+    layer: 'MAC',
+    definition: 'A 1-bit uplink request sent by the UE on PUCCH when it has data to transmit but holds no active UL grant. The gNB responds with a UL grant via DCI. After exhausting configured SR transmissions, the UE falls back to RACH.',
+    related: ['MAC', 'PUCCH', 'DCI', 'BSR', 'RACH'],
+    spec: '3GPP TS 38.321',
+    configParams: `# TEMS PUCCH
+NR 5G MAC UL Physical Channel Schedule Report
+Carriers:
+      [0]:
+        Carrier ID: 0
+        UL BWP ID: 1
+        RNTI Type: C_RNTI
+        Phychan Bit Mask:
+          PUCCH
+        Per PUCCH Data
+          NumPucch: 1
+          PerPucchData:
+            [0]:
+              Reserved: NotDropped
+              PUCCH Format: PucchFormatF1
+              UCI Request BMask:
+                SR_RPT
+              Start symbol: 0
+              Num Symbols: 14
+              Starting RB: 0
+              REL16 DMRS EN: 0
+              Dual Pol Status: 0
+              Num RB: 1
+              Freq Hopping Flag: HopModeGroup
+              Second Hop RB: 272
+              Num HARQ ACK Bits: 0
+              Num SR Bits: 1
+              pad_w2: 1
+              Num UCI P1 Bits: 1
+              Num UCI P2 Bits: 0
+              PadW3: 22
+              M0: 0
+              Time OCC Index: 2
+              I DMRS: 0
+              DFT OCC Length: 0
+              DFT OCC Index: 0
+              pad_w4: 65535
+        
+NR 5G MAC UCI Information
+Num Records: 1
+Records:
+  [0]:
+    Slot: 5
+    Numerology: 30 kHz
+    Frame: 918
+    Num UCI: 1
+    UCI Info:
+      [0]:
+        Channel: PUCCHFMT1
+        Carrier ID: 0
+        Start Symbol: 0
+        Num Symbols: 14
+        UCI Request Bitmask:
+          SR
+        Num HARQ: 0
+        Num SR: 1
+        Num CSF: 0
+        Total HARQ ACK Bits: 0
+        SR Data:
+          [0]:
+            SR ID: 0
+            SR Request: 1      `,
+    logReference: `# OCUDU DU
+[SCHED   ] [D] [   508.7] Slot decisions pci=1 t=2us (0 PDSCHs, 0 PUSCHs, 1 PUCCH, 0 attempted PDCCHs, 0 attempted UCIs):
+- PUCCH: c-rnti=0x4601 format=1 prb=[4..5) symb=[0..14) cs=0 occ=0 uci: harq_bits=0 sr=1
+[FAPI    ] [D] [   508.7] Sector#0: UL_TTI.request slot=508.7
+	- PUCCH rnti=0x4601 bwp=0:51 format=1 prb=4:1 prb2=0 symb=0:14 harq_bit_len=0 sr_bit_len=1
+[PHY     ] [D] [   508.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=yes metric=812.2 sinr=14.8dB t=20.8us
+[FAPI    ] [D] [  508.15] Sector#0: UCI.indication slot=508.7
+	- UCI PUCCH format 0/1 format=1 rnti=17921 sinr=14.8 SR: confidence=255 sr=detected
+[SCHED   ] [D] [  508.16] Processed slot events pci=1:
+- SR: ue=0 rnti=0x4601`,
+  },
+  {
+    id: 'srb',
+    term: 'SRB',
+    fullName: 'Signalling Radio Bearer',
+    type: 'Concept',
+    layer: 'RRC',
+    definition: 'A radio bearer used exclusively for RRC and NAS control messages. Three SRBs are defined: SRB0 (CCCH — carries RRCSetupRequest before security), SRB1 (DCCH — RRC/NAS after setup, before security activation), SRB2 (DCCH — NAS after AS security).',
+    related: ['DRB', 'RRC', 'NAS', 'PDCP'],
+    spec: '3GPP TS 38.331',
+    logReference: `# OCUDU
+[RLC     ] [I] du=0 ue=1 SRB1 UL: RX PDU. pdu_len=35 dc=data p=1 si=full sn=0
+[RLC     ] [D] du=0 ue=1 SRB1 UL: Status report requested via polling bit.
+[RLC     ] [D] du=0 ue=1 SRB1 DL: Triggering buffer state update to lower layer
+[RLC     ] [D] du=0 ue=1 SRB1 DL: Sending buffer state update to lower layer. bs=pending_bytes=3 hol_toa=none`,
   },
   {
     id: 'sres',
@@ -3125,6 +3802,17 @@ const terms = [
     spec: '3GPP TS 38.211',
   },
   {
+    id: 'ssb',
+    term: 'SSB',
+    fullName: 'Synchronization Signal Block',
+    type: 'Signal',
+    layer: 'PHY',
+    definition: 'A periodically transmitted downlink structure consisting of PSS (symbol 0), SSS (symbol 2), and PBCH with DMRS (symbols 1 and 3). Carries MIB and provides cell timing/identity. UEs detect SSBs during initial cell search and use them for RRM measurements and beam management.',
+    related: ['PSS', 'SSS', 'PBCH', 'MIB', 'CSI-RS', 'Cell Search'],
+    spec: '3GPP TS 38.211',
+    logReference: `# OCUDU\n[GNB     ] [I] SSB derived parameters for cell: 1, band: 78, dl_arfcn:650000, nof_crbs: 51 scs:30kHz, ssb_scs:30kHz:\n- SSB offset pointA:0 \n- k_SSB:4 \n- SSB arfcn:649632 \n- Coreset index:0 \n- Searchspace index:0\n\n[FAPI    ] [D] [   286.0] Sector#0: DL_TTI.request slot=286.0\n- SSB pci=1 beta_pss_profile=0 ssb_block_index=0 k_SSB=4 pointA=0 ssb_pattern_case=C scs=30kHz L_max=8`,
+  },
+  {
     id: 'ssc',
     term: 'SSC',
     fullName: 'Session and Service Continuity',
@@ -3133,6 +3821,26 @@ const terms = [
     definition: 'A mode defining how a PDU session behaves during UE mobility. SSC Mode 1: UPF anchor and UE IP remain fixed. Mode 2: session released and re-established at a new UPF. Mode 3: multi-homed routing while maintaining connectivity.',
     related: ['PDU Session', 'UPF', 'SMF', 'Handover', 'DNN'],
     spec: '3GPP TS 23.501',
+  },
+  {
+    id: 'sss',
+    term: 'SSS',
+    fullName: 'Secondary Synchronization Signal',
+    type: 'Signal',
+    layer: 'PHY',
+    definition: 'The second synchronization signal in the SSB (symbol 2). Together with PSS (which provides NID2), SSS provides NID1, completing the Physical Cell ID (PCI = 3 × NID1 + NID2). UEs use PSS+SSS to derive full PCI and confirm cell timing.',
+    related: ['PSS', 'SSB', 'PBCH', 'Cell Search'],
+    spec: '3GPP TS 38.211',
+  },
+  {
+    id: 'suci',
+    term: 'SUCI',
+    fullName: 'Subscription Concealed Identifier',
+    type: 'Identifier',
+    layer: 'NAS',
+    definition: "A privacy-preserving one-time-use identifier that conceals the subscriber's permanent SUPI using the home network's public key (ECIES). Sent in the initial Registration Request instead of the SUPI/IMSI to prevent IMSI-catching attacks.",
+    related: ['5G-GUTI', 'AUSF', 'AMF', 'NAS'],
+    spec: '3GPP TS 23.003',
   },
   {
     id: 'supi',
@@ -3164,7 +3872,8 @@ const terms = [
     related: ['PSS', 'SSS', 'SSB', 'Cell Search', 'PCI'],
     spec: '3GPP TS 38.211',
   },
-  // ── T (additional) ───────────────────────────────────────────────
+
+  // ── T ─────────────────────────────────────────────────────
   {
     id: 'ta',
     term: 'TA',
@@ -3174,6 +3883,7 @@ const terms = [
     definition: 'The uplink timing offset applied by the UE to compensate for propagation delay, ensuring UL transmissions arrive at the gNB aligned with the DL frame timing. Critical for OFDMA orthogonality — misaligned UL transmissions cause inter-user interference.',
     related: ['Timing Advance Command', 'RACH', 'RAR', 'MAC', 'GP'],
     spec: '3GPP TS 38.213',
+    logReference: `# OCUDU`,
   },
   {
     id: 'tac',
@@ -3184,6 +3894,7 @@ const terms = [
     definition: 'A 24-bit code identifying a Tracking Area — an administrative area grouping cells for paging and location management. Broadcast in SIB1. When a UE moves to a cell with a TAC not in its Tracking Area List, it performs a Mobility Registration Update.',
     related: ['PLMN', 'Registration', 'Paging', 'SIB1', 'AMF'],
     spec: '3GPP TS 23.003',
+    logReference: `# OCUDU`,
   },
   {
     id: 'tb',
@@ -3194,6 +3905,7 @@ const terms = [
     definition: 'The basic unit of data delivery between MAC and PHY layers. One or two TBs (two codewords in MIMO) are delivered per TTI. Each TB is independently channel-coded (CRC + LDPC) and protected by HARQ. TB size is determined by MCS and allocated PRBs.',
     related: ['TBS', 'MCS', 'HARQ', 'CB', 'CRC', 'Transport Channels'],
     spec: '3GPP TS 38.214',
+    logReference: `# OCUDU`,
   },
   {
     id: 'tbs',
@@ -3206,6 +3918,16 @@ const terms = [
     spec: '3GPP TS 38.214',
   },
   {
+    id: 'tcp',
+    term: 'TCP',
+    fullName: 'Transmission Control Protocol',
+    type: 'Protocol',
+    layer: 'Application',
+    definition: 'A reliable, connection-oriented transport protocol providing ordered delivery and congestion control. Operates transparently over the 5G PDU session. TCP retransmissions are independent of HARQ/ARQ — the network does not intercept TCP.',
+    related: ['UDP', 'IP', 'DN', 'N6'],
+    spec: 'IETF RFC 793',
+  },
+  {
     id: 'tdd',
     term: 'TDD',
     fullName: 'Time Division Duplex',
@@ -3214,6 +3936,7 @@ const terms = [
     definition: 'A duplex scheme using the same frequency for both uplink and downlink, separated in time. TDD slots are configured via SIB1 (static), RRC (semi-static), or DCI SFI (dynamic). A guard period separates DL and UL symbols. Used in unpaired spectrum.',
     related: ['FDD', 'SFI', 'Slot', 'Frame', 'GP', 'numerology'],
     spec: '3GPP TS 38.300',
+    logReference: `# OCUDU`,
   },
   {
     id: 'teid',
@@ -3224,6 +3947,19 @@ const terms = [
     definition: 'A 32-bit identifier in GTP-U headers identifying the tunnel endpoint at the receiving node. Each node allocates a local TEID per tunnel (per PDU session). Exchanged during PDU session establishment via NGAP N2 SM information and N4 PFCP.',
     related: ['GTP-U', 'N3', 'F1-U', 'N9', 'PDU Session', 'UPF'],
     spec: '3GPP TS 29.281',
+    logReference: `# OCUDU
+[GTPU    ] [I] Tunnel added. teid=0x000002
+[GTPU    ] [I] ue=0 RX teid=0x000002: GTPU NR-U Rx configured. node=cu_up local_teid=0x000002
+[CU-F1-U ] [I] ue=0 DRB1 ul-teid=0x000002: F1-U bearer configured. warn_on_drop=true dl_t_notif_timer=5ms queue_size=8192 batch_size=256
+[GTPU    ] [D] Forwarding PDU. pdu_len=20 teid=0x000002
+[GTPU    ] [D] ue=0 RX teid=0x000002: RX PDU. pdu_len=20
+[GTPU    ] [I] ue=0 RX teid=0x000002: RX DL data delivery status
+[CU-F1-U ] [D] ue=0 DRB1 ul-teid=0x000002: F1-U bearer received PDU
+[CU-UP   ] [I] ue=0: Attaching dl_teid={Addr=172.18.10.3 TEID=0x000002} to F1-U tunnel with ul_teid=0x000002
+[GTPU    ] [I] ue=0 TX teid=0x000002: GTPU NR-U Tx configured. peer_teid=0x000002 peer_addr=172.18.10.3 peer_port=2152
+[CU-F1-U ] [I] Connected CU bearer to DU bearer. UL GTP Tunnel={Addr=172.18.10.2 TEID=0x000002}, DL GTP Tunnel={Addr=172.18.10.3 TEID=0x000002}
+[CU-UP   ] [I] ue=0: Modified DRB1. psi=13 f1u_teid=0x000002
+[GTPU    ] [D] Forwarding PDU. pdu_len=323 teid=0x000002`,
   },
   {
     id: 'timing-advance-command',
@@ -3234,6 +3970,8 @@ const terms = [
     definition: 'A MAC CE sent by the gNB in the RAR (Msg2) or as a standalone TA Command MAC CE to adjust the UE\'s UL transmission timing. The 11-bit TA index encodes the required timing advance in multiples of 16 × Tc.',
     related: ['TA', 'RACH', 'RAR', 'MAC'],
     spec: '3GPP TS 38.321',
+    logReference: `# OCUDU
+  [MAC     ] [I] [  543.15] DL PDU: ue=1 rnti=0x4602 size=177: TA_CMD: tag_id=0, ta_cmd=29`,
   },
   {
     id: 'tls',
@@ -3244,6 +3982,16 @@ const terms = [
     definition: 'A cryptographic protocol providing authentication and encryption for network communications. In 5G, TLS (1.2 or 1.3) secures SBI interfaces between 5GC NFs and protects the N32 inter-PLMN interface. Provides certificate-based mutual authentication.',
     related: ['HTTP/2', 'SBI', 'SBA', 'IPSec', 'SEPP'],
     spec: '3GPP TS 33.501',
+  },
+  {
+    id: 'tpc',
+    term: 'TPC',
+    fullName: 'Transmit Power Control',
+    type: 'Concept',
+    layer: 'PHY',
+    definition: 'A mechanism to adjust UE uplink transmit power on a per-slot basis. TPC commands (delta values) are carried in UL DCI (DCI 0_0/0_1). Combined with open-loop path-loss compensation to maintain target received power at the gNB.',
+    related: ['DCI', 'PUSCH', 'PUCCH', 'PHY'],
+    spec: '3GPP TS 38.213',
   },
   {
     id: 'transport-channels',
@@ -3264,8 +4012,10 @@ const terms = [
     definition: 'The time duration of one HARQ transmission unit. In 5G NR, the TTI is one slot (14 symbols) by default; mini-slot (2, 4, or 7 symbols) scheduling is supported for URLLC, reducing HARQ round-trip time.',
     related: ['Slot', 'HARQ', 'numerology', 'URLLC', 'TB'],
     spec: '3GPP TS 38.211',
+    logReference: `# OCUDU`,
   },
-  // ── U (additional) ───────────────────────────────────────────────
+
+  // ── U ─────────────────────────────────────────────────────
   {
     id: 'uci',
     term: 'UCI',
@@ -3275,6 +4025,7 @@ const terms = [
     definition: 'Control information transmitted by the UE in the uplink: HARQ ACK/NACK feedback, CSI reports (CQI, PMI, RI, CRI), and Scheduling Requests. Carried on PUCCH (standalone) or multiplexed onto PUSCH when UL data is available.',
     related: ['PUCCH', 'PUSCH', 'HARQ', 'CQI', 'SR'],
     spec: '3GPP TS 38.212',
+    logReference: `# OCUDU`,
   },
   {
     id: 'udm',
@@ -3287,6 +4038,17 @@ const terms = [
     spec: '3GPP TS 23.501',
   },
   {
+    id: 'udp',
+    term: 'UDP',
+    fullName: 'User Datagram Protocol',
+    type: 'Protocol',
+    layer: 'Application',
+    definition: 'A connectionless, minimal-overhead transport protocol. Used for latency-sensitive applications such as VoIP, DNS, video streaming, and gaming. Loss recovery is handled at the application layer; ROHC in PDCP can compress UDP headers.',
+    related: ['TCP', 'IP', 'DN', 'ROHC'],
+    spec: 'IETF RFC 768',
+    logReference: `# OCUDU`,
+  },
+  {
     id: 'udr',
     term: 'UDR',
     fullName: 'Unified Data Repository',
@@ -3295,6 +4057,55 @@ const terms = [
     definition: 'A 5GC database function storing subscriber data, policy data, and application data. Accessed by UDM (subscription data), PCF (policy data), and NEF (application data). Provides a centralized data store accessed via the Nudr SBI service.',
     related: ['UDM', 'PCF', 'NEF', 'SBA'],
     spec: '3GPP TS 23.501',
+  },
+  {
+    id: 'ue',
+    term: 'UE',
+    fullName: 'User Equipment',
+    type: 'Component',
+    layer: 'UE',
+    definition: 'The end-user terminal in a 5G NR network, consisting of the ME (mobile equipment hardware/software) and a USIM (subscriber credentials). Connects to NG-RAN over the Uu air interface and communicates with the 5GC via NAS signaling on the N1 reference point.',
+    related: ['ME', 'USIM', 'gNB', 'Uu', 'NAS'],
+    spec: '3GPP TS 23.501',
+  },
+  {
+    id: 'ue-context',
+    term: 'UE Context',
+    fullName: 'UE Context',
+    type: 'Concept',
+    layer: 'NG-RAN',
+    definition: 'The complete set of UE-related information stored in a gNB (CU and DU) and the AMF to manage an active RRC connection. In the gNB: RRC configuration, DRB/SRB parameters, security keys, and PDCP state. In the AMF: NAS MM context, 5G-GUTI, and PDU session information.',
+    related: ['Initial Context', 'Bearer Context', 'NGAP', 'F1AP', 'RRC'],
+    spec: '3GPP TS 38.413',
+    logReference: `# OCUDU
+## UE CONTEXT SETUP ##
+[NGAP    ] [D] ue=2 ran_ue=2 amf_ue=3: "Initial Context Setup Procedure" started...
+[CU-CP   ] [I] ue=2: "Initial Context Setup Routine" initialized
+[CU-CP-F1] [D] ue=2 proc="UE Context Setup Procedure": started...
+[CU-CP-F1] [D] ue=2 du_ue=2 cu_ue=2 proc="UE Context Setup Procedure": UE context found
+[CU-CP-F1] [I] Tx PDU du=0 ue=2 cu_ue=2 du_ue=2: UEContextSetupRequest
+[CU-CP-F1] [I] Rx PDU du=0 ue=2 cu_ue=2 du_ue=2: UEContextSetupResponse
+[CU-CP-F1] [D] ue=2 proc="UE Context Setup Procedure": finished successfully
+
+## UE CONTEXT RELEASE ## 
+[NGAP    ] [I] ue=1 ran_ue=1 amf_ue=2: UE did not request a PDU session after 3000ms. Requesting UE release
+[NGAP    ] [I] Tx PDU: UEContextReleaseRequest
+[NGAP    ] [I] Rx PDU ue=1 ran_ue=1 amf_ue=2: UEContextReleaseCommand
+[NGAP    ] [D] ue=1 ran_ue=1 amf_ue=2: "UE Context Release Procedure" started...
+[CU-CP   ] [D] ue=1: "UE Context Release Routine" initialized.
+[RRC     ] [D] ue=1 c-rnti=0x4602: Tx SRB1 DCCH DL rrcRelease (8 B)
+[RRC     ] [D] ue=1 c-rnti=0x4602: Containerized rrcRelease: [
+[CU-CP-F1] [D] ue=1 du_ue=1 cu_ue=1 proc="UE Context Release Procedure": Procedure started...
+[CU-CP-F1] [I] Tx PDU du=0 ue=1 cu_ue=1 du_ue=1: UEContextReleaseCommand
+[CU-CP-F1] [I] Rx PDU du=0 ue=1 cu_ue=1 du_ue=1: UEContextReleaseComplete
+[CU-CP   ] [D] ue=1: "UE Removal Routine" started...
+[CU-CP-F1] [D] ue=1 cu_ue=1: Removing F1AP UE context
+[NGAP    ] [D] ue=1 ran_ue=1 amf_ue=2: Removing NGAP UE context
+[NRPPA   ] [D] ue=1: UE context not found
+[CU-UEMNG] [D] ue=1: Removed
+[CU-CP   ] [I] ue=1: "UE Removal Routine" finished successfully
+[NGAP    ] [I] Tx PDU ran_ue=1 amf_ue=2: UEContextReleaseComplete
+[NGAP    ] [D] ue=1 ran_ue=1 amf_ue=2: "UE Context Release Procedure" finished successfully`,
   },
   {
     id: 'ul-sch',
@@ -3317,6 +4128,16 @@ const terms = [
     spec: '3GPP TS 38.300',
   },
   {
+    id: 'upf',
+    term: 'UPF',
+    fullName: 'User Plane Function',
+    type: 'Component',
+    layer: '5GC',
+    definition: 'The 5G Core user-plane anchor. Terminates N3 (GTP-U from gNB-CU-UP) and N6 (IP toward DN). Performs PDU session anchoring, packet routing and forwarding, QoS enforcement (marking, policing), usage measurement, and downlink buffering for paging triggers. Controlled by SMF via N4/PFCP.',
+    related: ['SMF', 'N3', 'N6', 'N4', 'GTP-U', 'QoS'],
+    spec: '3GPP TS 23.501',
+  },
+  {
     id: 'urllc',
     term: 'URLLC',
     fullName: 'Ultra-Reliable Low-Latency Communications',
@@ -3326,7 +4147,29 @@ const terms = [
     related: ['eMBB', 'MMTC', 'TTI', 'HARQ', 'SPS', 'MEC'],
     spec: '3GPP TS 22.261',
   },
-  // ── V ────────────────────────────────────────────────────────────
+  {
+    id: 'usim',
+    term: 'USIM',
+    fullName: 'Universal Subscriber Identity Module',
+    type: 'Component',
+    layer: 'UE',
+    definition: 'The application running on a UICC (the SIM card) that stores the subscriber permanent identity (SUPI/IMSI), long-term secret key K, and authentication algorithms. Used for 5G-AKA derivation and SIM-based cryptographic operations.',
+    related: ['UE', 'ME', 'SUCI', '5G-AKA'],
+    spec: '3GPP TS 31.102',
+    logReference: `# OCUDU`,
+  },
+  {
+    id: 'uu',
+    term: 'Uu',
+    fullName: 'Uu Interface (NR Air Interface)',
+    type: 'Interface',
+    layer: 'UE ↔ NG-RAN',
+    definition: 'The 5G NR air interface between a UE and its serving gNB. Carries all protocol layers of the radio stack — PHY, MAC, RLC, PDCP, SDAP (UP), and RRC (CP). Uses OFDM waveforms with flexible numerology (subcarrier spacing 15–240 kHz).',
+    related: ['gNB', 'UE', 'PHY', 'MAC', 'RLC', 'PDCP', 'RRC'],
+    spec: '3GPP TS 38.300',
+  },
+
+  // ── V ─────────────────────────────────────────────────────
   {
     id: 'vonr',
     term: 'VoNR',
@@ -3346,8 +4189,10 @@ const terms = [
     definition: 'An intermediate resource block type indexed within a BWP. VRBs can be mapped to PRBs non-interleaved (VRB n → PRB n) or interleaved (bundle-based interleaver for frequency diversity). Signaled in DCI for PDSCH/PUSCH allocation.',
     related: ['PRB', 'RB', 'CRB', 'Resource Allocation', 'DCI', 'BWP'],
     spec: '3GPP TS 38.211',
+    logReference: `# OCUDU`,
   },
-  // ── X (additional) ───────────────────────────────────────────────
+
+  // ── X ─────────────────────────────────────────────────────
   {
     id: 'xmac',
     term: 'XMAC',
@@ -3359,6 +4204,26 @@ const terms = [
     spec: '3GPP TS 33.501',
   },
   {
+    id: 'xn',
+    term: 'Xn',
+    fullName: 'Xn Interface',
+    type: 'Interface',
+    layer: 'NG-RAN',
+    definition: 'The interface between two gNBs (or between a gNB and an ng-eNB). Carries XnAP for Xn Setup, UE context retrieval, Xn-based handover preparation and execution, SN Status Transfer, and dual connectivity (MR-DC) procedures.',
+    related: ['XnAP', 'gNB', 'Handover', 'F1'],
+    spec: '3GPP TS 38.420',
+  },
+  {
+    id: 'xnap',
+    term: 'XnAP',
+    fullName: 'Xn Application Protocol',
+    type: 'Protocol',
+    layer: 'NG-RAN',
+    definition: 'The application-layer protocol on the Xn interface between gNBs. Supports Xn Setup and configuration exchange, handover preparation (Handover Request/Acknowledge), SN Status Transfer, UE Context Release, and dual connectivity management (SgNB Addition/Modification/Release).',
+    related: ['Xn', 'gNB', 'NGAP', 'F1AP'],
+    spec: '3GPP TS 38.423',
+  },
+  {
     id: 'xres',
     term: 'XRES*',
     fullName: 'Expected Extended Authentication Response',
@@ -3367,57 +4232,6 @@ const terms = [
     definition: 'The expected authentication response computed by the UDM/ARPF during 5G-AKA authentication vector generation. Derived from RAND and K, extended to 128 bits via KDF. Stored by the AUSF and compared against the UE\'s RES* to complete authentication.',
     related: ['RES*', 'HXRES*', 'RAND', 'Authentication', '5G-AKA', 'AUSF'],
     spec: '3GPP TS 33.501',
-  },
-  // ── Context / State entries ──────────────────────────────────────
-  {
-    id: 'bearer-context',
-    term: 'Bearer Context',
-    fullName: 'Bearer Context',
-    type: 'Concept',
-    layer: 'NG-RAN',
-    definition: 'The set of information representing one or more DRBs associated with a PDU session, maintained in the gNB-CU-UP and managed via the E1 interface. Includes PDCP and SDAP configuration, QoS parameters, security keys, and F1-U tunnel identifiers.',
-    related: ['E1AP', 'gNB-CU-UP', 'DRB', 'PDU Session', 'UE Context'],
-    spec: '3GPP TS 38.463',
-  },
-  {
-    id: 'ue-context',
-    term: 'UE Context',
-    fullName: 'UE Context',
-    type: 'Concept',
-    layer: 'NG-RAN',
-    definition: 'The complete set of UE-related information stored in a gNB (CU and DU) and the AMF to manage an active RRC connection. In the gNB: RRC configuration, DRB/SRB parameters, security keys, and PDCP state. In the AMF: NAS MM context, 5G-GUTI, and PDU session information.',
-    related: ['Initial Context', 'Bearer Context', 'NGAP', 'F1AP', 'RRC'],
-    spec: '3GPP TS 38.413',
-  },
-  {
-    id: 'initial-context',
-    term: 'Initial Context',
-    fullName: 'Initial Context Setup',
-    type: 'Procedure',
-    layer: 'NG-RAN',
-    definition: 'An NGAP procedure in which the AMF sends an Initial Context Setup Request to the gNB-CU-CP to establish the UE AS context, including security keys (KgNB), UE capability, and PDU session resource configuration. The gNB establishes SRBs and DRBs and returns an Initial Context Setup Response.',
-    related: ['NGAP', 'UE Context', 'KgNB', 'AMF', 'gNB-CU-CP', 'PDU Session'],
-    spec: '3GPP TS 38.413',
-  },
-  {
-    id: 'rm-registered',
-    term: 'RM Registered',
-    fullName: 'Registration Management Registered State',
-    type: 'Concept',
-    layer: 'NAS',
-    definition: 'The 5G RM state in which the UE has successfully registered with the 5GC and holds a valid 5G-GUTI and Registration Area. The AMF maintains a UE MM context. The UE can initiate PDU sessions and receive MT paging.',
-    related: ['RM Deregistered', '5G RM', 'Registration', 'AMF', '5G-GUTI'],
-    spec: '3GPP TS 24.501',
-  },
-  {
-    id: 'rm-deregistered',
-    term: 'RM Deregistered',
-    fullName: 'Registration Management Deregistered State',
-    type: 'Concept',
-    layer: 'NAS',
-    definition: 'The 5G RM state in which the UE is not registered with the 5GC. The AMF does not hold a valid UE MM context. The UE must perform an Initial Registration to obtain a 5G-GUTI and access network services.',
-    related: ['RM Registered', '5G RM', 'Registration', 'AMF'],
-    spec: '3GPP TS 24.501',
   },
 ];
 

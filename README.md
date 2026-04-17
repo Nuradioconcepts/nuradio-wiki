@@ -1,4 +1,4 @@
-# NuRadio Wiki
+# nuradio atlas
 
 A technical reference wiki for 5G NR, O-RAN, and Computer Systems — built with [Docusaurus](https://docusaurus.io/).
 

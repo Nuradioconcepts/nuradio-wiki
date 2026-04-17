@@ -1,52 +1,66 @@
 [
   {
-    "title": "Resources 🚧",
-    "filepath": "docs/resources/overview.mdx",
-    "route": "/resources",
-    "section": "Resources",
-    "mtime": "2026-04-13T12:48:51.607Z"
-  },
-  {
-    "title": "5G NR Glossary",
-    "filepath": "docs/glossary/5g-nr.mdx",
-    "route": "/glossary/5g-nr",
-    "section": "Glossary",
-    "mtime": "2026-04-13T12:44:17.525Z"
-  },
-  {
-    "title": "Computer Systems Glossary",
-    "filepath": "docs/glossary/computer-systems.mdx",
-    "route": "/glossary/computer-systems",
-    "section": "Glossary",
-    "mtime": "2026-04-13T12:44:17.525Z"
-  },
-  {
-    "title": "O-RAN Glossary",
-    "filepath": "docs/glossary/o-ran.mdx",
-    "route": "/glossary/o-ran",
-    "section": "Glossary",
-    "mtime": "2026-04-13T12:44:17.525Z"
+    "title": "nuradio atlas",
+    "filepath": "docs/overview.mdx",
+    "route": "/",
+    "section": "Dashboard",
+    "mtime": "2026-04-16T13:57:03.673Z"
   },
   {
     "title": "Logs 🚧",
     "filepath": "docs/resources/logs.mdx",
     "route": "/resources/logs",
     "section": "Resources",
-    "mtime": "2026-04-13T12:32:31.627Z"
+    "mtime": "2026-04-14T15:31:09.122Z"
+  },
+  {
+    "title": "Project Overview",
+    "filepath": "docs/project-overview.mdx",
+    "route": "/project-overview",
+    "section": "project-overview",
+    "mtime": "2026-04-14T14:10:04.482Z"
+  },
+  {
+    "title": "Resources 🚧",
+    "filepath": "docs/resources/overview.mdx",
+    "route": "/resources",
+    "section": "Resources",
+    "mtime": "2026-04-13T12:52:37.392Z"
+  },
+  {
+    "title": "Computer Systems Glossary",
+    "filepath": "docs/glossary/computer-systems.mdx",
+    "route": "/glossary/computer-systems",
+    "section": "Glossary",
+    "mtime": "2026-04-13T12:52:37.391Z"
+  },
+  {
+    "title": "O-RAN Glossary",
+    "filepath": "docs/glossary/o-ran.mdx",
+    "route": "/glossary/o-ran",
+    "section": "Glossary",
+    "mtime": "2026-04-13T12:52:37.391Z"
   },
   {
     "title": "UE Registration Flow 🚧",
     "filepath": "docs/5g-nr/procedures/ue-registration-flow.mdx",
     "route": "/5g-nr/procedures/ue-registration-flow",
     "section": "5G NR",
-    "mtime": "2026-04-13T11:34:53.492Z"
+    "mtime": "2026-04-13T12:52:37.390Z"
+  },
+  {
+    "title": "5G NR Glossary",
+    "filepath": "docs/glossary/5g-nr.mdx",
+    "route": "/glossary/5g-nr",
+    "section": "Glossary",
+    "mtime": "2026-04-13T12:52:37.390Z"
   },
   {
     "title": "UE Mobility Flow 🚧",
     "filepath": "docs/5g-nr/procedures/ue-mobility-flow.mdx",
     "route": "/5g-nr/procedures/ue-mobility-flow",
     "section": "5G NR",
-    "mtime": "2026-04-13T11:34:42.626Z"
+    "mtime": "2026-04-13T12:52:37.389Z"
   },
   {
     "title": "Troubleshooting 🚧",
@@ -89,19 +103,5 @@
     "route": "/packet-analysis/basics",
     "section": "Packet Analysis",
     "mtime": "2026-04-12T17:51:08.525Z"
-  },
-  {
-    "title": "Packet Analysis 🚧",
-    "filepath": "docs/packet-analysis/overview.mdx",
-    "route": "/packet-analysis",
-    "section": "Packet Analysis",
-    "mtime": "2026-04-12T17:51:04.016Z"
-  },
-  {
-    "title": "5G System Procedures",
-    "filepath": "docs/5g-nr/procedures/5g-system.mdx",
-    "route": "/5g-nr/procedures/5g-system",
-    "section": "5G NR",
-    "mtime": "2026-04-12T15:13:56.768Z"
   }
 ]

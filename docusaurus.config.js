@@ -6,9 +6,9 @@ const require = createRequire(import.meta.url);
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'NuRadio Wiki',
+  title: 'nuradio atlas',
   tagline: 'A living knowledge base for systems, concepts, and runbooks.',
-  favicon: 'img/Icon_Gradient.png',
+  favicon: 'img/atlas-glow.png',
 
   future: {
     v4: true,
@@ -18,7 +18,7 @@ const config = {
   baseUrl: '/',
 
   organizationName: 'ryandecker',
-  projectName: 'nuradio-wiki',
+  projectName: 'nuradio-atlas',
 
   onBrokenLinks: 'warn',
 
@@ -69,16 +69,20 @@ const config = {
         respectPrefersColorScheme: false,
       },
       navbar: {
-        title: 'NuRadio Wiki',
+        title: '',
         logo: {
-          alt: 'NuRadio Wiki Logo',
-          src: 'img/Icon_Gradient.png',
-          width: 64,
-          height: 32,
+          alt: 'nuradio atlas Logo',
+          src: 'img/atlas-glow.png',
         },
         items: [
           {
-            to: '/',
+            type: 'html',
+            position: 'left',
+            value: '<span class="nav-brand">nuradio <span class="nav-brand__yellow">atlas</span></span>',
+          },
+          {
+            type: 'doc',
+            docId: 'overview',
             label: 'Dashboard',
             position: 'left',
           },
@@ -129,7 +133,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} NuRadio Wiki.`,
+        copyright: `Copyright © ${new Date().getFullYear()} nuradio atlas.`,
       },
       prism: {
         theme: terminalTheme,

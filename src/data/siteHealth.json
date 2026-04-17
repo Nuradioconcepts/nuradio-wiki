@@ -1,7 +1,12 @@
 {
   "totalPages": 26,
-  "totalLinks": 625,
+  "totalLinks": 621,
   "orphanPages": [
+    {
+      "title": "5G NR 🚧",
+      "route": "/5g-nr",
+      "filepath": "docs/5g-nr/overview.mdx"
+    },
     {
       "title": "5G Core Procedures",
       "route": "/5g-nr/procedures/5g-core",
@@ -38,6 +43,16 @@
       "filepath": "docs/glossary/o-ran.mdx"
     },
     {
+      "title": "O-RAN 🚧",
+      "route": "/o-ran",
+      "filepath": "docs/o-ran/overview.mdx"
+    },
+    {
+      "title": "Packet Analysis 🚧",
+      "route": "/packet-analysis",
+      "filepath": "docs/packet-analysis/overview.mdx"
+    },
+    {
       "title": "Project Overview",
       "route": "/project-overview",
       "filepath": "docs/project-overview.mdx"
@@ -46,7 +61,12 @@
       "title": "Logs 🚧",
       "route": "/resources/logs",
       "filepath": "docs/resources/logs.mdx"
+    },
+    {
+      "title": "Resources 🚧",
+      "route": "/resources",
+      "filepath": "docs/resources/overview.mdx"
     }
   ],
-  "generatedAt": "2026-04-13T12:49:36.226Z"
+  "generatedAt": "2026-04-17T13:39:51.183Z"
 }

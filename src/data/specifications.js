@@ -712,8 +712,8 @@ export const specificationsData = [
   // Open-source / Industry
   // ─────────────────────────────────────────────────────────────────────────────
   {
-    id: 'open-source',
-    name: 'Open-source',
+    id: 'Industry',
+    name: 'Industry',
     icon: '🛠',
     series: [
       {
