@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 function DownloadIcon() {
   return (
@@ -212,6 +213,21 @@ function SourceRow({ source, expanded, onToggle }) {
 
 export default function LogTable({ sources }) {
   const [expanded, setExpanded] = useState(null);
+  const { siteConfig: { baseUrl } } = useDocusaurusContext();
+  const base = baseUrl.replace(/\/$/, '');
+
+  // Prefix every relative file URL with the site's baseUrl so it works
+  // both locally (baseUrl='/') and on GitHub Pages (baseUrl='/nuradio-wiki/')
+  const resolvedSources = sources.map((source) => ({
+    ...source,
+    logs: source.logs.map((log) => ({
+      ...log,
+      files: (log.files || []).map((file) => ({
+        ...file,
+        url: file.url.startsWith('http') ? file.url : base + file.url,
+      })),
+    })),
+  }));
 
   return (
     <div className="lt-table">
@@ -221,7 +237,7 @@ export default function LogTable({ sources }) {
         <span>FORMAT</span>
         <span />
       </div>
-      {sources.map((source) => (
+      {resolvedSources.map((source) => (
         <SourceRow
           key={source.id}
           source={source}
