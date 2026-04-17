@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import GridVis from '@site/src/components/GridVis';
 import SiteHealth from '@site/src/components/SiteHealth';
 import RecentChanges from '@site/src/components/RecentChanges';
@@ -38,6 +39,7 @@ const STACK = [
 
 /* ── Main component ────────────────────────────────────────────────────── */
 export default function LandingPage() {
+  const atlasGlow = useBaseUrl('/img/atlas-glow.png');
   return (
     <div className="lp">
 
@@ -62,7 +64,7 @@ export default function LandingPage() {
         <div className="lp__hero-vis">
           <div className="lp__hero-icon-wrap">
             <img
-              src="/img/atlas-glow.png"
+              src={atlasGlow}
               alt="nuradio atlas"
               className="lp__hero-icon"
             />
