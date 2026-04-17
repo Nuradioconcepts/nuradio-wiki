@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunknuradio_atlas_v2=globalThis.webpackChunknuradio_atlas_v2||[]).push([[647],{7121(a,s,e){e.r(s),e.d(s,{default:()=>i});e(6540);var r=e(4164),u=e(7559),l=e(5500),n=e(2831),t=e(1656),c=e(4848);function i(a){return(0,c.jsx)(l.e3,{className:(0,r.A)(u.G.wrapper.docsPages),children:(0,c.jsx)(t.A,{children:(0,n.v)(a.route.routes)})})}}}]);
