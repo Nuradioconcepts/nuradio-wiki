@@ -1,5 +1,5 @@
 {
-  "totalPages": 26,
+  "totalPages": 27,
   "totalLinks": 621,
   "orphanPages": [
     {
@@ -58,6 +58,11 @@
       "filepath": "docs/project-overview.mdx"
     },
     {
+      "title": "5G NR Channels",
+      "route": "/resources/5g-nr-channels",
+      "filepath": "docs/resources/5g-nr-channels.mdx"
+    },
+    {
       "title": "Logs 🚧",
       "route": "/resources/logs",
       "filepath": "docs/resources/logs.mdx"
@@ -68,5 +73,5 @@
       "filepath": "docs/resources/overview.mdx"
     }
   ],
-  "generatedAt": "2026-04-17T13:39:51.183Z"
+  "generatedAt": "2026-04-23T17:40:56.010Z"
 }

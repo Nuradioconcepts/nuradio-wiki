@@ -1,17 +1,24 @@
 [
   {
-    "title": "nuradio atlas",
-    "filepath": "docs/overview.mdx",
-    "route": "/",
-    "section": "Dashboard",
-    "mtime": "2026-04-16T13:57:03.673Z"
+    "title": "5G NR Channels",
+    "filepath": "docs/resources/5g-nr-channels.mdx",
+    "route": "/resources/5g-nr-channels",
+    "section": "Resources",
+    "mtime": "2026-04-23T17:40:25.791Z"
   },
   {
     "title": "Logs 🚧",
     "filepath": "docs/resources/logs.mdx",
     "route": "/resources/logs",
     "section": "Resources",
-    "mtime": "2026-04-14T15:31:09.122Z"
+    "mtime": "2026-04-17T15:37:29.397Z"
+  },
+  {
+    "title": "nuradio atlas",
+    "filepath": "docs/overview.mdx",
+    "route": "/",
+    "section": "Dashboard",
+    "mtime": "2026-04-16T13:57:03.673Z"
   },
   {
     "title": "Project Overview",
@@ -96,12 +103,5 @@
     "route": "/packet-analysis/considerations",
     "section": "Packet Analysis",
     "mtime": "2026-04-12T17:51:12.688Z"
-  },
-  {
-    "title": "Basics 🚧",
-    "filepath": "docs/packet-analysis/basics.mdx",
-    "route": "/packet-analysis/basics",
-    "section": "Packet Analysis",
-    "mtime": "2026-04-12T17:51:08.525Z"
   }
 ]

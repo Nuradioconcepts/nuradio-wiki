@@ -3588,3 +3588,83 @@ a.pt-row__name-link:hover {
     padding: 2.5rem 1.5rem 3.5rem;
   }
 }
+
+/* ─── NR Channels Table ─────────────────────────────────────────────────── */
+.nrch-wrapper {
+  margin: 1.5rem 0;
+}
+
+.nrch-scroll {
+  overflow-x: auto;
+  border: 1px solid rgba(177, 247, 39, 0.15);
+  border-radius: 10px;
+}
+
+.nrch-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.nrch-th {
+  padding: 0.6rem 0.75rem;
+  background: rgba(177, 247, 39, 0.07);
+  border-bottom: 1px solid rgba(177, 247, 39, 0.18);
+  color: #b1f727;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  position: sticky;
+  top: 0;
+  transition: background 0.15s;
+}
+
+.nrch-th:hover {
+  background: rgba(177, 247, 39, 0.14);
+}
+
+.nrch-th--active {
+  background: rgba(177, 247, 39, 0.12);
+  color: #d2fb78;
+}
+
+.nrch-th-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.nrch-sort-icon {
+  font-size: 0.7rem;
+  opacity: 0.5;
+}
+
+.nrch-sort-icon--active {
+  opacity: 1;
+  color: #b1f727;
+}
+
+.nrch-row:nth-child(even) {
+  background: rgba(177, 247, 39, 0.03);
+}
+
+.nrch-row:hover {
+  background: rgba(177, 247, 39, 0.07);
+}
+
+.nrch-td {
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px solid rgba(177, 247, 39, 0.07);
+  color: var(--ifm-font-color-base);
+}
+
+.nrch-td--num {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.nrch-row:last-child .nrch-td {
+  border-bottom: none;
+}

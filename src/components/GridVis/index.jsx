@@ -50,7 +50,7 @@ export default function GridVis() {
         { to: 1.00, duration: 800 },
       ],
       scaleY: [
-        { to: 0.50, duration: 800 },
+        { to: 0.70, duration: 800 },
         { to: 1.00, duration: 800 },
       ],
       delay:    stagger(10, { grid: [COLS, ROWS], from: FROM_IDX }),
