@@ -63,6 +63,7 @@ module.exports = {
       },
       items: [
         'resources/logs',
+        'resources/5g-nr-channels',
       ],
     },
     {

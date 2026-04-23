@@ -1,0 +1,23 @@
+---
+title: 5G NR Channels
+sidebar_label: "5G NR Channels"
+description: Observed 5G NR downlink channels — ARFCN, GSCN, band, frequency, bandwidth, SCS, SSB, and carrier parameters.
+---
+
+import NRChannelsTable from '@site/src/components/NRChannelsTable';
+import SpectrumAnalyzer from '@site/src/components/SpectrumAnalyzer';
+import { nrChannelsData } from '@site/src/data/nrChannels';
+
+# 5G NR Channels
+
+This is a list of observed 5G NR downlink channels captured from live network scans. Each entry represents a detected carrier and includes the ARFCN, GSCN, operating band, center frequency, bandwidth, subcarrier spacing (SCS), SSB parameters, and derived carrier edges. Click any column header to sort the table.
+
+## Interactive Spectrum Analyzer
+
+Simulated spectrum display using the observed channel data below. Select a band, zoom with the Start/Stop/Span controls, place markers by clicking the trace, and toggle individual carriers using the channel pills below the display.
+
+<SpectrumAnalyzer />
+
+## Channel Reference Table
+
+<NRChannelsTable channels={nrChannelsData} />
