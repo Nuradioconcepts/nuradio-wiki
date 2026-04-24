@@ -1,0 +1,243 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.R{background:#0e0e0e;color:#ccc;font-family:'Courier New',Consolas,monospace;padding:10px;border-radius:10px;border:1px solid #333;font-size:11px}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:2px 0 6px;border-bottom:1px solid #222;margin-bottom:6px}
+.ht{color:#33ff33;font-size:13px;font-weight:500;letter-spacing:1px}
+.sr{display:flex;gap:6px;margin-bottom:6px;align-items:center;flex-wrap:wrap}
+.sb{padding:3px 10px;font-size:10px;cursor:pointer;border-radius:5px;border:1px solid #333;background:#151515;color:#aaa;font-family:inherit}
+.sb:hover{border-color:#555}
+.sb.g{background:#0a2a0a;color:#33ff33;border-color:#33ff33}
+.sb.n{background:#2a2a0a;color:#ffcc00;border-color:#ffcc00}
+.sb.b{background:#2a0a0a;color:#ff4444;border-color:#ff4444}
+.sb.a{box-shadow:0 0 0 2px rgba(255,255,255,.15)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+.p{background:#111;border:1px solid #222;border-radius:6px;padding:6px;overflow:hidden}
+.pt{color:#33ff33;font-size:10px;margin-bottom:4px;letter-spacing:.5px}
+canvas{display:block;width:100%}
+.cp{background:#0d0d0d;border:1px solid #222;border-radius:6px;padding:8px;margin-bottom:6px}
+.ct{color:#33ff33;font-size:10px;margin-bottom:6px}
+.cg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px 10px}
+.sw{padding:2px 0}
+.sh{display:flex;justify-content:space-between}
+.sl{font-size:9px;color:#777}
+.sv{font-size:11px;font-weight:500}
+input[type=range]{width:100%;height:12px;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;margin:1px 0}
+input[type=range]::-webkit-slider-track{height:3px;background:#222;border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#33ff33;margin-top:-3.5px}
+input[type=range]::-moz-range-track{height:3px;background:#222;border-radius:2px;border:none}
+input[type=range]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#33ff33;border:none}
+.fb{background:#111;border:1px solid #222;border-radius:6px;padding:8px;margin-top:6px}
+.ff{color:#ffcc00;font-size:10px;margin-bottom:4px}
+.fi{color:#ff6633;font-size:10px;padding:1px 0}
+@media(max-width:720px){.g2,.cg{grid-template-columns:1fr}.hdr{align-items:flex-start;flex-direction:column;gap:3px}.sr{align-items:flex-start}}
+</style>
+<div class="R">
+<div class="hdr"><span class="ht">5G NR RF HEALTH ANALYZER</span><span style="color:#888;font-size:10px">LAYER 1: PHYSICAL</span></div>
+<div class="sr">
+<span style="font-size:10px;color:#777">Presets:</span>
+<button class="sb g a" id="bG">Good</button>
+<button class="sb n" id="bN">Normal</button>
+<button class="sb b" id="bB">Degraded</button>
+<span style="margin-left:auto;font-size:10px;color:#555" id="sd"></span>
+</div>
+<div class="cp"><div class="ct">RF PARAMETER CONTROLS</div><div class="cg" id="SB"></div></div>
+<div class="g2">
+<div class="p"><div class="pt">SPECTRUM</div><canvas id="cS" height="190"></canvas></div>
+<div class="p"><div class="pt">I/Q CONSTELLATION</div><canvas id="cI" height="190"></canvas></div>
+</div>
+<div class="g2">
+<div class="p"><div class="pt">EVM vs SUBCARRIER</div><canvas id="cE" height="140"></canvas></div>
+<div class="p"><div class="pt">BLER OVER TIME</div><canvas id="cB" height="140"></canvas></div>
+</div>
+<div class="fb"><div class="ff">ACTIVE IMPAIRMENTS ANALYSIS</div><div id="FL"></div></div>
+</div>
+<script>
+var D=[
+{k:'snr',l:'SNR',u:'dB',mn:-5,mx:40,st:.5,g:32,n:18,b:5,iv:0,gt:20,bt:10},
+{k:'evm',l:'EVM',u:'%',mn:.2,mx:25,st:.1,g:.8,n:3.5,b:12,iv:1,gt:3,bt:8},
+{k:'rsrp',l:'RSRP',u:'dBm',mn:-140,mx:-44,st:1,g:-75,n:-95,b:-118,iv:0,gt:-85,bt:-110},
+{k:'rsrq',l:'RSRQ',u:'dB',mn:-20,mx:-3,st:.5,g:-8,n:-12,b:-18,iv:0,gt:-10,bt:-15},
+{k:'rssi',l:'RSSI',u:'dBm',mn:-120,mx:-30,st:1,g:-55,n:-75,b:-100,iv:0,gt:-65,bt:-90},
+{k:'sinr',l:'SINR',u:'dB',mn:-10,mx:35,st:.5,g:25,n:12,b:-2,iv:0,gt:15,bt:3},
+{k:'pn',l:'Phase Noise',u:'dBc/Hz',mn:-120,mx:-65,st:1,g:-110,n:-95,b:-80,iv:0,gt:-100,bt:-85},
+{k:'ds',l:'Delay Spread',u:'ns',mn:10,mx:2000,st:10,g:50,n:300,b:1200,iv:1,gt:100,bt:500},
+{k:'dop',l:'Doppler',u:'Hz',mn:0,mx:600,st:5,g:5,n:80,b:400,iv:1,gt:20,bt:200},
+{k:'bler',l:'BLER',u:'%',mn:0,mx:50,st:.1,g:.1,n:5,b:30,iv:1,gt:1,bt:10}
+];
+var V={},t=0,dp=window.devicePixelRatio||1,BH=[],BX=60;
+var WS=[];for(var i=0;i<6;i++)WS.push({f:.3+Math.random()*1.8,a:1.5+Math.random()*3,p:Math.random()*Math.PI*2,s:.4+Math.random()*1.2});
+
+function gc(v,d){if(d.iv)return v<=d.gt?'#33ff33':v<=d.bt?'#ffcc00':'#ff4444';return v>=d.gt?'#33ff33':v>=d.bt?'#ffcc00':'#ff4444'}
+function tc(){return V.evm<5?'#33ff33':V.evm<8?'#ffcc00':'#ff4444'}
+function fv(v,d){if(d.k==='bler'&&v<1)return v.toFixed(2)+' '+d.u;return(Math.abs(v)<10?v.toFixed(1):Math.round(v))+' '+d.u}
+
+function bld(){
+var bx=document.getElementById('SB');bx.innerHTML='';
+D.forEach(function(d){
+var dv=document.createElement('div');dv.className='sw';
+var c=gc(V[d.k],d);
+dv.innerHTML='<div class="sh"><span class="sl">'+d.l+'</span><span class="sv" id="v_'+d.k+'" style="color:'+c+'">'+fv(V[d.k],d)+'</span></div><input type="range" id="s_'+d.k+'" min="'+d.mn+'" max="'+d.mx+'" step="'+d.st+'" value="'+V[d.k]+'">';
+bx.appendChild(dv);
+dv.querySelector('input').addEventListener('input',(function(dd){return function(){V[dd.k]=parseFloat(this.value);var e=document.getElementById('v_'+dd.k);e.textContent=fv(V[dd.k],dd);e.style.color=gc(V[dd.k],dd);doF()}})(d));
+})}
+
+function lp(nm){
+document.querySelectorAll('.sb').forEach(function(b){b.classList.remove('a')});
+document.getElementById(nm==='good'?'bG':nm==='normal'?'bN':'bB').classList.add('a');
+document.getElementById('sd').textContent={good:'Strong signal, clean channel',normal:'Moderate, typical urban',bad:'Weak signal, high interference'}[nm];
+D.forEach(function(d){V[d.k]=d[nm==='good'?'g':nm==='normal'?'n':'b'];var sl=document.getElementById('s_'+d.k);if(sl)sl.value=V[d.k];var el=document.getElementById('v_'+d.k);if(el){el.textContent=fv(V[d.k],d);el.style.color=gc(V[d.k],d)}});
+BH.length=0;doF()}
+
+document.getElementById('bG').onclick=function(){lp('good')};
+document.getElementById('bN').onclick=function(){lp('normal')};
+document.getElementById('bB').onclick=function(){lp('bad')};
+
+function doF(){
+var f=[];
+if(V.snr<10)f.push('Low SNR ('+V.snr.toFixed(1)+' dB) \u2014 noise dominating, low-order modulation forced');
+else if(V.snr<20)f.push('Moderate SNR ('+V.snr.toFixed(1)+' dB) \u2014 64QAM possible but reduced margin');
+if(V.evm>8)f.push('High EVM ('+V.evm.toFixed(1)+'%) \u2014 exceeds 64QAM limit, IQ imbalance or PA compression');
+else if(V.evm>3)f.push('Moderate EVM ('+V.evm.toFixed(1)+'%) \u2014 within tolerance but link budget reduced');
+if(V.rsrp<-110)f.push('Weak RSRP ('+V.rsrp+' dBm) \u2014 deep cell edge or heavy penetration loss');
+else if(V.rsrp<-90)f.push('Marginal RSRP ('+V.rsrp+' dBm) \u2014 approaching cell edge');
+if(V.rsrq<-15)f.push('Poor RSRQ ('+V.rsrq.toFixed(1)+' dB) \u2014 high interference, possible pilot pollution');
+if(V.sinr<3)f.push('SINR collapse ('+V.sinr.toFixed(1)+' dB) \u2014 interference at or above signal');
+else if(V.sinr<10)f.push('Low SINR ('+V.sinr.toFixed(1)+' dB) \u2014 co-channel interference limiting capacity');
+if(V.pn>-90)f.push('Excessive phase noise ('+V.pn+' dBc/Hz) \u2014 LO degradation, constellation rotation');
+else if(V.pn>-100)f.push('Elevated phase noise ('+V.pn+' dBc/Hz) \u2014 constellation smear at high QAM');
+if(V.ds>800)f.push('Severe delay spread ('+V.ds+' ns) \u2014 ISI exceeding CP, orthogonality lost');
+else if(V.ds>200)f.push('Moderate multipath ('+V.ds+' ns) \u2014 frequency-selective fading');
+if(V.dop>200)f.push('High Doppler ('+V.dop+' Hz) \u2014 fast fading, channel estimation degraded');
+else if(V.dop>50)f.push('Moderate Doppler ('+V.dop+' Hz) \u2014 time-varying channel');
+if(V.bler>10)f.push('BLER >10% \u2014 HARQ exhausted, throughput collapse');
+else if(V.bler>2)f.push('Elevated BLER ('+V.bler.toFixed(1)+'%) \u2014 HARQ overhead increasing');
+if(V.rssi>-50)f.push('RSSI very high ('+V.rssi+' dBm) \u2014 possible overload');
+if(!f.length)f.push('All parameters healthy \u2014 no significant impairments detected');
+document.getElementById('FL').innerHTML=f.map(function(x){return'<div class="fi">\u25B8 '+x+'</div>'}).join('')}
+
+function rc(c,h){var r=c.parentElement.getBoundingClientRect();c.width=r.width*dp;c.height=h*dp;c.style.height=h+'px';c.getContext('2d').setTransform(dp,0,0,dp,0,0)}
+
+function dSpec(){
+var c=document.getElementById('cS'),x=c.getContext('2d');rc(c,190);
+var W=c.width/dp,H=190,M={t:16,r:8,b:20,l:36},pw=W-M.l-M.r,ph=H-M.t-M.b;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+x.strokeStyle='#1a2a1a';x.lineWidth=.5;
+for(var i=0;i<=6;i++){var y=M.t+i/6*ph;x.beginPath();x.moveTo(M.l,y);x.lineTo(M.l+pw,y);x.stroke()}
+for(var i=0;i<=10;i++){var xx=M.l+i/10*pw;x.beginPath();x.moveTo(xx,M.t);x.lineTo(xx,M.t+ph);x.stroke()}
+x.strokeStyle='#333';x.strokeRect(M.l,M.t,pw,ph);
+var na=Math.max(1,(40-V.snr)/7),st=M.t+ph*.08,nf=M.t+ph*.88;
+var cS2=pw*.12,cE2=pw*.88,cW=cE2-cS2;
+var sLvl=st+(nf-st)*(1-Math.min(1,Math.max(0,(V.snr+10)/50)));
+var shW=cW*.1+V.evm*.8;
+var col=tc();
+x.save();x.beginPath();x.rect(M.l,M.t,pw,ph);x.clip();
+var gr=x.createLinearGradient(0,st,0,nf);gr.addColorStop(0,col+'22');gr.addColorStop(1,col+'03');
+x.beginPath();x.moveTo(M.l,nf);
+for(var px=0;px<pw;px++){
+var yy=nf;
+if(px>=cS2&&px<=cE2){var nm=(px-cS2)/cW,ed=Math.min(nm,1-nm)*2,ef=Math.min(1,ed*8),w=0;
+for(var wi=0;wi<WS.length;wi++)w+=Math.sin(px*WS[wi].f+t*WS[wi].s+WS[wi].p)*WS[wi].a;
+w*=na*.12;var dr=V.ds/3000*Math.sin(px*.15+t*1.2)*(nf-st)*.15;
+yy=st+w*ef+dr*ef+(1-ef)*(nf-st)*.5;}
+else{var dL=Math.abs(px-cS2),dR=Math.abs(px-cE2),dd=Math.min(dL,dR);
+if(dd<shW*2.5){var sd=1-dd/(shW*2.5);yy=nf-(nf-sLvl)*sd*sd*sd+(Math.random()-.5)*na;}
+else yy=nf+(Math.random()-.5)*na*1.5+Math.sin(px*.5+t*3)*.5;}
+x.lineTo(M.l+px,Math.max(M.t,Math.min(M.t+ph,yy)))}
+x.lineTo(M.l+pw,nf);x.closePath();x.fillStyle=gr;x.fill();
+x.beginPath();
+for(var px=0;px<pw;px++){
+var yy=nf;
+if(px>=cS2&&px<=cE2){var nm=(px-cS2)/cW,ed=Math.min(nm,1-nm)*2,ef=Math.min(1,ed*8),w=0;
+for(var wi=0;wi<WS.length;wi++)w+=Math.sin(px*WS[wi].f+t*WS[wi].s+WS[wi].p)*WS[wi].a;
+w*=na*.12;var dr=V.ds/3000*Math.sin(px*.15+t*1.2)*(nf-st)*.15;
+yy=st+w*ef+dr*ef+(1-ef)*(nf-st)*.5;}
+else{var dL=Math.abs(px-cS2),dR=Math.abs(px-cE2),dd=Math.min(dL,dR);
+if(dd<shW*2.5){var sd=1-dd/(shW*2.5);yy=nf-(nf-sLvl)*sd*sd*sd+(Math.random()-.5)*na;}
+else yy=nf+(Math.random()-.5)*na*1.5+Math.sin(px*.5+t*3)*.5;}
+yy=Math.max(M.t,Math.min(M.t+ph,yy));px?x.lineTo(M.l+px,yy):x.moveTo(M.l,yy)}
+x.strokeStyle=col;x.lineWidth=1.2;x.stroke();x.restore();
+x.fillStyle='#555';x.font='8px monospace';x.textAlign='right';
+for(var i=0;i<=6;i++)x.fillText((-10-i*10)+'',M.l-3,M.t+i/6*ph+3);
+x.textAlign='center';x.fillText('RSRP:'+V.rsrp+' | SNR:'+V.snr.toFixed(1)+' | SINR:'+V.sinr.toFixed(1),M.l+pw/2,H-4)}
+
+function dIQ(){
+var c=document.getElementById('cI'),x=c.getContext('2d');rc(c,190);
+var W=c.width/dp,H=190,cx=W/2,cy=H/2,sc=Math.min(W,H)*.38;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+x.strokeStyle='#1a2a1a';x.lineWidth=.5;
+x.beginPath();x.moveTo(cx,4);x.lineTo(cx,H-4);x.stroke();
+x.beginPath();x.moveTo(4,cy);x.lineTo(W-4,cy);x.stroke();
+for(var r=.25;r<=1;r+=.25){x.beginPath();x.arc(cx,cy,sc*r,0,Math.PI*2);x.stroke()}
+x.fillStyle='#444';x.font='8px monospace';x.textAlign='center';x.fillText('I',W-8,cy-4);x.fillText('Q',cx+8,10);
+var ml,pts=[];
+if(V.evm<5){ml='64QAM';for(var a=-7;a<=7;a+=2)for(var bb=-7;bb<=7;bb+=2)pts.push([a/7,bb/7])}
+else if(V.evm<12){ml='16QAM';for(var a=-3;a<=3;a+=2)for(var bb=-3;bb<=3;bb+=2)pts.push([a/3,bb/3])}
+else{ml='QPSK';pts=[[-0.7,-0.7],[-0.7,0.7],[0.7,-0.7],[0.7,0.7]]}
+var sp=V.evm/100*2.5,pr=(V.pn+120)/200*.2,dw=V.dop/1000,ds2=V.ds/8000;
+var col=tc(),nd=V.evm<5?3:V.evm<12?4:6;
+for(var pi=0;pi<pts.length;pi++){var ii=pts[pi][0],qq=pts[pi][1];
+for(var nn=0;nn<nd;nn++){
+var ni=ii+(Math.random()-.5)*2*sp+Math.sin(t*1.3+ii*4)*.3*sp;
+var nq=qq+(Math.random()-.5)*2*sp+Math.cos(t*1.7+qq*3)*.3*sp;
+ni+=Math.sin(t*3.1+ii*2)*dw;nq+=Math.cos(t*2.7+qq*2)*dw;
+ni+=(Math.random()-.5)*ds2;nq+=(Math.random()-.5)*ds2;
+var rot=pr*Math.sin(t*2.1+ii+qq);
+var ri=ni*Math.cos(rot)-nq*Math.sin(rot);
+var rq=ni*Math.sin(rot)+nq*Math.cos(rot);
+x.fillStyle=col+(V.evm<5?'aa':V.evm<8?'88':'55');
+x.fillRect(cx+ri*sc-1,cy-rq*sc-1,2,2)}}
+if(V.evm<6){x.strokeStyle=col+'22';for(var pi=0;pi<pts.length;pi++){x.beginPath();x.arc(cx+pts[pi][0]*sc,cy-pts[pi][1]*sc,2,0,Math.PI*2);x.stroke()}}
+x.fillStyle='#888';x.font='9px monospace';x.textAlign='center';
+x.fillText(ml+' | EVM '+V.evm.toFixed(1)+'% | PN '+V.pn,cx,H-4)}
+
+function dEvm(){
+var c=document.getElementById('cE'),x=c.getContext('2d');rc(c,140);
+var W=c.width/dp,H=140,M={t:14,r:8,b:18,l:30},pw=W-M.l-M.r,ph=H-M.t-M.b;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+x.strokeStyle='#1a2a1a';x.lineWidth=.5;
+for(var i=0;i<=4;i++){var y=M.t+i/4*ph;x.beginPath();x.moveTo(M.l,y);x.lineTo(M.l+pw,y);x.stroke()}
+x.strokeStyle='#333';x.strokeRect(M.l,M.t,pw,ph);
+var mx2=25,nS=52,jt=V.evm*.35,dr=V.ds/2000*3,col=tc();
+var gr=x.createLinearGradient(0,M.t,0,M.t+ph);gr.addColorStop(0,col+'20');gr.addColorStop(1,'transparent');
+x.beginPath();x.moveTo(M.l,M.t+ph);
+for(var i=0;i<nS;i++){var xx=M.l+i/nS*pw;
+var ev=V.evm+Math.sin(i*.3+t*1.5)*jt+Math.sin(i*.7+t*2.3)*jt*.5+(Math.random()-.5)*jt*.8+Math.sin(i*.4+t*1.2)*dr+Math.sin(i*.2+t*V.dop/200)*V.dop/600;
+x.lineTo(xx,M.t+ph-Math.max(0,ev)/mx2*ph)}
+x.lineTo(M.l+pw,M.t+ph);x.closePath();x.fillStyle=gr;x.fill();
+x.beginPath();
+for(var i=0;i<nS;i++){var xx=M.l+i/nS*pw;
+var ev=V.evm+Math.sin(i*.3+t*1.5)*jt+Math.sin(i*.7+t*2.3)*jt*.5+(Math.random()-.5)*jt*.8+Math.sin(i*.4+t*1.2)*dr+Math.sin(i*.2+t*V.dop/200)*V.dop/600;
+var yy=M.t+ph-Math.max(0,ev)/mx2*ph;i?x.lineTo(xx,yy):x.moveTo(xx,yy)}
+x.strokeStyle=col;x.lineWidth=1;x.stroke();
+var lims=[{v:8,l:'64QAM 8%',c:'#33ff33'},{v:13.5,l:'16QAM 13.5%',c:'#ffcc00'},{v:18.5,l:'QPSK 18.5%',c:'#ff6633'}];
+lims.forEach(function(lm){var yy=M.t+ph-lm.v/mx2*ph;if(yy>M.t&&yy<M.t+ph){x.strokeStyle=lm.c+'55';x.lineWidth=.5;x.setLineDash([3,3]);x.beginPath();x.moveTo(M.l,yy);x.lineTo(M.l+pw,yy);x.stroke();x.setLineDash([]);x.fillStyle=lm.c;x.font='7px monospace';x.textAlign='right';x.fillText(lm.l,M.l+pw-2,yy-2)}});
+x.fillStyle='#555';x.font='8px monospace';x.textAlign='center';x.fillText('Subcarrier',M.l+pw/2,H-3);
+x.textAlign='right';for(var i=0;i<=4;i++)x.fillText(Math.round(i*25/4)+'%',M.l-3,M.t+ph-i/4*ph+3)}
+
+function dBler(){
+var c=document.getElementById('cB'),x=c.getContext('2d');rc(c,140);
+var W=c.width/dp,H=140,M={t:14,r:8,b:18,l:30},pw=W-M.l-M.r,ph=H-M.t-M.b;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+x.strokeStyle='#1a2a1a';x.lineWidth=.5;
+for(var i=0;i<=4;i++){var y=M.t+i/4*ph;x.beginPath();x.moveTo(M.l,y);x.lineTo(M.l+pw,y);x.stroke()}
+x.strokeStyle='#333';x.strokeRect(M.l,M.t,pw,ph);
+var nv=V.bler+Math.sin(t*1.1)*V.bler*.3+(Math.random()-.5)*V.bler*.4;
+BH.push(Math.max(0,nv));if(BH.length>BX)BH.shift();
+var mb=Math.max(1,V.bler*2.5,5);
+var col=V.bler<2?'#33ff33':V.bler<10?'#ffcc00':'#ff4444';
+var gr=x.createLinearGradient(0,M.t,0,M.t+ph);gr.addColorStop(0,col+'22');gr.addColorStop(1,'transparent');
+x.beginPath();x.moveTo(M.l,M.t+ph);
+for(var i=0;i<BH.length;i++){x.lineTo(M.l+i/(BX-1)*pw,M.t+ph-Math.min(BH[i],mb)/mb*ph)}
+x.lineTo(M.l+(BH.length-1)/(BX-1)*pw,M.t+ph);x.lineTo(M.l,M.t+ph);x.closePath();x.fillStyle=gr;x.fill();
+x.beginPath();
+for(var i=0;i<BH.length;i++){var xx=M.l+i/(BX-1)*pw,yy=M.t+ph-Math.min(BH[i],mb)/mb*ph;i?x.lineTo(xx,yy):x.moveTo(xx,yy)}
+x.strokeStyle=col;x.lineWidth=1;x.stroke();
+var ty=M.t+ph-10/mb*ph;
+if(ty>M.t&&ty<M.t+ph){x.strokeStyle='#ff666655';x.lineWidth=.5;x.setLineDash([3,3]);x.beginPath();x.moveTo(M.l,ty);x.lineTo(M.l+pw,ty);x.stroke();x.setLineDash([]);x.fillStyle='#ff6633';x.font='7px monospace';x.textAlign='right';x.fillText('10% target',M.l+pw-2,ty-2)}
+x.fillStyle='#555';x.font='8px monospace';x.textAlign='center';x.fillText('Time',M.l+pw/2,H-3);
+x.textAlign='right';for(var i=0;i<=4;i++)x.fillText((mb*(1-i/4)).toFixed(mb<2?2:1)+'%',M.l-3,M.t+i/4*ph+3)}
+
+function frame(ts){t=(ts||0)*.001;dSpec();dIQ();dEvm();dBler();requestAnimationFrame(frame)}
+lp('good');bld();requestAnimationFrame(frame);
+</script>
