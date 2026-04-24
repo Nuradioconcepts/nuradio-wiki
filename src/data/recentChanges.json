@@ -1,10 +1,24 @@
 [
   {
+    "title": "5G NR Tools",
+    "filepath": "docs/resources/5g-nr-tools.mdx",
+    "route": "/resources/5g-nr-tools",
+    "section": "Resources",
+    "mtime": "2026-04-24T18:43:31.319Z"
+  },
+  {
+    "title": "System Architecture",
+    "filepath": "docs/5g-nr/architecture.mdx",
+    "route": "/5g-nr/architecture",
+    "section": "5G NR",
+    "mtime": "2026-04-24T17:01:34.115Z"
+  },
+  {
     "title": "5G NR Channels",
     "filepath": "docs/resources/5g-nr-channels.mdx",
     "route": "/resources/5g-nr-channels",
     "section": "Resources",
-    "mtime": "2026-04-23T17:40:25.791Z"
+    "mtime": "2026-04-23T17:41:42.799Z"
   },
   {
     "title": "Logs 🚧",
@@ -89,19 +103,5 @@
     "route": "/packet-analysis/protocols",
     "section": "Packet Analysis",
     "mtime": "2026-04-12T17:51:16.992Z"
-  },
-  {
-    "title": "Tips & Tricks 🚧",
-    "filepath": "docs/packet-analysis/tips-and-tricks.mdx",
-    "route": "/packet-analysis/tips-and-tricks",
-    "section": "Packet Analysis",
-    "mtime": "2026-04-12T17:51:14.435Z"
-  },
-  {
-    "title": "Considerations 🚧",
-    "filepath": "docs/packet-analysis/considerations.mdx",
-    "route": "/packet-analysis/considerations",
-    "section": "Packet Analysis",
-    "mtime": "2026-04-12T17:51:12.688Z"
   }
 ]

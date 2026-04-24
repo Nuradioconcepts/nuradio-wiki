@@ -1,0 +1,251 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.R{background:#0e0e0e;color:#ccc;font-family:'Courier New',Consolas,monospace;padding:10px;border-radius:10px;border:1px solid #333;font-size:11px}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:2px 0 6px;border-bottom:1px solid #222;margin-bottom:6px}
+.ht{color:#00ccff;font-size:13px;font-weight:500;letter-spacing:1px}
+.sr{display:flex;gap:6px;margin-bottom:6px;align-items:center;flex-wrap:wrap}
+.sb{padding:3px 10px;font-size:10px;cursor:pointer;border-radius:5px;border:1px solid #333;background:#151515;color:#aaa;font-family:inherit}
+.sb:hover{border-color:#555}
+.sb.g{background:#0a2a0a;color:#33ff33;border-color:#33ff33}
+.sb.n{background:#2a2a0a;color:#ffcc00;border-color:#ffcc00}
+.sb.b{background:#2a0a0a;color:#ff4444;border-color:#ff4444}
+.sb.a{box-shadow:0 0 0 2px rgba(255,255,255,.15)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+.p{background:#111;border:1px solid #222;border-radius:6px;padding:6px;overflow:hidden}
+.pt{color:#00ccff;font-size:10px;margin-bottom:4px;letter-spacing:.5px}
+canvas{display:block;width:100%}
+.cp{background:#0d0d0d;border:1px solid #222;border-radius:6px;padding:8px;margin-bottom:6px}
+.ct{color:#00ccff;font-size:10px;margin-bottom:6px}
+.cg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px 10px}
+.sw{padding:2px 0}
+.sh{display:flex;justify-content:space-between}
+.sl{font-size:9px;color:#777}
+.sv{font-size:11px;font-weight:500}
+input[type=range]{width:100%;height:12px;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;margin:1px 0}
+input[type=range]::-webkit-slider-track{height:3px;background:#222;border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#00ccff;margin-top:-3.5px}
+input[type=range]::-moz-range-track{height:3px;background:#222;border-radius:2px;border:none}
+input[type=range]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#00ccff;border:none}
+.fb{background:#111;border:1px solid #222;border-radius:6px;padding:8px;margin-top:6px}
+.ff{color:#ffcc00;font-size:10px;margin-bottom:4px}
+.fi{color:#ff6633;font-size:10px;padding:1px 0}
+.lg{display:flex;flex-wrap:wrap;gap:8px;padding:3px 0;font-size:8px;color:#888}
+.lg span{display:flex;align-items:center;gap:3px}
+.lg .lsw{width:8px;height:8px;border-radius:1px}
+.spdctl{display:flex;gap:6px;align-items:center;margin:4px 0;font-size:10px;color:#777}
+.spdctl button{padding:2px 8px;font-size:9px;cursor:pointer;border-radius:4px;border:1px solid #333;background:#151515;color:#aaa;font-family:inherit}
+.spdctl button.a{background:#0a2a2a;color:#00ccff;border-color:#00ccff}
+@media(max-width:720px){.g2,.cg{grid-template-columns:1fr}.hdr{align-items:flex-start;flex-direction:column;gap:3px}.sr,.spdctl{align-items:flex-start}}
+</style>
+<div class="R">
+<div class="hdr"><span class="ht">5G NR PROTOCOL LAYER ANALYZER</span><span style="color:#888;font-size:10px">LAYER 2: MAC / RLC / PDCP</span></div>
+<div class="sr">
+<span style="font-size:10px;color:#777">Presets:</span>
+<button class="sb g a" id="bG">Good</button>
+<button class="sb n" id="bN">Normal</button>
+<button class="sb b" id="bB">Degraded</button>
+<span style="margin-left:auto;font-size:10px;color:#555" id="sd"></span>
+</div>
+<div class="cp"><div class="ct">PROTOCOL PARAMETER CONTROLS</div><div class="cg" id="SB"></div></div>
+<div class="spdctl">
+<span>Animation speed:</span>
+<button class="a" id="sp1" onclick="setSpd(1)">1x</button>
+<button id="sp2" onclick="setSpd(0.5)">0.5x</button>
+<button id="sp3" onclick="setSpd(0.25)">0.25x</button>
+<button id="sp4" onclick="setSpd(0.1)">0.1x</button>
+<span style="margin-left:8px;color:#555" id="spdLbl">Normal speed</span>
+</div>
+<div class="g2">
+<div class="p"><div class="pt">HARQ PROCESS TIMELINE (8 processes x 24 slots)</div><canvas id="cH" height="195"></canvas>
+<div class="lg"><span><span class="lsw" style="background:#33ff33"></span>ACK (1st TX)</span><span><span class="lsw" style="background:#ffcc00"></span>ACK (retx)</span><span><span class="lsw" style="background:#ff4444"></span>NACK (failed)</span><span><span class="lsw" style="background:#ff444444"></span>DTX</span></div></div>
+<div class="p"><div class="pt">RESOURCE GRID (14 sym x 24 RB per slot)</div><canvas id="cR" height="195"></canvas>
+<div class="lg"><span><span class="lsw" style="background:#00ccff"></span>PDSCH</span><span><span class="lsw" style="background:#ff33ff"></span>PDCCH</span><span><span class="lsw" style="background:#ffcc00"></span>DMRS</span><span><span class="lsw" style="background:#33ff33"></span>CSI-RS</span><span><span class="lsw" style="background:#ff6633"></span>HARQ retx</span><span><span class="lsw" style="background:#333"></span>Empty/blanked</span></div></div>
+</div>
+<div class="g2">
+<div class="p"><div class="pt">ACK / NACK RATIO</div><canvas id="cA" height="130"></canvas></div>
+<div class="p"><div class="pt">RLC RETRANSMISSION + DISCARD</div><canvas id="cL" height="130"></canvas></div>
+</div>
+<div class="g2">
+<div class="p"><div class="pt">PDCP SDU DELIVERY</div><canvas id="cP" height="120"></canvas></div>
+<div class="p"><div class="pt">MAC SCHEDULING EFFICIENCY</div><canvas id="cM" height="120"></canvas></div>
+</div>
+<div class="fb"><div class="ff">ACTIVE PROTOCOL IMPAIRMENTS</div><div id="FL"></div></div>
+</div>
+<script>
+var D=[
+{k:'ack',l:'ACK Rate',u:'%',mn:40,mx:100,st:.5,g:99.5,n:92,b:65,iv:0,gt:95,bt:80},
+{k:'nack',l:'NACK Rate',u:'%',mn:0,mx:40,st:.5,g:.4,n:6,b:25,iv:1,gt:2,bt:10},
+{k:'dtx',l:'DTX Rate',u:'%',mn:0,mx:20,st:.1,g:.1,n:2,b:10,iv:1,gt:.5,bt:5},
+{k:'hretx',l:'HARQ Retx',u:'%',mn:0,mx:50,st:.5,g:.5,n:8,b:35,iv:1,gt:2,bt:15},
+{k:'hmx',l:'Max HARQ Rounds',u:'',mn:1,mx:4,st:1,g:1,n:2,b:4,iv:1,gt:1,bt:3},
+{k:'cqi',l:'CQI',u:'',mn:1,mx:15,st:1,g:13,n:9,b:4,iv:0,gt:10,bt:5},
+{k:'rlcr',l:'RLC Retx Rate',u:'%',mn:0,mx:20,st:.1,g:.1,n:2,b:15,iv:1,gt:.5,bt:5},
+{k:'rlcd',l:'RLC Discard',u:'%',mn:0,mx:10,st:.1,g:0,n:.2,b:5,iv:1,gt:.1,bt:2},
+{k:'pdcp',l:'PDCP Delivery',u:'%',mn:85,mx:100,st:.1,g:99.99,n:99.8,b:95,iv:0,gt:99.5,bt:97},
+{k:'mcs',l:'MCS Average',u:'',mn:0,mx:28,st:1,g:25,n:16,b:6,iv:0,gt:20,bt:10},
+{k:'sef',l:'Sched Efficiency',u:'%',mn:10,mx:100,st:1,g:96,n:78,b:42,iv:0,gt:85,bt:55},
+{k:'rbu',l:'RB Utilization',u:'%',mn:10,mx:100,st:1,g:92,n:70,b:35,iv:0,gt:80,bt:50}
+];
+
+var V={},t=0,dp=window.devicePixelRatio||1;
+var spd=1,lastTick=0,slotTimer=0,SLOT_INT=400;
+var HH=[[],[],[],[],[],[],[],[]],NSLOTS=24;
+var ackH=[],rlcRH=[],rlcDH=[],pdcpH=[],schH=[],HMX=60;
+var rgGrid=null;
+
+function gc(v,d){if(d.iv)return v<=d.gt?'#33ff33':v<=d.bt?'#ffcc00':'#ff4444';return v>=d.gt?'#33ff33':v>=d.bt?'#ffcc00':'#ff4444'}
+function fv(v,d){if(d.k==='pdcp')return v.toFixed(2)+' '+d.u;if(d.k==='rlcd'||d.k==='rlcr'||d.k==='dtx')return v.toFixed(1)+' '+d.u;return(Math.abs(v)<10?v.toFixed(1):Math.round(v))+' '+d.u}
+
+function bld(){
+var bx=document.getElementById('SB');bx.innerHTML='';
+D.forEach(function(d){
+var dv=document.createElement('div');dv.className='sw';
+dv.innerHTML='<div class="sh"><span class="sl">'+d.l+'</span><span class="sv" id="v_'+d.k+'" style="color:'+gc(V[d.k],d)+'">'+fv(V[d.k],d)+'</span></div><input type="range" id="s_'+d.k+'" min="'+d.mn+'" max="'+d.mx+'" step="'+d.st+'" value="'+V[d.k]+'">';
+bx.appendChild(dv);
+dv.querySelector('input').addEventListener('input',(function(dd){return function(){V[dd.k]=parseFloat(this.value);var e=document.getElementById('v_'+dd.k);e.textContent=fv(V[dd.k],dd);e.style.color=gc(V[dd.k],dd);doF()}})(d))})}
+
+function lp(nm){
+document.querySelectorAll('.sb').forEach(function(b){b.classList.remove('a')});
+document.getElementById(nm==='good'?'bG':nm==='normal'?'bN':'bB').classList.add('a');
+document.getElementById('sd').textContent={good:'Clean protocol, minimal retx',normal:'Moderate retx, typical loaded cell',bad:'Severe stress, high discard'}[nm];
+D.forEach(function(d){V[d.k]=d[nm==='good'?'g':nm==='normal'?'n':'b'];var sl=document.getElementById('s_'+d.k);if(sl)sl.value=V[d.k];var el=document.getElementById('v_'+d.k);if(el){el.textContent=fv(V[d.k],d);el.style.color=gc(V[d.k],d)}});
+for(var i=0;i<8;i++)HH[i]=[];ackH=[];rlcRH=[];rlcDH=[];pdcpH=[];schH=[];rgGrid=null;doF()}
+
+document.getElementById('bG').onclick=function(){lp('good')};
+document.getElementById('bN').onclick=function(){lp('normal')};
+document.getElementById('bB').onclick=function(){lp('bad')};
+
+function setSpd(s){spd=s;
+['sp1','sp2','sp3','sp4'].forEach(function(id){document.getElementById(id).classList.remove('a')});
+var btn=s===1?'sp1':s===.5?'sp2':s===.25?'sp3':'sp4';
+document.getElementById(btn).classList.add('a');
+document.getElementById('spdLbl').textContent=s===1?'Normal speed':s===.5?'Half speed':s===.25?'Quarter speed':'Slow motion'}
+
+function doF(){
+var f=[];
+if(V.ack<80)f.push('ACK rate '+V.ack.toFixed(1)+'% \u2014 majority of TBs failing first transmission');
+else if(V.ack<95)f.push('ACK rate '+V.ack.toFixed(1)+'% \u2014 notable first-pass failures consuming HARQ capacity');
+if(V.nack>10)f.push('NACK rate '+V.nack.toFixed(1)+'% \u2014 HARQ processes saturated with retransmissions');
+else if(V.nack>3)f.push('NACK rate '+V.nack.toFixed(1)+'% \u2014 retransmissions adding 8-16ms latency per TB');
+if(V.dtx>5)f.push('DTX rate '+V.dtx.toFixed(1)+'% \u2014 UE not responding, possible timing misalignment or DRX issue');
+else if(V.dtx>1)f.push('DTX rate '+V.dtx.toFixed(1)+'% \u2014 occasional missed HARQ feedback');
+if(V.hretx>15)f.push('HARQ retx '+V.hretx.toFixed(0)+'% \u2014 processes blocked, all 8 occupied with retransmissions');
+if(V.hmx>=4)f.push('Max HARQ rounds = 4 \u2014 exhausting retx budget, RLC layer absorbing residual errors');
+if(V.cqi<5)f.push('CQI '+V.cqi+' \u2014 QPSK only, massive throughput reduction');
+else if(V.cqi<10)f.push('CQI '+V.cqi+' \u2014 16QAM, moderate throughput limitation');
+if(V.rlcr>5)f.push('RLC retx '+V.rlcr.toFixed(1)+'% \u2014 HARQ failures cascading to RLC AM retransmissions');
+else if(V.rlcr>1)f.push('RLC retx '+V.rlcr.toFixed(1)+'% \u2014 occasional L2 retransmission');
+if(V.rlcd>2)f.push('RLC discard '+V.rlcd.toFixed(1)+'% \u2014 discard timer expiring, PDUs dropped');
+else if(V.rlcd>.5)f.push('RLC discard '+V.rlcd.toFixed(2)+'% \u2014 approaching discard threshold');
+if(V.pdcp<97)f.push('PDCP delivery '+V.pdcp.toFixed(1)+'% \u2014 user data loss, application impact');
+if(V.mcs<10)f.push('MCS avg '+V.mcs+' \u2014 low spectral efficiency, capacity constrained');
+if(V.sef<55)f.push('Scheduling eff '+V.sef+'% \u2014 scheduler unable to utilize available resources');
+if(V.rbu<50)f.push('RB util '+V.rbu+'% \u2014 resources wasted from interference blanking or MCS fallback');
+if(!f.length)f.push('All protocol metrics healthy \u2014 efficient L2 operation');
+document.getElementById('FL').innerHTML=f.map(function(x){return'<div class="fi">\u25B8 '+x+'</div>'}).join('')}
+
+function rc(c,h){var r=c.parentElement.getBoundingClientRect();c.width=r.width*dp;c.height=h*dp;c.style.height=h+'px';c.getContext('2d').setTransform(dp,0,0,dp,0,0)}
+
+function tickSlot(){
+for(var p=0;p<8;p++){
+var r=Math.random()*100;var st;
+if(r<V.ack)st='ack';
+else if(r<V.ack+V.nack){st=Math.random()*100<50?'retx':'nack'}
+else st='dtx';
+HH[p].push(st);if(HH[p].length>NSLOTS)HH[p].shift()}
+var dataPct=V.rbu/100*.75;var retxPct=V.hretx/100*.3;var emptyPct=1-dataPct-retxPct-.08;
+if(emptyPct<0)emptyPct=0;
+rgGrid=[];
+for(var sy=0;sy<14;sy++){rgGrid[sy]=[];for(var rb=0;rb<24;rb++){
+if(sy<=2&&rb<3)rgGrid[sy][rb]='ctrl';
+else if(sy===3||(sy===11&&rb%4===0))rgGrid[sy][rb]='dmrs';
+else if(sy===7&&rb%6===0)rgGrid[sy][rb]='csi';
+else{var r2=Math.random();if(r2<dataPct)rgGrid[sy][rb]='data';else if(r2<dataPct+retxPct)rgGrid[sy][rb]='retx';else rgGrid[sy][rb]='empty'}}}
+var av=V.ack+(Math.random()-.5)*4+Math.sin(t*.7)*2;
+ackH.push(Math.max(0,Math.min(100,av)));if(ackH.length>HMX)ackH.shift();
+var rv=V.rlcr+(Math.random()-.5)*V.rlcr*.6+Math.sin(t*.9)*V.rlcr*.3;
+rlcRH.push(Math.max(0,rv));if(rlcRH.length>HMX)rlcRH.shift();
+var dv=V.rlcd+(Math.random()-.5)*Math.max(.1,V.rlcd)*.6;
+rlcDH.push(Math.max(0,dv));if(rlcDH.length>HMX)rlcDH.shift();
+var pv=V.pdcp+(Math.random()-.5)*(100-V.pdcp)*.5;
+pdcpH.push(Math.max(0,Math.min(100,pv)));if(pdcpH.length>HMX)pdcpH.shift();
+var sv=V.sef+(Math.random()-.5)*8+Math.sin(t*.8)*3;
+schH.push(Math.max(0,Math.min(100,sv)));if(schH.length>HMX)schH.shift()}
+
+function dHarq(){
+var c=document.getElementById('cH'),x=c.getContext('2d');rc(c,195);
+var W=c.width/dp,H=195,M={t:14,r:4,b:4,l:28};
+var pw=W-M.l-M.r,ph=H-M.t-M.b;
+var cw=pw/NSLOTS-1,ch=ph/8-1;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+x.fillStyle='#555';x.font='8px monospace';x.textAlign='right';
+for(var p=0;p<8;p++)x.fillText('P'+p,M.l-3,M.t+p*(ch+1)+ch/2+3);
+x.textAlign='center';
+for(var sl=0;sl<NSLOTS;sl+=4)x.fillText('s'+sl,M.l+sl*(cw+1)+cw/2,M.t-3);
+for(var p=0;p<8;p++){
+for(var sl=0;sl<HH[p].length;sl++){
+var xx=M.l+sl*(cw+1),yy=M.t+p*(ch+1);
+var st=HH[p][sl];
+var col=st==='ack'?'#33ff33':st==='retx'?'#ffcc00':st==='nack'?'#ff4444':'#ff444433';
+x.fillStyle=col;x.fillRect(xx,yy,cw,ch);
+if(st==='nack'){x.strokeStyle='#ffffff44';x.lineWidth=.5;x.beginPath();x.moveTo(xx+1,yy+1);x.lineTo(xx+cw-1,yy+ch-1);x.stroke();x.beginPath();x.moveTo(xx+cw-1,yy+1);x.lineTo(xx+1,yy+ch-1);x.stroke()}
+if(st==='retx'){x.strokeStyle='#ffffff33';x.lineWidth=.5;x.beginPath();x.moveTo(xx+cw/2,yy+2);x.lineTo(xx+cw/2,yy+ch-2);x.stroke();x.beginPath();x.moveTo(xx+cw/2-2,yy+4);x.lineTo(xx+cw/2,yy+2);x.lineTo(xx+cw/2+2,yy+4);x.stroke()}
+if(sl===HH[p].length-1){x.strokeStyle='#00ccff88';x.lineWidth=1.5;x.strokeRect(xx,yy,cw,ch)}
+}}}
+
+function dRG(){
+var c=document.getElementById('cR'),x=c.getContext('2d');rc(c,195);
+var W=c.width/dp,H=195,M={t:14,r:4,b:4,l:22};
+var pw=W-M.l-M.r,ph=H-M.t-M.b;
+var cw=pw/14-.5,ch=ph/24-.5;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+x.fillStyle='#444';x.font='7px monospace';x.textAlign='center';
+for(var sy=0;sy<14;sy+=2)x.fillText(sy,M.l+sy*(cw+.5)+cw/2,M.t-2);
+x.textAlign='right';
+for(var rb=0;rb<24;rb+=4)x.fillText(rb,M.l-2,M.t+rb*(ch+.5)+ch/2+2);
+if(!rgGrid)return;
+var cols={ctrl:'#ff33ffcc',dmrs:'#ffcc00cc',csi:'#33ff33cc',data:'#00ccffcc',retx:'#ff6633cc',empty:'#222'};
+for(var sy=0;sy<14;sy++){for(var rb=0;rb<24;rb++){
+var xx=M.l+sy*(cw+.5),yy=M.t+rb*(ch+.5);
+x.fillStyle=cols[rgGrid[sy][rb]]||'#222';
+x.fillRect(xx,yy,cw,ch)}}}
+
+function dTS(cid,arr1,arr2,h,yMax,c1,c2,l1,l2,xLbl){
+var c=document.getElementById(cid),x=c.getContext('2d');rc(c,h);
+var W=c.width/dp,H=h,M={t:12,r:6,b:16,l:32},pw=W-M.l-M.r,ph=H-M.t-M.b;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+x.strokeStyle='#1a2a1a';x.lineWidth=.5;
+for(var i=0;i<=4;i++){var y=M.t+i/4*ph;x.beginPath();x.moveTo(M.l,y);x.lineTo(M.l+pw,y);x.stroke()}
+x.strokeStyle='#333';x.lineWidth=.5;x.strokeRect(M.l,M.t,pw,ph);
+function dLine(arr,col){if(arr.length<2)return;
+var gr=x.createLinearGradient(0,M.t,0,M.t+ph);gr.addColorStop(0,col+'20');gr.addColorStop(1,'transparent');
+x.beginPath();x.moveTo(M.l,M.t+ph);
+for(var i=0;i<arr.length;i++){x.lineTo(M.l+i/(HMX-1)*pw,M.t+ph-Math.min(arr[i],yMax)/yMax*ph)}
+x.lineTo(M.l+(arr.length-1)/(HMX-1)*pw,M.t+ph);x.lineTo(M.l,M.t+ph);x.closePath();x.fillStyle=gr;x.fill();
+x.beginPath();
+for(var i=0;i<arr.length;i++){var xx=M.l+i/(HMX-1)*pw,yy=M.t+ph-Math.min(arr[i],yMax)/yMax*ph;i?x.lineTo(xx,yy):x.moveTo(xx,yy)}
+x.strokeStyle=col;x.lineWidth=1;x.stroke()}
+dLine(arr1,c1);if(arr2)dLine(arr2,c2);
+x.fillStyle='#555';x.font='8px monospace';x.textAlign='center';x.fillText(xLbl||'Time',M.l+pw/2,H-2);
+x.textAlign='right';
+for(var i=0;i<=4;i++)x.fillText((yMax*(1-i/4)).toFixed(yMax<1?2:yMax<10?1:0),M.l-3,M.t+i/4*ph+3);
+x.font='7px monospace';x.textAlign='left';
+if(l1){x.fillStyle=c1;x.fillText(l1,M.l+4,M.t+8)}
+if(l2){x.fillStyle=c2;x.fillText(l2,M.l+4,M.t+16)}}
+
+function frame(ts){
+t=(ts||0)*.001;
+var dt=ts-lastTick;lastTick=ts;
+slotTimer+=dt*spd;
+if(slotTimer>=SLOT_INT){slotTimer-=SLOT_INT;tickSlot()}
+dHarq();dRG();
+dTS('cA',ackH,null,130,100,'#33ff33',null,'ACK %',null,'Time');
+var rlcMax=Math.max(1,V.rlcr*3,5);
+dTS('cL',rlcRH,rlcDH,130,rlcMax,'#ffcc00','#ff4444','RLC retx %','RLC discard %','Time');
+dTS('cP',pdcpH,null,120,100,'#00ccff',null,'PDCP delivery %',null,'Time');
+dTS('cM',schH,null,120,100,'#33ff33',null,'Sched eff %',null,'Time');
+requestAnimationFrame(frame)}
+
+lp('good');bld();lastTick=performance.now();requestAnimationFrame(frame);
+</script>

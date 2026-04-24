@@ -1,5 +1,5 @@
 {
-  "totalPages": 27,
+  "totalPages": 28,
   "totalLinks": 621,
   "orphanPages": [
     {
@@ -63,6 +63,11 @@
       "filepath": "docs/resources/5g-nr-channels.mdx"
     },
     {
+      "title": "5G NR Tools",
+      "route": "/resources/5g-nr-tools",
+      "filepath": "docs/resources/5g-nr-tools.mdx"
+    },
+    {
       "title": "Logs 🚧",
       "route": "/resources/logs",
       "filepath": "docs/resources/logs.mdx"
@@ -73,5 +78,5 @@
       "filepath": "docs/resources/overview.mdx"
     }
   ],
-  "generatedAt": "2026-04-23T17:40:56.010Z"
+  "generatedAt": "2026-04-24T18:43:51.990Z"
 }

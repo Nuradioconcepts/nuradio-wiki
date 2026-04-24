@@ -1,0 +1,318 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.R{background:#0e0e0e;color:#ccc;font-family:'Courier New',Consolas,monospace;padding:10px;border-radius:10px;border:1px solid #333;font-size:11px}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:2px 0 6px;border-bottom:1px solid #222;margin-bottom:6px}
+.ht{color:#ff33ff;font-size:13px;font-weight:500;letter-spacing:1px}
+.sr{display:flex;gap:6px;margin-bottom:6px;align-items:center;flex-wrap:wrap}
+.sb{padding:3px 10px;font-size:10px;cursor:pointer;border-radius:5px;border:1px solid #333;background:#151515;color:#aaa;font-family:inherit}
+.sb:hover{border-color:#555}
+.sb.g{background:#0a2a0a;color:#33ff33;border-color:#33ff33}
+.sb.n{background:#2a2a0a;color:#ffcc00;border-color:#ffcc00}
+.sb.b{background:#2a0a0a;color:#ff4444;border-color:#ff4444}
+.sb.a{box-shadow:0 0 0 2px rgba(255,255,255,.15)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+.p{background:#111;border:1px solid #222;border-radius:6px;padding:6px;overflow:hidden}
+.pt{color:#ff33ff;font-size:10px;margin-bottom:4px;letter-spacing:.5px}
+canvas{display:block;width:100%}
+.cp{background:#0d0d0d;border:1px solid #222;border-radius:6px;padding:8px;margin-bottom:6px}
+.ct{color:#ff33ff;font-size:10px;margin-bottom:6px}
+.cg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px 10px}
+.sw{padding:2px 0}
+.sh{display:flex;justify-content:space-between}
+.sl{font-size:9px;color:#777}
+.sv{font-size:11px;font-weight:500}
+input[type=range]{width:100%;height:12px;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;margin:1px 0}
+input[type=range]::-webkit-slider-track{height:3px;background:#222;border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#ff33ff;margin-top:-3.5px}
+input[type=range]::-moz-range-track{height:3px;background:#222;border-radius:2px;border:none}
+input[type=range]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#ff33ff;border:none}
+.fb{background:#111;border:1px solid #222;border-radius:6px;padding:8px;margin-top:6px}
+.ff{color:#ffcc00;font-size:10px;margin-bottom:4px}
+.fi{color:#ff6633;font-size:10px;padding:1px 0}
+.spdctl{display:flex;gap:6px;align-items:center;margin:4px 0 6px;font-size:10px;color:#777}
+.spdctl button{padding:2px 8px;font-size:9px;cursor:pointer;border-radius:4px;border:1px solid #333;background:#151515;color:#aaa;font-family:inherit}
+.spdctl button.a{background:#2a0a2a;color:#ff33ff;border-color:#ff33ff}
+@media(max-width:720px){.g2,.cg{grid-template-columns:1fr}.hdr{align-items:flex-start;flex-direction:column;gap:3px}.sr,.spdctl{align-items:flex-start}}
+</style>
+<div class="R">
+<div class="hdr"><span class="ht">5G NR NETWORK / APPLICATION ANALYZER</span><span style="color:#888;font-size:10px">LAYER 3+: IP / TRANSPORT / APPLICATION</span></div>
+<div class="sr">
+<span style="font-size:10px;color:#777">Presets:</span>
+<button class="sb g a" id="bG">Good</button>
+<button class="sb n" id="bN">Normal</button>
+<button class="sb b" id="bB">Degraded</button>
+<span style="margin-left:auto;font-size:10px;color:#555" id="sd"></span>
+</div>
+<div class="cp"><div class="ct">NETWORK / APPLICATION CONTROLS</div><div class="cg" id="SB"></div></div>
+<div class="spdctl">
+<span>Speed:</span>
+<button class="a" id="sp1" onclick="setSpd(1)">1x</button>
+<button id="sp2" onclick="setSpd(.5)">0.5x</button>
+<button id="sp3" onclick="setSpd(.25)">0.25x</button>
+<button id="sp4" onclick="setSpd(.1)">0.1x</button>
+<span style="margin-left:8px;color:#555" id="spdLbl">Normal speed</span>
+</div>
+<div class="g2">
+<div class="p"><div class="pt">THROUGHPUT (DL / UL)</div><canvas id="cT" height="180"></canvas></div>
+<div class="p"><div class="pt">LATENCY DISTRIBUTION</div><canvas id="cL" height="180"></canvas></div>
+</div>
+<div class="g2">
+<div class="p"><div class="pt">PACKET LOSS / JITTER</div><canvas id="cPJ" height="150"></canvas></div>
+<div class="p"><div class="pt">TCP WINDOW / CONGESTION</div><canvas id="cTCP" height="150"></canvas></div>
+</div>
+<div class="g2">
+<div class="p"><div class="pt">CELL CAPACITY &amp; CONNECTED USERS</div><canvas id="cCap" height="150"></canvas></div>
+<div class="p"><div class="pt">APPLICATION QoE SCORE</div><canvas id="cQoE" height="150"></canvas></div>
+</div>
+<div class="fb"><div class="ff">NETWORK / APPLICATION IMPAIRMENTS</div><div id="FL"></div></div>
+</div>
+<script>
+var D=[
+{k:'tpd',l:'DL Throughput',u:'Mbps',mn:1,mx:1200,st:5,g:850,n:250,b:15,iv:0,gt:400,bt:50},
+{k:'tpu',l:'UL Throughput',u:'Mbps',mn:0.5,mx:200,st:1,g:120,n:40,b:3,iv:0,gt:50,bt:10},
+{k:'lat',l:'Avg Latency',u:'ms',mn:1,mx:200,st:1,g:8,n:35,b:150,iv:1,gt:15,bt:60},
+{k:'jit',l:'Jitter',u:'ms',mn:0,mx:80,st:.5,g:1,n:12,b:55,iv:1,gt:5,bt:25},
+{k:'plr',l:'Packet Loss',u:'%',mn:0,mx:15,st:.1,g:.01,n:.8,b:8,iv:1,gt:.1,bt:2},
+{k:'usr',l:'Connected UEs',u:'',mn:1,mx:500,st:1,g:25,n:150,b:400,iv:1,gt:50,bt:250},
+{k:'cap',l:'Cell Load',u:'%',mn:5,mx:100,st:1,g:30,n:70,b:98,iv:1,gt:50,bt:85},
+{k:'tcp',l:'TCP Window',u:'KB',mn:4,mx:2048,st:4,g:1400,n:512,b:32,iv:0,gt:800,bt:128},
+{k:'dns',l:'DNS Resolve',u:'ms',mn:1,mx:500,st:1,g:5,n:40,b:300,iv:1,gt:15,bt:80},
+{k:'tls',l:'TLS Handshake',u:'ms',mn:5,mx:800,st:5,g:15,n:80,b:500,iv:1,gt:30,bt:150},
+{k:'ho',l:'Handover Freq',u:'/min',mn:0,mx:20,st:.5,g:.2,n:3,b:15,iv:1,gt:1,bt:6},
+{k:'qoe',l:'QoE Score',u:'/5',mn:1,mx:5,st:.1,g:4.8,n:3.5,b:1.5,iv:0,gt:4,bt:2.5}
+];
+
+var V={},t=0,dp=window.devicePixelRatio||1;
+var spd=1,lastTick=0,slotTimer=0,TICK=300;
+var tpDH=[],tpUH=[],latH=[],jitH=[],plrH=[],tcpH=[],qoeH=[],HMX=60;
+var latBins=[];
+
+function gc(v,d){if(d.iv)return v<=d.gt?'#33ff33':v<=d.bt?'#ffcc00':'#ff4444';return v>=d.gt?'#33ff33':v>=d.bt?'#ffcc00':'#ff4444'}
+function fv(v,d){if(d.k==='plr'&&v<1)return v.toFixed(2)+' '+d.u;if(d.k==='qoe')return v.toFixed(1)+' '+d.u;return(Math.abs(v)<10?v.toFixed(1):Math.round(v))+' '+d.u}
+
+function bld(){
+var bx=document.getElementById('SB');bx.innerHTML='';
+D.forEach(function(d){
+var dv=document.createElement('div');dv.className='sw';
+dv.innerHTML='<div class="sh"><span class="sl">'+d.l+'</span><span class="sv" id="v_'+d.k+'" style="color:'+gc(V[d.k],d)+'">'+fv(V[d.k],d)+'</span></div><input type="range" id="s_'+d.k+'" min="'+d.mn+'" max="'+d.mx+'" step="'+d.st+'" value="'+V[d.k]+'">';
+bx.appendChild(dv);
+dv.querySelector('input').addEventListener('input',(function(dd){return function(){V[dd.k]=parseFloat(this.value);var e=document.getElementById('v_'+dd.k);e.textContent=fv(V[dd.k],dd);e.style.color=gc(V[dd.k],dd);doF()}})(d))})}
+
+function lp(nm){
+document.querySelectorAll('.sb').forEach(function(b){b.classList.remove('a')});
+document.getElementById(nm==='good'?'bG':nm==='normal'?'bN':'bB').classList.add('a');
+document.getElementById('sd').textContent={good:'High throughput, low latency, excellent QoE',normal:'Moderate performance, typical loaded network',bad:'Congested, high latency, poor user experience'}[nm];
+D.forEach(function(d){V[d.k]=d[nm==='good'?'g':nm==='normal'?'n':'b'];var sl=document.getElementById('s_'+d.k);if(sl)sl.value=V[d.k];var el=document.getElementById('v_'+d.k);if(el){el.textContent=fv(V[d.k],d);el.style.color=gc(V[d.k],d)}});
+tpDH=[];tpUH=[];latH=[];jitH=[];plrH=[];tcpH=[];qoeH=[];latBins=[];doF()}
+
+document.getElementById('bG').onclick=function(){lp('good')};
+document.getElementById('bN').onclick=function(){lp('normal')};
+document.getElementById('bB').onclick=function(){lp('bad')};
+
+function setSpd(s){spd=s;['sp1','sp2','sp3','sp4'].forEach(function(id){document.getElementById(id).classList.remove('a')});
+document.getElementById(s===1?'sp1':s===.5?'sp2':s===.25?'sp3':'sp4').classList.add('a');
+document.getElementById('spdLbl').textContent=s===1?'Normal':s===.5?'Half':s===.25?'Quarter':'Slow motion'}
+
+function doF(){
+var f=[];
+if(V.tpd<50)f.push('DL throughput '+Math.round(V.tpd)+' Mbps \u2014 severe congestion or low MCS, video buffering likely');
+else if(V.tpd<200)f.push('DL throughput '+Math.round(V.tpd)+' Mbps \u2014 moderate, HD streaming possible but 4K will stall');
+if(V.tpu<10)f.push('UL throughput '+V.tpu.toFixed(1)+' Mbps \u2014 uploads/video calls will suffer quality drops');
+if(V.lat>60)f.push('Latency '+Math.round(V.lat)+' ms \u2014 exceeds real-time thresholds, gaming/VoNR impacted');
+else if(V.lat>20)f.push('Latency '+Math.round(V.lat)+' ms \u2014 acceptable for browsing, marginal for real-time apps');
+if(V.jit>25)f.push('Jitter '+V.jit.toFixed(1)+' ms \u2014 de-jitter buffer overflow, VoIP quality degraded (MOS <3)');
+else if(V.jit>8)f.push('Jitter '+V.jit.toFixed(1)+' ms \u2014 noticeable in real-time audio, adaptive buffering active');
+if(V.plr>2)f.push('Packet loss '+V.plr.toFixed(1)+'% \u2014 TCP retransmissions dominating, window collapse');
+else if(V.plr>.3)f.push('Packet loss '+V.plr.toFixed(2)+'% \u2014 occasional TCP retx, throughput dips');
+if(V.usr>250)f.push(Math.round(V.usr)+' connected UEs \u2014 scheduler contention, per-user throughput reduced');
+if(V.cap>85)f.push('Cell load '+Math.round(V.cap)+'% \u2014 near capacity, admission control may reject new bearers');
+else if(V.cap>60)f.push('Cell load '+Math.round(V.cap)+'% \u2014 moderate, QoS enforcement active');
+if(V.tcp<128)f.push('TCP window '+Math.round(V.tcp)+' KB \u2014 collapsed from loss/congestion, bandwidth underutilized');
+else if(V.tcp<512)f.push('TCP window '+Math.round(V.tcp)+' KB \u2014 restricted, not fully utilizing available bandwidth');
+if(V.dns>80)f.push('DNS resolution '+Math.round(V.dns)+' ms \u2014 slow DNS adding perceived latency to page loads');
+if(V.tls>150)f.push('TLS handshake '+Math.round(V.tls)+' ms \u2014 high RTT inflating connection setup time');
+if(V.ho>6)f.push('Handover freq '+V.ho.toFixed(1)+'/min \u2014 ping-pong handovers causing data interruption');
+else if(V.ho>2)f.push('Handover freq '+V.ho.toFixed(1)+'/min \u2014 moderate mobility, brief throughput dips during HO');
+if(V.qoe<2.5)f.push('QoE score '+V.qoe.toFixed(1)+'/5 \u2014 poor user experience, complaints expected');
+if(!f.length)f.push('All network metrics healthy \u2014 excellent application performance');
+document.getElementById('FL').innerHTML=f.map(function(x){return'<div class="fi">\u25B8 '+x+'</div>'}).join('')}
+
+function rc(c,h){var r=c.parentElement.getBoundingClientRect();c.width=r.width*dp;c.height=h*dp;c.style.height=h+'px';c.getContext('2d').setTransform(dp,0,0,dp,0,0)}
+
+function tick(){
+var dlv=V.tpd+(Math.random()-.5)*V.tpd*.15+Math.sin(t*.6)*V.tpd*.08;
+tpDH.push(Math.max(0,dlv));if(tpDH.length>HMX)tpDH.shift();
+var ulv=V.tpu+(Math.random()-.5)*V.tpu*.2+Math.sin(t*.8)*V.tpu*.1;
+tpUH.push(Math.max(0,ulv));if(tpUH.length>HMX)tpUH.shift();
+var lv=V.lat+(Math.random()-.5)*V.lat*.3+Math.sin(t*1.1)*V.lat*.1;
+latH.push(Math.max(1,lv));if(latH.length>HMX)latH.shift();
+var jv=V.jit+(Math.random()-.5)*V.jit*.5+Math.sin(t*1.3)*V.jit*.15;
+jitH.push(Math.max(0,jv));if(jitH.length>HMX)jitH.shift();
+var pv=V.plr+(Math.random()-.5)*V.plr*.6;
+plrH.push(Math.max(0,pv));if(plrH.length>HMX)plrH.shift();
+var tv=V.tcp+(Math.random()-.5)*V.tcp*.1+Math.sin(t*.5)*V.tcp*.05;
+tcpH.push(Math.max(4,tv));if(tcpH.length>HMX)tcpH.shift();
+var qv=V.qoe+(Math.random()-.5)*.3+Math.sin(t*.7)*.1;
+qoeH.push(Math.max(1,Math.min(5,qv)));if(qoeH.length>HMX)qoeH.shift();
+latBins=[];var nB=30;
+for(var i=0;i<nB;i++)latBins.push(0);
+for(var i=0;i<200;i++){
+var s=V.lat+((Math.random()-.5)*2+(Math.random()-.5)*2)*V.jit;
+s=Math.max(0,s);
+var maxLat=V.lat*4;
+var bin=Math.floor(s/maxLat*nB);
+if(bin>=0&&bin<nB)latBins[bin]++}}
+
+function dTP(){
+var c=document.getElementById('cT'),x=c.getContext('2d');rc(c,180);
+var W=c.width/dp,H=180,M={t:14,r:8,b:18,l:42},pw=W-M.l-M.r,ph=H-M.t-M.b;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+x.strokeStyle='#1a2a1a';x.lineWidth=.5;
+for(var i=0;i<=5;i++){var y=M.t+i/5*ph;x.beginPath();x.moveTo(M.l,y);x.lineTo(M.l+pw,y);x.stroke()}
+x.strokeStyle='#333';x.strokeRect(M.l,M.t,pw,ph);
+var mx=Math.max(10,V.tpd*1.4);
+function dL(arr,col,lbl){if(arr.length<2)return;
+var gr=x.createLinearGradient(0,M.t,0,M.t+ph);gr.addColorStop(0,col+'20');gr.addColorStop(1,'transparent');
+x.beginPath();x.moveTo(M.l,M.t+ph);
+for(var i=0;i<arr.length;i++)x.lineTo(M.l+i/(HMX-1)*pw,M.t+ph-Math.min(arr[i],mx)/mx*ph);
+x.lineTo(M.l+(arr.length-1)/(HMX-1)*pw,M.t+ph);x.lineTo(M.l,M.t+ph);x.closePath();x.fillStyle=gr;x.fill();
+x.beginPath();for(var i=0;i<arr.length;i++){var xx=M.l+i/(HMX-1)*pw,yy=M.t+ph-Math.min(arr[i],mx)/mx*ph;i?x.lineTo(xx,yy):x.moveTo(xx,yy)}
+x.strokeStyle=col;x.lineWidth=1.2;x.stroke();
+if(arr.length>0){var last=arr[arr.length-1];x.fillStyle=col;x.font='bold 9px monospace';x.textAlign='left';x.fillText(Math.round(last)+' Mbps',M.l+pw+2,M.t+ph-Math.min(last,mx)/mx*ph+3)}}
+dL(tpDH,'#00ccff','DL');dL(tpUH,'#ff33ff','UL');
+x.fillStyle='#555';x.font='8px monospace';x.textAlign='center';x.fillText('Time',M.l+pw/2,H-3);
+x.textAlign='right';for(var i=0;i<=5;i++)x.fillText(Math.round(mx*(1-i/5)),M.l-3,M.t+i/5*ph+3);
+x.font='7px monospace';x.textAlign='left';x.fillStyle='#00ccff';x.fillText('DL',M.l+4,M.t+9);x.fillStyle='#ff33ff';x.fillText('UL',M.l+4,M.t+18)}
+
+function dLat(){
+var c=document.getElementById('cL'),x=c.getContext('2d');rc(c,180);
+var W=c.width/dp,H=180,M={t:14,r:8,b:18,l:32},pw=W-M.l-M.r,ph=H-M.t-M.b;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+x.strokeStyle='#1a2a1a';x.lineWidth=.5;
+for(var i=0;i<=4;i++){var y=M.t+i/4*ph;x.beginPath();x.moveTo(M.l,y);x.lineTo(M.l+pw,y);x.stroke()}
+x.strokeStyle='#333';x.strokeRect(M.l,M.t,pw,ph);
+if(latBins.length===0)return;
+var nB=latBins.length,maxC=0;
+for(var i=0;i<nB;i++)if(latBins[i]>maxC)maxC=latBins[i];
+if(maxC===0)maxC=1;
+var bw=pw/nB;
+var maxLat=V.lat*4;
+var col=V.lat<15?'#33ff33':V.lat<60?'#ffcc00':'#ff4444';
+for(var i=0;i<nB;i++){
+var bh=latBins[i]/maxC*ph*.9;
+var xx=M.l+i*bw,yy=M.t+ph-bh;
+var gr=x.createLinearGradient(0,yy,0,M.t+ph);gr.addColorStop(0,col+'cc');gr.addColorStop(1,col+'33');
+x.fillStyle=gr;x.fillRect(xx+1,yy,bw-2,bh)}
+var avgX=M.l+(V.lat/maxLat)*pw;
+if(avgX>M.l&&avgX<M.l+pw){x.strokeStyle='#ffffff88';x.lineWidth=1;x.setLineDash([3,3]);
+x.beginPath();x.moveTo(avgX,M.t);x.lineTo(avgX,M.t+ph);x.stroke();x.setLineDash([]);
+x.fillStyle='#fff';x.font='8px monospace';x.textAlign='center';x.fillText('avg '+Math.round(V.lat)+'ms',avgX,M.t+10)}
+var p95=V.lat+V.jit*2;var p95X=M.l+(p95/maxLat)*pw;
+if(p95X>M.l&&p95X<M.l+pw){x.strokeStyle='#ff666688';x.lineWidth=.8;x.setLineDash([2,2]);
+x.beginPath();x.moveTo(p95X,M.t);x.lineTo(p95X,M.t+ph);x.stroke();x.setLineDash([]);
+x.fillStyle='#ff6633';x.font='7px monospace';x.textAlign='center';x.fillText('p95',p95X,M.t+ph-4)}
+x.fillStyle='#555';x.font='8px monospace';x.textAlign='center';x.fillText('Latency (ms)',M.l+pw/2,H-3);
+x.textAlign='center';
+for(var i=0;i<=4;i++)x.fillText(Math.round(maxLat*i/4),M.l+i/4*pw,M.t+ph+12)}
+
+function dPJ(){
+var c=document.getElementById('cPJ'),x=c.getContext('2d');rc(c,150);
+var W=c.width/dp,H=150,M={t:12,r:6,b:16,l:32},pw=W-M.l-M.r,ph=H-M.t-M.b;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+x.strokeStyle='#1a2a1a';x.lineWidth=.5;
+for(var i=0;i<=4;i++){var y=M.t+i/4*ph;x.beginPath();x.moveTo(M.l,y);x.lineTo(M.l+pw,y);x.stroke()}
+x.strokeStyle='#333';x.strokeRect(M.l,M.t,pw,ph);
+var plMax=Math.max(.5,V.plr*3,2);
+var jitMax=Math.max(2,V.jit*2.5);
+function dL2(arr,mx,col,lbl,yOff){if(arr.length<2)return;
+x.beginPath();for(var i=0;i<arr.length;i++){var xx=M.l+i/(HMX-1)*pw,yy=M.t+ph-Math.min(arr[i],mx)/mx*ph;i?x.lineTo(xx,yy):x.moveTo(xx,yy)}
+x.strokeStyle=col;x.lineWidth=1;x.stroke();
+x.font='7px monospace';x.textAlign='left';x.fillStyle=col;x.fillText(lbl,M.l+4,M.t+yOff)}
+dL2(plrH,plMax,'#ff4444','Loss %',9);dL2(jitH,jitMax,'#ffcc00','Jitter ms',18);
+x.fillStyle='#555';x.font='8px monospace';x.textAlign='center';x.fillText('Time',M.l+pw/2,H-2);
+x.textAlign='right';for(var i=0;i<=4;i++){x.fillText(plMax>1?(plMax*(1-i/4)).toFixed(1):(plMax*(1-i/4)).toFixed(2),M.l-3,M.t+i/4*ph+3)}}
+
+function dTCP(){
+var c=document.getElementById('cTCP'),x=c.getContext('2d');rc(c,150);
+var W=c.width/dp,H=150,M={t:12,r:6,b:16,l:36},pw=W-M.l-M.r,ph=H-M.t-M.b;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+x.strokeStyle='#1a2a1a';x.lineWidth=.5;
+for(var i=0;i<=4;i++){var y=M.t+i/4*ph;x.beginPath();x.moveTo(M.l,y);x.lineTo(M.l+pw,y);x.stroke()}
+x.strokeStyle='#333';x.strokeRect(M.l,M.t,pw,ph);
+var mx=2200;
+if(tcpH.length>1){
+var col=V.tcp>800?'#33ff33':V.tcp>128?'#ffcc00':'#ff4444';
+var gr=x.createLinearGradient(0,M.t,0,M.t+ph);gr.addColorStop(0,col+'20');gr.addColorStop(1,'transparent');
+x.beginPath();x.moveTo(M.l,M.t+ph);
+for(var i=0;i<tcpH.length;i++)x.lineTo(M.l+i/(HMX-1)*pw,M.t+ph-Math.min(tcpH[i],mx)/mx*ph);
+x.lineTo(M.l+(tcpH.length-1)/(HMX-1)*pw,M.t+ph);x.lineTo(M.l,M.t+ph);x.closePath();x.fillStyle=gr;x.fill();
+x.beginPath();for(var i=0;i<tcpH.length;i++){var xx=M.l+i/(HMX-1)*pw,yy=M.t+ph-Math.min(tcpH[i],mx)/mx*ph;i?x.lineTo(xx,yy):x.moveTo(xx,yy)}
+x.strokeStyle=col;x.lineWidth=1;x.stroke()}
+x.fillStyle='#555';x.font='8px monospace';x.textAlign='center';x.fillText('Time',M.l+pw/2,H-2);
+x.textAlign='right';for(var i=0;i<=4;i++)x.fillText(Math.round(mx*(1-i/4))+' KB',M.l-3,M.t+i/4*ph+3);
+x.font='7px monospace';x.textAlign='left';x.fillStyle='#00ccff';x.fillText('TCP cwnd',M.l+4,M.t+9)}
+
+function dCap(){
+var c=document.getElementById('cCap'),x=c.getContext('2d');rc(c,150);
+var W=c.width/dp,H=150,M={t:12,r:8,b:14,l:8},pw=W-M.l-M.r,ph=H-M.t-M.b;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+var gW=pw*.4,gH=ph-10,gX=M.l+pw*.05,gY=M.t+5;
+var loadH=gH*V.cap/100;
+var lCol=V.cap<50?'#33ff33':V.cap<85?'#ffcc00':'#ff4444';
+x.fillStyle='#1a1a1a';x.fillRect(gX,gY,gW,gH);
+var gr=x.createLinearGradient(0,gY+gH-loadH,0,gY+gH);gr.addColorStop(0,lCol+'cc');gr.addColorStop(1,lCol+'44');
+x.fillStyle=gr;x.fillRect(gX,gY+gH-loadH,gW,loadH);
+x.strokeStyle='#333';x.strokeRect(gX,gY,gW,gH);
+x.fillStyle='#fff';x.font='bold 12px monospace';x.textAlign='center';x.fillText(Math.round(V.cap)+'%',gX+gW/2,gY+gH/2+4);
+x.fillStyle='#888';x.font='8px monospace';x.fillText('Cell Load',gX+gW/2,gY+gH+10);
+var rX=M.l+pw*.55,rW=pw*.4;
+var metrics=[
+{l:'Users',v:Math.round(V.usr),c:gc(V.usr,D[5])},
+{l:'DL Mbps',v:Math.round(V.tpd),c:gc(V.tpd,D[0])},
+{l:'Avg Lat',v:Math.round(V.lat)+'ms',c:gc(V.lat,D[2])},
+{l:'HO/min',v:V.ho.toFixed(1),c:gc(V.ho,D[10])},
+{l:'DNS',v:Math.round(V.dns)+'ms',c:gc(V.dns,D[8])},
+{l:'TLS',v:Math.round(V.tls)+'ms',c:gc(V.tls,D[9])}
+];
+var rH=(ph-10)/metrics.length;
+metrics.forEach(function(m,i){
+var yy=gY+i*rH;
+x.fillStyle='#0a0a0a';x.fillRect(rX,yy,rW,rH-2);x.strokeStyle='#222';x.strokeRect(rX,yy,rW,rH-2);
+x.fillStyle='#777';x.font='8px monospace';x.textAlign='left';x.fillText(m.l,rX+4,yy+rH/2+2);
+x.fillStyle=m.c;x.font='bold 10px monospace';x.textAlign='right';x.fillText(m.v,rX+rW-4,yy+rH/2+2)})}
+
+function dQoE(){
+var c=document.getElementById('cQoE'),x=c.getContext('2d');rc(c,150);
+var W=c.width/dp,H=150,M={t:12,r:6,b:16,l:32},pw=W-M.l-M.r,ph=H-M.t-M.b;
+x.fillStyle='#0a0a0a';x.fillRect(0,0,W,H);
+x.strokeStyle='#1a2a1a';x.lineWidth=.5;
+for(var i=0;i<=5;i++){var y=M.t+i/5*ph;x.beginPath();x.moveTo(M.l,y);x.lineTo(M.l+pw,y);x.stroke()}
+x.strokeStyle='#333';x.strokeRect(M.l,M.t,pw,ph);
+if(qoeH.length>1){
+var col=V.qoe>=4?'#33ff33':V.qoe>=2.5?'#ffcc00':'#ff4444';
+var gr=x.createLinearGradient(0,M.t,0,M.t+ph);gr.addColorStop(0,col+'25');gr.addColorStop(1,'transparent');
+x.beginPath();x.moveTo(M.l,M.t+ph);
+for(var i=0;i<qoeH.length;i++)x.lineTo(M.l+i/(HMX-1)*pw,M.t+ph-(qoeH[i]-1)/4*ph);
+x.lineTo(M.l+(qoeH.length-1)/(HMX-1)*pw,M.t+ph);x.lineTo(M.l,M.t+ph);x.closePath();x.fillStyle=gr;x.fill();
+x.beginPath();for(var i=0;i<qoeH.length;i++){var xx=M.l+i/(HMX-1)*pw,yy=M.t+ph-(qoeH[i]-1)/4*ph;i?x.lineTo(xx,yy):x.moveTo(xx,yy)}
+x.strokeStyle=col;x.lineWidth=1.5;x.stroke();
+if(qoeH.length>0){var last=qoeH[qoeH.length-1];
+x.fillStyle=col;x.font='bold 16px monospace';x.textAlign='right';
+x.fillText(last.toFixed(1)+'/5',M.l+pw-4,M.t+20)}}
+var zones=[{y:4,l:'Excellent',c:'#33ff33'},{y:3,l:'Good',c:'#ffcc00'},{y:2,l:'Poor',c:'#ff4444'}];
+zones.forEach(function(z){var yy=M.t+ph-(z.y-1)/4*ph;x.strokeStyle=z.c+'33';x.lineWidth=.5;x.setLineDash([2,4]);
+x.beginPath();x.moveTo(M.l,yy);x.lineTo(M.l+pw,yy);x.stroke();x.setLineDash([]);
+x.fillStyle=z.c+'88';x.font='7px monospace';x.textAlign='left';x.fillText(z.l,M.l+2,yy-2)});
+x.fillStyle='#555';x.font='8px monospace';x.textAlign='center';x.fillText('Time',M.l+pw/2,H-2);
+x.textAlign='right';for(var i=0;i<=5;i++)x.fillText((5-i),M.l-3,M.t+i/5*ph+3)}
+
+function frame(ts){
+t=(ts||0)*.001;var dt=ts-lastTick;lastTick=ts;
+slotTimer+=dt*spd;
+if(slotTimer>=TICK){slotTimer-=TICK;tick()}
+dTP();dLat();dPJ();dTCP();dCap();dQoE();
+requestAnimationFrame(frame)}
+
+lp('good');bld();lastTick=performance.now();requestAnimationFrame(frame);
+</script>
