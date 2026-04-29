@@ -1,7 +1,22 @@
 {
-  "totalPages": 28,
-  "totalLinks": 621,
+  "totalPages": 34,
+  "totalLinks": 626,
   "orphanPages": [
+    {
+      "title": "Air Interface",
+      "route": "/5g-nr/air-interface",
+      "filepath": "docs/5g-nr/air-interface.mdx"
+    },
+    {
+      "title": "System Architecture",
+      "route": "/5g-nr/architecture",
+      "filepath": "docs/5g-nr/architecture.mdx"
+    },
+    {
+      "title": "Data Encapsulation",
+      "route": "/5g-nr/data-encapsulation",
+      "filepath": "docs/5g-nr/data-encapsulation.mdx"
+    },
     {
       "title": "5G NR 🚧",
       "route": "/5g-nr",
@@ -68,15 +83,20 @@
       "filepath": "docs/resources/5g-nr-tools.mdx"
     },
     {
-      "title": "Logs 🚧",
-      "route": "/resources/logs",
-      "filepath": "docs/resources/logs.mdx"
+      "title": "Cable & Antenna Analyzer",
+      "route": "/resources/cable-antenna-analyzer",
+      "filepath": "docs/resources/cable-antenna-analyzer.mdx"
     },
     {
       "title": "Resources 🚧",
       "route": "/resources",
       "filepath": "docs/resources/overview.mdx"
+    },
+    {
+      "title": "Tools",
+      "route": "/tools",
+      "filepath": "docs/tools/overview.mdx"
     }
   ],
-  "generatedAt": "2026-04-24T18:43:51.990Z"
+  "generatedAt": "2026-04-29T17:50:38.114Z"
 }

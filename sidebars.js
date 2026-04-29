@@ -10,9 +10,6 @@ module.exports = {
         id: '5g-nr/overview',
       },
       items: [
-        '5g-nr/architecture',
-        '5g-nr/air-interface',
-        '5g-nr/data-encapsulation',
         {
           type: 'category',
           label: 'Procedures',
@@ -62,9 +59,21 @@ module.exports = {
         id: 'resources/overview',
       },
       items: [
+        'resources/specifications',
         'resources/logs',
-        'resources/5g-nr-channels',
-        'resources/5g-nr-tools',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Tools',
+      link: {
+        type: 'doc',
+        id: 'tools/overview',
+      },
+      items: [
+        'tools/5g-nr-channels',
+        'tools/5g-nr-tools',
+        'tools/cable-antenna-analyzer',
       ],
     },
     {

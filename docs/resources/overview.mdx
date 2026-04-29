@@ -1,26 +1,29 @@
 ---
 title: Resources 🚧
 slug: /resources
-description: 3GPP specifications, O-RAN Alliance docs, IETF RFCs, and open-source project references — browsable by series with linked glossary terms.
+description: Resource hub for specifications and operational logs.
 hide_table_of_contents: true
 ---
 
-import SpecificationsTable from '@site/src/components/SpecificationsTable';
-import { specificationsData } from '@site/src/data/specifications';
-import fiveGTerms from '@site/src/data/glossaryTerms/5g-nr';
-import oranTerms from '@site/src/data/glossaryTerms/o-ran';
-import csTerms from '@site/src/data/glossaryTerms/computer-systems';
-
-export const allTerms = [
-  ...fiveGTerms.map(t => ({ ...t, glossary: '5g-nr' })),
-  ...oranTerms.map(t => ({ ...t, glossary: 'o-ran' })),
-  ...csTerms.map(t => ({ ...t, glossary: 'computer-systems' })),
-];
+import Link from '@docusaurus/Link';
 
 <div className="hero-panel">
   <span className="hero-panel__eyebrow">Resources</span>
-  <h1>Specifications</h1>
-  <p>Browse 3GPP, O-RAN Alliance, IETF, and open-source specifications — organized by series. Expand a specification to see covered topics and linked glossary terms.</p>
+  <h1>Resource Center</h1>
+  <p>Use this landing page to access curated standards references and field/stack log artifacts used across the project.</p>
 </div>
 
-<SpecificationsTable specs={specificationsData} allTerms={allTerms} />
+## Available Resources
+
+<div className="card-grid">
+  <Link to="/resources/specifications" className="doc-card">
+    <span className="doc-card__emoji">📚</span>
+    <strong>Specifications</strong>
+    <span>Browse 3GPP, O-RAN Alliance, IETF, and open-source specs with linked glossary terms.</span>
+  </Link>
+  <Link to="/resources/logs" className="doc-card">
+    <span className="doc-card__emoji">📄</span>
+    <strong>Logs</strong>
+    <span>Review operational logs and packet captures organized by source and component.</span>
+  </Link>
+</div>

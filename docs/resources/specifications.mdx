@@ -1,0 +1,26 @@
+---
+title: Specifications
+sidebar_label: "Specifications"
+description: 3GPP specifications, O-RAN Alliance docs, IETF RFCs, and open-source project references — browsable by series with linked glossary terms.
+hide_table_of_contents: true
+---
+
+import SpecificationsTable from '@site/src/components/SpecificationsTable';
+import { specificationsData } from '@site/src/data/specifications';
+import fiveGTerms from '@site/src/data/glossaryTerms/5g-nr';
+import oranTerms from '@site/src/data/glossaryTerms/o-ran';
+import csTerms from '@site/src/data/glossaryTerms/computer-systems';
+
+export const allTerms = [
+  ...fiveGTerms.map(t => ({ ...t, glossary: '5g-nr' })),
+  ...oranTerms.map(t => ({ ...t, glossary: 'o-ran' })),
+  ...csTerms.map(t => ({ ...t, glossary: 'computer-systems' })),
+];
+
+<div className="hero-panel">
+  <span className="hero-panel__eyebrow">Resources</span>
+  <h1>Specifications</h1>
+  <p>Browse 3GPP, O-RAN Alliance, IETF, and open-source specifications — organized by series. Expand a specification to see covered topics and linked glossary terms.</p>
+</div>
+
+<SpecificationsTable specs={specificationsData} allTerms={allTerms} />

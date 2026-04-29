@@ -75,12 +75,13 @@ const config = {
         logo: {
           alt: 'nuradio atlas Logo',
           src: 'img/atlas-glow.png',
+          href: '/',
         },
         items: [
           {
             type: 'html',
             position: 'left',
-            value: '<span class="nav-brand">nuradio <span class="nav-brand__yellow">atlas</span></span>',
+            value: '<a class="nav-brand" href="/nuradio-wiki/">nuradio <span class="nav-brand__yellow">atlas</span></a>',
           },
           {
             type: 'doc',
@@ -89,29 +90,68 @@ const config = {
             position: 'left',
           },
           {
-            to: '/5g-nr',
+            type: 'doc',
+            docId: 'project-overview',
+            label: 'Project Overview',
+            position: 'left',
+          },
+          {
             label: '5G NR',
             position: 'left',
+            items: [
+              { label: 'Overview', to: '/5g-nr' },
+              { label: 'Procedures', to: '/5g-nr/procedures' },
+              { label: 'UE', to: '/5g-nr/procedures/ue' },
+              { label: 'NG-RAN', to: '/5g-nr/procedures/ng-ran' },
+              { label: '5G Core', to: '/5g-nr/procedures/5g-core' },
+              { label: '5G System', to: '/5g-nr/procedures/5g-system' },
+            ],
           },
           {
-            to: '/o-ran',
             label: 'O-RAN',
+            to: '/o-ran',
             position: 'left',
           },
           {
-            to: '/glossary/computer-systems',
-            label: 'Computer Systems',
-            position: 'left',
-          },
-          {
-            to: '/packet-analysis',
             label: 'Packet Analysis',
             position: 'left',
+            items: [
+              { label: 'Overview', to: '/packet-analysis' },
+              { label: 'Basics', to: '/packet-analysis/basics' },
+              { label: 'Considerations', to: '/packet-analysis/considerations' },
+              { label: 'Tips and Tricks', to: '/packet-analysis/tips-and-tricks' },
+              { label: 'Protocols', to: '/packet-analysis/protocols' },
+              { label: 'Analysis', to: '/packet-analysis/analysis' },
+              { label: 'Troubleshooting', to: '/packet-analysis/troubleshooting' },
+            ],
           },
           {
-            to: '/resources',
             label: 'Resources',
             position: 'left',
+            items: [
+              { label: 'Overview', to: '/resources' },
+              { label: 'Specifications', to: '/resources/specifications' },
+              { label: 'Logs', to: '/resources/logs' },
+            ],
+          },
+          {
+            label: 'Tools',
+            position: 'left',
+            items: [
+              { label: 'Overview', to: '/tools' },
+              { label: '5G NR Channels', to: '/tools/5g-nr-channels' },
+              { label: '5G NR Tools', to: '/tools/5g-nr-tools' },
+              { label: 'Cable + Antenna Analyzer', to: '/tools/cable-antenna-analyzer' },
+            ],
+          },
+          {
+            label: 'Glossary',
+            position: 'left',
+            items: [
+              { label: '5G NR', to: '/glossary/5g-nr' },
+              { label: 'O-RAN', to: '/glossary/o-ran' },
+              { label: 'Computer Systems', to: '/glossary/computer-systems' },
+            ],
           },
         ],
       },

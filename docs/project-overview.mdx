@@ -5,7 +5,7 @@ description: Framework and collaboration guide for contributors to the nuradio a
 
 ## What It Is
 
-nuradio atlas is a **Docusaurus 3** static documentation site — a living knowledge base covering 5G NR, O-RAN, computer systems, and packet analysis topics. It's built as a pure docs site (no blog, no landing page) where the docs root (`/`) serves directly as the homepage.
+nuradio atlas is a **Docusaurus 3** static documentation site — a living knowledge base covering 5G NR, O-RAN, packet analysis, resource references, and interactive tools. It's built as a pure docs site (no blog, no landing page) where the docs root (`/`) serves directly as the homepage.
 
 ## Tech Stack
 
@@ -23,18 +23,23 @@ nuradio-wiki-v2/
 │   ├── overview.mdx          # Homepage / dashboard (slug: /)
 │   ├── 5g-nr/                # 5G NR section
 │   │   ├── overview.mdx
-│   │   ├── architecture.mdx
-│   │   ├── air-interface.mdx
-│   │   ├── data-encapsulation.mdx
 │   │   └── procedures/       # Subsection with its own overview
 │   │       ├── overview.mdx
 │   │       ├── ue.mdx
 │   │       ├── ng-ran.mdx
 │   │       ├── 5g-core.mdx
 │   │       └── 5g-system.mdx
-│   ├── o-ran/overview.mdx    # O-RAN section (stub, items TBD)
-│   ├── packet-analysis/      # Packet Analysis section (stub)
-│   └── resources/            # Resources/references section (stub)
+│   ├── o-ran/overview.mdx    # O-RAN section
+│   ├── packet-analysis/      # Packet Analysis section
+│   ├── resources/            # Resource center and references
+│   │   ├── overview.mdx
+│   │   ├── specifications.mdx
+│   │   └── logs.mdx
+│   └── tools/                # Interactive tooling section
+│       ├── overview.mdx
+│       ├── 5g-nr-channels.mdx
+│       ├── 5g-nr-tools.mdx
+│       └── cable-antenna-analyzer.mdx
 ├── src/
 │   ├── components/           # Custom React components used in MDX
 │   │   ├── ComponentCard/    # Protocol layer card panels
@@ -50,7 +55,8 @@ nuradio-wiki-v2/
 ## Content Model
 
 - All pages are **MDX** files — standard Markdown with optional JSX component imports
-- Content is organized into **top-level sections**, each with an `overview.mdx` that acts as the section landing page and is linked in both the navbar and the sidebar category header
+- Content is organized into **top-level sections**, each with an `overview.mdx` landing page linked from sidebar category headers
+- The current primary sections are: Dashboard, Project Overview, 5G NR (procedures-focused), O-RAN, Packet Analysis, Resources, Tools, and Glossary
 - The sidebar is manually defined in `sidebars.js` — new pages must be explicitly added there to appear in navigation
 
 ## Key Configuration Decisions
