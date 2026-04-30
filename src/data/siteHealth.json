@@ -1,5 +1,5 @@
 {
-  "totalPages": 34,
+  "totalPages": 35,
   "totalLinks": 626,
   "orphanPages": [
     {
@@ -58,6 +58,11 @@
       "filepath": "docs/glossary/o-ran.mdx"
     },
     {
+      "title": "RF Glossary",
+      "route": "/glossary/rf",
+      "filepath": "docs/glossary/rf.mdx"
+    },
+    {
       "title": "O-RAN 🚧",
       "route": "/o-ran",
       "filepath": "docs/o-ran/overview.mdx"
@@ -98,5 +103,5 @@
       "filepath": "docs/tools/overview.mdx"
     }
   ],
-  "generatedAt": "2026-04-29T17:50:38.114Z"
+  "generatedAt": "2026-04-30T00:44:46.737Z"
 }

@@ -781,6 +781,117 @@ function MiniChart({
   );
 }
 
+function gammaFromImpedance(resistance, reactance) {
+  const denom = ((resistance + 1) * (resistance + 1)) + (reactance * reactance);
+  return {
+    re: (((resistance * resistance) + (reactance * reactance) - 1) / Math.max(0.00001, denom)),
+    im: ((2 * reactance) / Math.max(0.00001, denom)),
+  };
+}
+
+function SmithChart({
+  points,
+  markers = [],
+  onPlaceMarker,
+  activeMarkerLabel,
+}) {
+  const width = 760;
+  const height = 520;
+  const margin = { top: 22, right: 26, bottom: 42, left: 34 };
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+  const radius = Math.min(plotWidth, plotHeight) * 0.485;
+  const centerX = margin.left + (plotWidth / 2);
+  const centerY = margin.top + (plotHeight / 2);
+
+  if (!points.length) {
+    return null;
+  }
+
+  const toX = (re) => centerX + (re * radius);
+  const toY = (im) => centerY - (im * radius);
+  const buildContourPath = (resolver, start, stop, steps = 120) => {
+    let path = '';
+    for (let i = 0; i <= steps; i += 1) {
+      const t = start + (((stop - start) * i) / Math.max(1, steps));
+      const gamma = resolver(t);
+      const x = toX(gamma.re).toFixed(2);
+      const y = toY(gamma.im).toFixed(2);
+      path += `${i === 0 ? 'M' : 'L'} ${x} ${y} `;
+    }
+    return path.trim();
+  };
+
+  const tracePath = points
+    .map((point, index) => `${index === 0 ? 'M' : 'L'} ${toX(point.gammaRe).toFixed(2)} ${toY(point.gammaIm).toFixed(2)}`)
+    .join(' ');
+  const resistanceContours = [0, 0.2, 0.5, 1, 2, 5];
+  const reactanceContours = [0.2, 0.5, 1, 2, 5, -0.2, -0.5, -1, -2, -5];
+
+  return (
+    <svg
+      className="caa-chart caa-smith-chart"
+      viewBox={`0 0 ${width} ${height}`}
+      role="img"
+      aria-label="Smith chart for S11 reflection coefficient"
+      onClick={onPlaceMarker ? (event) => {
+        const bounds = event.currentTarget.getBoundingClientRect();
+        const svgX = ((event.clientX - bounds.left) / Math.max(1, bounds.width)) * width;
+        const svgY = ((event.clientY - bounds.top) / Math.max(1, bounds.height)) * height;
+        const rawRe = (svgX - centerX) / Math.max(0.00001, radius);
+        const rawIm = (centerY - svgY) / Math.max(0.00001, radius);
+        const magnitude = Math.hypot(rawRe, rawIm);
+        const gamma = magnitude > 1
+          ? { re: rawRe / magnitude, im: rawIm / magnitude }
+          : { re: rawRe, im: rawIm };
+        onPlaceMarker(gamma);
+      } : undefined}
+    >
+      <rect x="0" y="0" width={width} height={height} rx="10" className="caa-chart__bg" />
+      <circle cx={centerX} cy={centerY} r={radius} className="caa-smith-chart__outer" />
+      <line x1={centerX - radius} y1={centerY} x2={centerX + radius} y2={centerY} className="caa-smith-chart__axis" />
+
+      {resistanceContours.map((resistance) => (
+        <path
+          key={`smith-r-${resistance}`}
+          d={buildContourPath((reactance) => gammaFromImpedance(resistance, reactance), -8, 8)}
+          className="caa-smith-chart__grid"
+        />
+      ))}
+      {reactanceContours.map((reactance) => (
+        <path
+          key={`smith-x-${reactance}`}
+          d={buildContourPath((resistance) => gammaFromImpedance(resistance, reactance), 0, 8)}
+          className="caa-smith-chart__grid"
+        />
+      ))}
+
+      <path d={tracePath} className="caa-smith-chart__trace" />
+      {markers.map((marker) => (
+        <g key={marker.label}>
+          <circle
+            cx={toX(marker.gammaRe)}
+            cy={toY(marker.gammaIm)}
+            r={4}
+            className={activeMarkerLabel === marker.label ? 'caa-chart__marker-point caa-chart__marker-point--active' : 'caa-chart__marker-point'}
+          />
+          <text
+            x={toX(marker.gammaRe) + 6}
+            y={toY(marker.gammaIm) - 6}
+            className="caa-chart__marker-label"
+          >
+            {marker.label}
+          </text>
+        </g>
+      ))}
+
+      <text x={centerX} y={height - 6} textAnchor="middle" className="caa-chart__axis-label">
+        Re(Γ) / Im(Γ) Smith plane
+      </text>
+    </svg>
+  );
+}
+
 function sectionTitle(title, index) {
   return (
     <h3 className="caa-panel__section-title">
@@ -954,6 +1065,20 @@ export default function CableAntennaAnalyzer() {
         area: true,
       };
     }
+    if (activeTab === 'smithChart') {
+      return {
+        xValues: primaryResults.freqs,
+        yValues: primaryResults.returnLossSeries,
+        yMin: 0,
+        yMax: 40,
+        color: '#7ec0ff',
+        xLabel: 'Frequency (MHz)',
+        yLabel: 'Return Loss (dB)',
+        formatX: (value) => value.toFixed(0),
+        formatY: (value) => value.toFixed(1),
+        area: false,
+      };
+    }
     if (activeTab === 'dtf') {
       const xValues = primaryResults.dtfSeries.map((_, index) => (config.dtfRangeFt * index) / (primaryResults.dtfSeries.length - 1));
       return {
@@ -1018,6 +1143,28 @@ export default function CableAntennaAnalyzer() {
     }
     : currentChart;
   const chartForDisplay = isMeasureView ? measuredChart : currentChart;
+  const smithPoints = useMemo(() => {
+    const visibleCount = clamp(measureVisibleCount, 1, primaryResults.freqs.length);
+    return primaryResults.freqs.slice(0, visibleCount).map((freqMHz, index) => {
+      const returnLossDb = primaryResults.returnLossSeries[index];
+      const phaseDeg = primaryResults.s11PhaseSeries[index];
+      const gammaMag = clamp(Math.pow(10, -(returnLossDb / 20)), 0.0001, 0.999);
+      const phaseRad = (phaseDeg * Math.PI) / 180;
+      return {
+        freqMHz,
+        returnLossDb,
+        phaseDeg,
+        gammaMag,
+        gammaRe: gammaMag * Math.cos(phaseRad),
+        gammaIm: gammaMag * Math.sin(phaseRad),
+      };
+    });
+  }, [
+    measureVisibleCount,
+    primaryResults.freqs,
+    primaryResults.returnLossSeries,
+    primaryResults.s11PhaseSeries,
+  ]);
 
   const overallBadgeClass = primaryResults.summary.overallPass ? 'caa-status__value caa-status__value--pass' : 'caa-status__value caa-status__value--fail';
   const displayedFaultDistance = primaryResults.summary.faultDistanceFt
@@ -1140,13 +1287,15 @@ export default function CableAntennaAnalyzer() {
     { id: 'returnLoss', label: 'Magnitude' },
     { id: 'vswr', label: 'VSWR' },
     { id: 's11Phase', label: 'Phase' },
-    { id: 'cableLoss', label: 'Smith Chart' },
+    { id: 'cableLoss', label: 'Cable Loss' },
+    { id: 'smithChart', label: 'Smith Chart' },
   ];
   const measureTraceRows = [
     { id: 'returnLoss', label: 'S11 (Return Loss)' },
     { id: 'vswr', label: 'S11 (VSWR)' },
     { id: 's11Phase', label: 'S11 (Phase)' },
-    { id: 'cableLoss', label: 'S11 (Smith Chart)' },
+    { id: 'cableLoss', label: 'Cable Loss' },
+    { id: 'smithChart', label: 'S11 (Smith Chart)' },
   ];
   const average = (series) => series.reduce((sum, value) => sum + value, 0) / Math.max(series.length, 1);
   const visibleReturnLoss = primaryResults.returnLossSeries.slice(0, measureVisibleCount);
@@ -1164,6 +1313,7 @@ export default function CableAntennaAnalyzer() {
     const markerIndex = Math.round((chartForDisplay.xValues.length - 1) * ratio);
     const xValue = chartForDisplay.xValues[markerIndex];
     const yValue = chartForDisplay.yValues[markerIndex];
+    const smithPoint = smithPoints[Math.min(smithPoints.length - 1, Math.max(0, markerIndex))];
     const axisValue = chartForDisplay.xLabel.includes('Frequency')
       ? `${(xValue / 1000).toFixed(3)} GHz`
       : `${xValue.toFixed(1)} ${config.units}`;
@@ -1171,18 +1321,24 @@ export default function CableAntennaAnalyzer() {
       ? `${yValue.toFixed(2)}:1`
       : activeTab === 's11Phase'
         ? `${yValue.toFixed(1)} deg`
-        : `${yValue.toFixed(1)} dB`;
+        : activeTab === 'smithChart'
+          ? `Γ ${smithPoint.gammaRe >= 0 ? '+' : ''}${smithPoint.gammaRe.toFixed(2)} ${smithPoint.gammaIm >= 0 ? '+' : ''}${smithPoint.gammaIm.toFixed(2)}j`
+          : `${yValue.toFixed(1)} dB`;
     return {
       marker: markerLabel,
       axisValue,
       markerValue,
       ratio,
       xValue,
+      gammaRe: smithPoint.gammaRe,
+      gammaIm: smithPoint.gammaIm,
     };
   });
   const chartMarkers = markerRows.map((row) => ({
     label: row.marker,
     xValue: row.xValue,
+    gammaRe: row.gammaRe,
+    gammaIm: row.gammaIm,
   }));
   const diagnoseAnalysis = useMemo(() => {
     const issues = [];
@@ -1428,7 +1584,51 @@ export default function CableAntennaAnalyzer() {
     const ratio = clamp((xValue - xMin) / Math.max(0.00001, xMax - xMin), 0, 1);
     setMarkerRatios((previous) => ({ ...previous, [activeMarker]: ratio }));
   };
+  const placeMarkerOnSmith = (gammaPoint) => {
+    if (!smithPoints.length) return;
+    let nearestIndex = 0;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+    smithPoints.forEach((point, index) => {
+      const distance = ((point.gammaRe - gammaPoint.re) ** 2) + ((point.gammaIm - gammaPoint.im) ** 2);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestIndex = index;
+      }
+    });
+    const ratio = smithPoints.length > 1 ? nearestIndex / (smithPoints.length - 1) : 0;
+    setMarkerRatios((previous) => ({ ...previous, [activeMarker]: ratio }));
+  };
   const exportMeasure = (format) => {
+    if (activeTab === 'smithChart') {
+      const rows = smithPoints.map((point) => ({
+        frequencyMHz: point.freqMHz,
+        gammaReal: point.gammaRe,
+        gammaImag: point.gammaIm,
+        gammaMagnitude: point.gammaMag,
+        phaseDeg: point.phaseDeg,
+        returnLossDb: point.returnLossDb,
+        scenario: SCENARIOS[appliedScenario].label,
+        severityPercent: severity,
+      }));
+      if (format === 'json') {
+        triggerDownload(
+          'measure-smith-chart.json',
+          JSON.stringify({ generatedAt: new Date().toISOString(), rows }, null, 2),
+          'application/json',
+        );
+        showToast('Exported Smith Chart JSON file');
+        return;
+      }
+      const csv = [
+        'frequency_mhz,gamma_real,gamma_imag,gamma_mag,phase_deg,return_loss_db,scenario,severity_percent',
+        ...rows.map((row) => (
+          `${row.frequencyMHz.toFixed(2)},${row.gammaReal.toFixed(5)},${row.gammaImag.toFixed(5)},${row.gammaMagnitude.toFixed(5)},${row.phaseDeg.toFixed(2)},${row.returnLossDb.toFixed(3)},${row.scenario},${row.severityPercent}`
+        )),
+      ].join('\n');
+      triggerDownload('measure-smith-chart.csv', csv, 'text/csv');
+      showToast('Exported Smith Chart CSV file');
+      return;
+    }
     const rows = chartForDisplay.xValues.map((xValue, index) => ({
       frequencyMHz: xValue,
       value: chartForDisplay.yValues[index],
@@ -2010,21 +2210,30 @@ export default function CableAntennaAnalyzer() {
                   {measureTraceRows.find((item) => item.id === activeTab)?.label || 'S11 (Return Loss)'}
                 </p>
                 <p className="caa-field-note">Click the chart to place marker <strong>{activeMarker}</strong>.</p>
-                <MiniChart
-                  xValues={chartForDisplay.xValues}
-                  yValues={chartForDisplay.yValues}
-                  yMin={chartForDisplay.yMin}
-                  yMax={chartForDisplay.yMax}
-                  color={chartForDisplay.color}
-                  area={chartForDisplay.area}
-                  xLabel={chartForDisplay.xLabel}
-                  yLabel={chartForDisplay.yLabel}
-                  formatX={chartForDisplay.formatX}
-                  formatY={chartForDisplay.formatY}
-                  markers={chartMarkers}
-                  activeMarkerLabel={activeMarker}
-                  onPlaceMarker={placeMarkerAtX}
-                />
+                {activeTab === 'smithChart' ? (
+                  <SmithChart
+                    points={smithPoints}
+                    markers={chartMarkers}
+                    activeMarkerLabel={activeMarker}
+                    onPlaceMarker={placeMarkerOnSmith}
+                  />
+                ) : (
+                  <MiniChart
+                    xValues={chartForDisplay.xValues}
+                    yValues={chartForDisplay.yValues}
+                    yMin={chartForDisplay.yMin}
+                    yMax={chartForDisplay.yMax}
+                    color={chartForDisplay.color}
+                    area={chartForDisplay.area}
+                    xLabel={chartForDisplay.xLabel}
+                    yLabel={chartForDisplay.yLabel}
+                    formatX={chartForDisplay.formatX}
+                    formatY={chartForDisplay.formatY}
+                    markers={chartMarkers}
+                    activeMarkerLabel={activeMarker}
+                    onPlaceMarker={placeMarkerAtX}
+                  />
+                )}
               </section>
 
               <section className="caa-card">

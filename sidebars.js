@@ -83,6 +83,7 @@ module.exports = {
         'glossary/5g-nr',
         'glossary/o-ran',
         'glossary/computer-systems',
+        'glossary/rf',
       ],
     },
   ],

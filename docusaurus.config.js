@@ -151,6 +151,7 @@ const config = {
               { label: '5G NR', to: '/glossary/5g-nr' },
               { label: 'O-RAN', to: '/glossary/o-ran' },
               { label: 'Computer Systems', to: '/glossary/computer-systems' },
+              { label: 'RF', to: '/glossary/rf' },
             ],
           },
         ],

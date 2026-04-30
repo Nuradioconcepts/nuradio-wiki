@@ -1,5 +1,12 @@
 [
   {
+    "title": "RF Glossary",
+    "filepath": "docs/glossary/rf.mdx",
+    "route": "/glossary/rf",
+    "section": "Glossary",
+    "mtime": "2026-04-30T00:42:32.982Z"
+  },
+  {
     "title": "Cable & Antenna Analyzer",
     "filepath": "docs/tools/cable-antenna-analyzer.mdx",
     "route": "/tools/cable-antenna-analyzer",
@@ -96,12 +103,5 @@
     "route": "/",
     "section": "Dashboard",
     "mtime": "2026-04-16T13:57:03.673Z"
-  },
-  {
-    "title": "Computer Systems Glossary",
-    "filepath": "docs/glossary/computer-systems.mdx",
-    "route": "/glossary/computer-systems",
-    "section": "Glossary",
-    "mtime": "2026-04-13T12:52:37.391Z"
   }
 ]
